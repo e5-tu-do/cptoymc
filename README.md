@@ -6,6 +6,7 @@ This template provides everything neccesary to start coding within the E5 LHCb e
 - **cmake**: directory for CMake auxiliary files.
 - **doc**: directory for documents, e.g. your thesis.
 - **main**: your main files fit in here.
+- **python**: python scripts are best suited here.
 - **sandbox**: whenever you want to play around or test something, do it in here.
 - **src**: your class definitions.
 - **CMakeLists.txt**: contains all relevant information for CMake
