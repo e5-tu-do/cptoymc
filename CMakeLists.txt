@@ -31,7 +31,7 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 
 # Project Definition
-project(template)
+project(CPToyMC)
 cmake_minimum_required(VERSION 2.6)
 
 FIND_PACKAGE(Boost 1.48 COMPONENTS program_options filesystem thread system random REQUIRED)
