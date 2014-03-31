@@ -34,7 +34,7 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 project(CPToyMC)
 cmake_minimum_required(VERSION 2.6)
 
-FIND_PACKAGE(Boost 1.48 COMPONENTS program_options filesystem thread system random REQUIRED)
+FIND_PACKAGE(Boost 1.55 COMPONENTS program_options filesystem thread system random REQUIRED)
 
 find_package(ROOT REQUIRED)
 find_package(DooCore REQUIRED)

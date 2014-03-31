@@ -1,8 +1,8 @@
 # Executables
-add_executable(HelloMain HelloMain.cpp)
+add_executable(DoToyGen DoToyGenMain.cpp)
 
 # Aliases for module libs
 
 # Linker information
-target_link_libraries(HelloMain ${ALL_LIBRARIES})
+target_link_libraries(DoToyGen ${ALL_LIBRARIES})
 
