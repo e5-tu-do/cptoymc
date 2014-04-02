@@ -116,8 +116,8 @@ int main() {
   pars_tagging.eff_SS   = 0.0625;
   pars_tagging.eff_SSOS = 0.0436;
 
-  pars_tagging.w_OS    = 0.25;
-  pars_tagging.w_SS    = 0.25;
+  pars_tagging.w_OS    = 0.25; // no effect
+  pars_tagging.w_SS    = 0.25; // no effect
 
   pars_tagging.dw_OS    = 0.;
   pars_tagging.dw_SS    = 0.;
@@ -240,13 +240,13 @@ void generateTagAndEta(TRandom& rndm, const ParsTagging& pars_tagging, const int
 
   if (random_val < pars_tagging.eff_OS) {
     generateTagAndEtaOS(rndm, pars_tagging, tag_true, tag_OS, eta_OS);
-    tag_SS = 0;
+    tag_SS = 1;
     eta_SS = 0.5;
     tag_class = 1;
   }
   else if (random_val < (pars_tagging.eff_OS + pars_tagging.eff_SS)) {
     generateTagAndEtaSS(rndm, pars_tagging, tag_true, tag_SS, eta_SS);
-    tag_OS = 0;
+    tag_OS = 1;
     eta_OS = 0.5;
     tag_class = -1;
   }
@@ -256,9 +256,9 @@ void generateTagAndEta(TRandom& rndm, const ParsTagging& pars_tagging, const int
     tag_class = 10;
   } 
   else {
-    tag_SS = 0;
+    tag_SS = 1;
     eta_SS = 0.5;
-    tag_OS = 0;
+    tag_OS = 1;
     eta_OS = 0.5;
     tag_class = 0;
   }
