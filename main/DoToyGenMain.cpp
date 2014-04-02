@@ -93,7 +93,7 @@ int main() {
   pars_time_CP.Sf     = 0.7;
   pars_time_CP.Cf     = 0.0;
   pars_time_CP.Df     = +sqrt(pars_time_CP.Sf*pars_time_CP.Sf+pars_time_CP.Cf*pars_time_CP.Cf);
-  pars_time_CP.AP     = 0.0;
+  pars_time_CP.AP     = 0.;
 
   //============================================================================
   // Experimental Parameters
@@ -107,7 +107,7 @@ int main() {
   // Decay time parameters
   ParsTimeResol pars_time_resol;
   pars_time_resol.bias  = 0.;
-  pars_time_resol.sigma = 8.;
+  pars_time_resol.sigma = 0.05;
 
   //----------------------------------------------------------------------------
   // Tagging parameters
@@ -236,14 +236,53 @@ void generateTime(TRandom& rndm, const ParsTimeResol& pars_time_resol, const dou
 void generateTagAndEta(TRandom& rndm, const ParsTagging& pars_tagging, const int tag_true,  
                        int& tag_OS, double& eta_OS, int& tag_SS, double& eta_SS, int& tag_class) {
 
+  double random_val = rndm.Uniform();
+
+  if (random_val < pars_tagging.eff_OS) {
+    generateTagAndEtaOS(rndm, pars_tagging, tag_true, tag_OS, eta_OS);
+    tag_SS = 0;
+    eta_SS = 0.5;
+    tag_class = 1;
+  }
+  else if (random_val < (pars_tagging.eff_OS + pars_tagging.eff_SS)) {
+    generateTagAndEtaSS(rndm, pars_tagging, tag_true, tag_SS, eta_SS);
+    tag_OS = 0;
+    eta_OS = 0.5;
+    tag_class = -1;
+  }
+  else if (random_val < (pars_tagging.eff_OS + pars_tagging.eff_SS + pars_tagging.eff_SSOS)) {
+    generateTagAndEtaOS(rndm, pars_tagging, tag_true, tag_OS, eta_OS);
+    generateTagAndEtaSS(rndm, pars_tagging, tag_true, tag_SS, eta_SS);
+    tag_class = 10;
+  } 
+  else {
+    tag_SS = 0;
+    eta_SS = 0.5;
+    tag_OS = 0;
+    eta_OS = 0.5;
+    tag_class = 0;
+  }
+
 }
 
 void generateTagAndEtaOS(TRandom& rndm, const ParsTagging& pars_tagging, const int tag_true, int& tag_OS, double& eta_OS) {
-
+  eta_OS = rndm.Uniform(0.0, 0.5);
+  if (rndm.Uniform() < (eta_OS+(double)tag_true*pars_tagging.dw_OS/2.)){
+    tag_OS = -1*tag_true;
+  }
+  else {
+    tag_OS = tag_true;
+  }
 }
 
 void generateTagAndEtaSS(TRandom& rndm, const ParsTagging& pars_tagging, const int tag_true, int& tag_SS, double& eta_SS) {
-
+  eta_SS = rndm.Uniform(0.0, 0.44);
+  if (rndm.Uniform() < (eta_SS+(double)tag_true*pars_tagging.dw_SS/2.)) {
+    tag_SS = -1*tag_true;
+  }
+  else {
+    tag_SS = tag_true;
+  }
 }
 
 double BCPV_PDF(double t, double d, double tau, double dGamma, double dm, double Sf, double Cf, double Df) {
