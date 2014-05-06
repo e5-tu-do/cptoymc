@@ -39,21 +39,3 @@ Dimensions {
     tag_class       "catTaggedOSSSPiob"
   }
 }
-
-Sig_Bd {
-  EventInfo {
-    ID 0
-  }
-  Mass {
-    TrueModel BreitWigner
-    {
-      mean  5279.15 ; MeV/c^2
-      width 0.
-    }
-    Resolution SingleGaussian {
-      bias   0.
-      width  10. ; MeV
-    }
-  }
-}
-

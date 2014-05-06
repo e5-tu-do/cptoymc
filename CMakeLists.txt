@@ -6,6 +6,11 @@
 # to Debug prior to calling PROJECT()
 #
 
+
+# Project Definition
+project(CPToyMC)
+cmake_minimum_required(VERSION 2.6)
+
 set(CMAKE_CXX_FLAGS_DBG "-O0 -ggdb -pg" CACHE STRING "Debug options." FORCE)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG" CACHE STRING "Debug options." FORCE)
 set(CMAKE_CXX_FLAGS_PROFILING "-O3 -pg" CACHE STRING "Debug options." FORCE)
@@ -19,6 +24,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -pedantic -Wall -Wextra")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
+message( STATUS "CXX flags are ${CMAKE_CXX_FLAGS}")
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "$ENV{DOOFITSYS}/cmake/Modules/")
 #set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "$ENV{DOOCORESYS}/cmake/Modules/")
@@ -30,9 +37,6 @@ include_directories(${BASEPATH})
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 
-# Project Definition
-project(CPToyMC)
-cmake_minimum_required(VERSION 2.6)
 
 find_package(Boost 1.55 COMPONENTS program_options filesystem thread system random REQUIRED)
 
