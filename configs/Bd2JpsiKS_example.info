@@ -1,0 +1,34 @@
+; Example configuration for a ToyMC in Bd2JpsiKS
+
+; General configuration options
+
+; Define which components should be used and which yields should be generated.
+; This defines, which other property trees are read out.
+Components  
+{
+  Sig_Bd 10000
+  Sig_Bs   100
+  Bkg    10000
+} 
+
+; observable dimensions to be generated. Specifies their name in the TTree.
+Dimensions {
+  bkg_cat      "catBackground"
+  mass_true    "obsMassTrue"
+  mass_meas    "obsMass"
+  time_true    "obsTimeTrue"
+  time_meas     "obsTime"
+  tag_true      "obsTagTrue"
+  tag_OS_meas   "obsTagOS"
+  eta_OS_meas   "obsEtaOS"
+  tag_SS_meas   "obsTagSS"
+  eta_SS_meas   "obsEtaSS"
+  tagComb_meas  "obsTagComb"
+  etaComb_meas  "obsEtaComb" 
+  tag_class     "catTaggedOSSSPiob"
+}
+
+Sig {
+
+}
+
