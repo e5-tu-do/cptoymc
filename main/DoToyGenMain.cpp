@@ -22,7 +22,7 @@ int main() {
   ToyConfig config;
   config.load("../configs/Bd2JpsiKS_dirtyconfig.info");
 
-
+  
 
   // int num_events = 100000;
 

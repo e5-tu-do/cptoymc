@@ -3,9 +3,12 @@
 
 // from STL
 #include <string>
+#include <initializer>
 
 namespace cptoymc {
 namespace configuration {
+
+
 
 struct ParsMass {
   double mean;
@@ -50,29 +53,25 @@ public:
   void load(const std::string& config_file);
 
 private:
-  ParsMass        pars_sigBd_mass;
-  ParsTimeAndCP   pars_sigBd_timeandcp;
-  ParsMassResol   pars_sigBd_mass_resol;  
-  ParsTimeResol   pars_sigBd_time_resol;
-  ParsTagging     pars_sigBd_tagging;
 
-  ParsMass        pars_sigBs_mass;
-  ParsTimeAndCP   pars_sigBs_timeandcp;
-  ParsMassResol   pars_sigBs_mass_resol;  
-  ParsTimeResol   pars_sigBs_time_resol;
-  ParsTagging     pars_sigBs_tagging;
 
-  ParsMass        pars_bkg_mass;
-  ParsTimeAndCP   pars_bkg_timeandcp;
-  ParsMassResol   pars_bkg_mass_resol;  
-  ParsTimeResol   pars_bkg_time_resol;
-  ParsTagging     pars_bkg_tagging;
+};
 
-}; // class ToyConfig
+class CompConfig {
+public:
+  CompConfig(const std::string& name, int bkg_cat, int yield);
+  ~CompConfig();
 
-// class ComponentConfig {
+  const std::string& name() { return name_; }
+  int bkg_cat() { return bkg_cat_; }
+  int yield() { return yield_; }
 
-// }
+private:
+  const std::string name_;
+  const int bkg_cat_;
+  const int yield_;
+
+};
 
 } // namespace configuration
 } // namespace cptoymc
