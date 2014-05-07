@@ -26,7 +26,18 @@ struct Observables {
   double eta_OS;
   int    tag_SS;
   double eta_SS;
+  int    bkg_cat;
 };
+
+class ToyGenerator {
+public:
+
+private:
+  int Bd_yield_exp_;
+  int Bs_yield_exp_;
+  int Bkg_yield_exp_;
+};
+
   
 void resetObs(cptoymc::generator::Observables& obs);
 
@@ -42,6 +53,8 @@ void generateTagAndEtaSS(TRandom& rndm, const cptoymc::configuration::ParsTaggin
 
 double BCPV_PDF(double t, double d, double tau, double dGamma, double dm, double Sf, double Cf, double Df);
 double BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, double Df);
+
+int yieldToGenerate(TRandom& rndm, double yield_exp);
 
 } // namespace generator
 } // namespace cptoymc

@@ -22,6 +22,7 @@ void cptoymc::generator::resetObs(cptoymc::generator::Observables& obs) {
   obs.eta_OS    = 0.5;
   obs.tag_SS    = 0;
   obs.eta_SS    = 0.5;
+  obs.bkg_cat   = -1000;
 }
 
 
@@ -132,4 +133,8 @@ double cptoymc::generator::BCPV_PDF(double t, double d, double tau, double dGamm
 
 double cptoymc::generator::BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, double Df) {
   return exp(-t*gamma_min)*(1.+std::abs(Df)+sqrt(Sf*Sf+Cf*Cf));
+}
+
+int yieldToGenerate(TRandom& rndm, double yield_exp) {
+  return rndm.Poisson(yield_exp);
 }

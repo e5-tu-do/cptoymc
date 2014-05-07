@@ -40,9 +40,9 @@ void ToyConfig::load(const std::string& config_file) {
 
 
 CompConfig::CompConfig(const std::string& name, int bkg_cat, int yield) :
-  name_    = name,
-  bkg_cat_ = bkg_cat,
-  yield_   = yield
+  name_(name),
+  bkg_cat_(bkg_cat),
+  yield_(yield)
 {
 
 }

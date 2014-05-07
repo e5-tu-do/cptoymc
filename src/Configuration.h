@@ -3,7 +3,6 @@
 
 // from STL
 #include <string>
-#include <initializer>
 
 namespace cptoymc {
 namespace configuration {
