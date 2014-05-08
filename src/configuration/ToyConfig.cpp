@@ -34,9 +34,9 @@ void ToyConfig::load(const std::string& config_file) {
   //   std::cout << "Tree is empty!" << std::endl;
   // }
 
-  CompConfig("Sig_Bd",0,10000);
-  CompConfig("Sig_Bs",0,100);
-  CompConfig("Bkg",0,10000);
+  comp_configs_.emplace("Sig_Bd",CompConfig("Sig_Bd",0,10000));
+  comp_configs_.emplace("Sig_Bs",CompConfig("Sig_Bs",0,100));
+  comp_configs_.emplace("Bkg",   CompConfig("Bkg",0,10000));
 
   
 }
