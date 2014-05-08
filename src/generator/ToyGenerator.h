@@ -30,8 +30,7 @@ private:
 } // namespace generator
 } // namespace cptoymc
 
-#endif // CPTOYMC_GENERATOR_GENERATOR_H
-
-
-
 #endif // CPTOYMC_GENERATOR_TOYGENERATOR_H
+
+
+

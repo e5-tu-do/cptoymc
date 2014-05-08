@@ -9,6 +9,8 @@ class TTree;
 
 namespace cptoymc {
 
+
+// forward declarations
 namespace configuration {
 struct ParsMass;
 struct ParsTimeAndCP;
@@ -17,25 +19,14 @@ struct ParsTimeResol;
 struct ParsTagging;
 class ToyConfig;
 } // namespace configuration
-  
+
 namespace generator {
 
+// forward declarations
+class Observables;
 
-struct Observables {
-  double mass_true;
-  double time_true;
-  int    tag_true;
-  double mass;
-  double time;
-  int    tag_class; // -1: SS&&!OS, 0: !OS&&!SS, 1: OS&&!SS, 10: OS&&SS
-  int    tag_OS;
-  double eta_OS;
-  int    tag_SS;
-  double eta_SS;
-  int    bkg_cat;
-};
-  
-void resetObs(cptoymc::generator::Observables& obs);
+
+// Time and Tag
 
 void generateTrueMass(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true);
 void generateTrueTimeAndTag(TRandom& rndm, const cptoymc::configuration::ParsTimeAndCP& pars_time_CP, double& obs_time_true, int& obs_tag_true);

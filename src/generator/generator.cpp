@@ -11,26 +11,14 @@
 #include "configuration/configuration.h"
 
 
-void cptoymc::generator::resetObs(cptoymc::generator::Observables& obs) {
-  obs.mass_true = -1000.;
-  obs.time_true = -1000.;
-  obs.tag_true  = 0;
-  obs.mass      = -1000.;
-  obs.time      = -1000.;
-  obs.tag_class = -10000;
-  obs.tag_OS    = 0;
-  obs.eta_OS    = 0.5;
-  obs.tag_SS    = 0;
-  obs.eta_SS    = 0.5;
-  obs.bkg_cat   = -1000;
-}
+namespace cptoymc {
+namespace generator {
 
-
-void cptoymc::generator::generateTrueMass(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true) {
+void generateTrueMass(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true) {
   obs_mass_true = rndm.BreitWigner(pars_mass.mean, pars_mass.gamma);
 }
 
-void cptoymc::generator::generateTrueTimeAndTag(TRandom& rndm, const cptoymc::configuration::ParsTimeAndCP& pars_time_CP, double& obs_time_true, int& obs_tag_true) {
+void generateTrueTimeAndTag(TRandom& rndm, const cptoymc::configuration::ParsTimeAndCP& pars_time_CP, double& obs_time_true, int& obs_tag_true) {
   // helper quantities
   double prob_B = (1. - pars_time_CP.AP)/2.;
   double gamma_min = 1./pars_time_CP.tau - std::abs(pars_time_CP.dGamma)/2.;
@@ -65,17 +53,17 @@ void cptoymc::generator::generateTrueTimeAndTag(TRandom& rndm, const cptoymc::co
   obs_time_true = val_t;
 }
 
-void cptoymc::generator::generateMass(TRandom& rndm, const cptoymc::configuration::ParsMassResol& pars_mass_resol, const double obs_mass_true, double& obs_mass) {
+void generateMass(TRandom& rndm, const cptoymc::configuration::ParsMassResol& pars_mass_resol, const double obs_mass_true, double& obs_mass) {
   obs_mass = obs_mass_true;
   obs_mass += rndm.Gaus(pars_mass_resol.bias, pars_mass_resol.sigma);
 }
 
-void cptoymc::generator::generateTime(TRandom& rndm, const cptoymc::configuration::ParsTimeResol& pars_time_resol, const double obs_time_true, double& obs_time) {
+void generateTime(TRandom& rndm, const cptoymc::configuration::ParsTimeResol& pars_time_resol, const double obs_time_true, double& obs_time) {
   obs_time = obs_time_true;
   obs_time += rndm.Gaus(pars_time_resol.bias, pars_time_resol.sigma);
 }
 
-void cptoymc::generator::generateTagAndEta(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_OS, double& eta_OS, int& tag_SS, double& eta_SS, int& tag_class) {
+void generateTagAndEta(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_OS, double& eta_OS, int& tag_SS, double& eta_SS, int& tag_class) {
   
   double random_val = rndm.Uniform();
   
@@ -106,7 +94,7 @@ void cptoymc::generator::generateTagAndEta(TRandom& rndm, const cptoymc::configu
   
 }
 
-void cptoymc::generator::generateTagAndEtaOS(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_OS, double& eta_OS) {
+void generateTagAndEtaOS(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_OS, double& eta_OS) {
   eta_OS = rndm.Uniform(0.0, 0.5);
   if (rndm.Uniform() < (eta_OS+(double)tag_true*pars_tagging.dw_OS/2.)){
     tag_OS = -1*tag_true;
@@ -116,7 +104,7 @@ void cptoymc::generator::generateTagAndEtaOS(TRandom& rndm, const cptoymc::confi
   }
 }
 
-void cptoymc::generator::generateTagAndEtaSS(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_SS, double& eta_SS) {
+void generateTagAndEtaSS(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_SS, double& eta_SS) {
   eta_SS = rndm.Uniform(0.0, 0.44);
   if (rndm.Uniform() < (eta_SS+(double)tag_true*pars_tagging.dw_SS/2.)) {
     tag_SS = -1*tag_true;
@@ -127,14 +115,19 @@ void cptoymc::generator::generateTagAndEtaSS(TRandom& rndm, const cptoymc::confi
 }
 
 
-double cptoymc::generator::BCPV_PDF(double t, double d, double tau, double dGamma, double dm, double Sf, double Cf, double Df) {
+double BCPV_PDF(double t, double d, double tau, double dGamma, double dm, double Sf, double Cf, double Df) {
   return exp(-t/tau)*(cosh(dGamma*t/2.)+Df*sinh(dGamma*t/2.)+d*Cf*cos(dm*t)-d*Sf*sin(dm*t));
 }
 
-double cptoymc::generator::BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, double Df) {
+double BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, double Df) {
   return exp(-t*gamma_min)*(1.+std::abs(Df)+sqrt(Sf*Sf+Cf*Cf));
 }
 
 int yieldToGenerate(TRandom& rndm, double yield_exp) {
   return rndm.Poisson(yield_exp);
 }
+
+
+} // namespace cptoymc
+} // namespace generator
+

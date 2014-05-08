@@ -6,6 +6,7 @@ add_library( CPToyMC
   configuration/ToyConfig.h     configuration/ToyConfig.cpp
   generator/generator.h         generator/generator.cpp
   generator/ToyGenerator.h      generator/ToyGenerator.cpp
+  generator/Observables.h       generator/Observables.cpp
 )
 
 # Linker information
