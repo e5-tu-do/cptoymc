@@ -1,7 +1,11 @@
 #ifndef CPTOYMC_GENERATOR_H
 #define CPTOYMC_GENERATOR_H
 
+// STL
+#include <memory>
+
 class TRandom;
+class TTree;
 
 namespace cptoymc {
 
@@ -11,9 +15,22 @@ struct ParsTimeAndCP;
 struct ParsMassResol;
 struct ParsTimeResol;
 struct ParsTagging;
+class ToyConfig;
 } // namespace configuration
   
 namespace generator {
+
+class ToyGenerator {
+public:
+  ToyGenerator();
+  ToyGenerator(cptoymc::configuration::ToyConfig config);
+  ~ToyGenerator();
+
+  std::unique_ptr<TTree> GenerateToy();
+
+private:
+
+};
 
 struct Observables {
   double mass_true;
