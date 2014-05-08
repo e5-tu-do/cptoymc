@@ -9,10 +9,15 @@ class TTree;
 
 namespace cptoymc {
 namespace configuration {
+// forward declarations
 class ToyConfig;
+
 } // namespace configuration
   
 namespace generator {
+// forward declaration
+class Observables;
+
 
 class ToyGenerator {
 public:
@@ -23,7 +28,9 @@ public:
   std::unique_ptr<TTree> GenerateToy();
 
 private:
-
+  void GenerateBd(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables);
+  void GenerateBs(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables);
+  void GenerateBkg(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables);
 };
 
 

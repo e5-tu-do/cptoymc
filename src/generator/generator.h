@@ -26,8 +26,7 @@ namespace generator {
 class Observables;
 
 
-// Time and Tag
-
+// Signal
 void generateTrueMass(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true);
 void generateTrueTimeAndTag(TRandom& rndm, const cptoymc::configuration::ParsTimeAndCP& pars_time_CP, double& obs_time_true, int& obs_tag_true);
 
@@ -40,6 +39,10 @@ void generateTagAndEtaSS(TRandom& rndm, const cptoymc::configuration::ParsTaggin
 
 double BCPV_PDF(double t, double d, double tau, double dGamma, double dm, double Sf, double Cf, double Df);
 double BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, double Df);
+
+// Background
+void generateMassBkg(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true);
+// void generateTrueTimeAndTag
 
 int yieldToGenerate(TRandom& rndm, double yield_exp);
 

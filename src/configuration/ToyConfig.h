@@ -2,8 +2,11 @@
 #define CPTOYMC_CONFIGURATION_TOYCONFIG_H
 
 // STL
+#include <map>
 #include <string>
 
+// from project
+#include "configuration/CompConfig.h"
 
 namespace cptoymc {
 namespace configuration {
@@ -16,7 +19,7 @@ public:
   void load(const std::string& config_file);
 
 private:
-
+  std::map<std::string,CompConfig> comp_configs_;
 
 };
 

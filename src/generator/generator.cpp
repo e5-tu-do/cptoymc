@@ -14,6 +14,13 @@
 namespace cptoymc {
 namespace generator {
 
+
+void generateSig(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables) {
+  
+}
+
+
+
 void generateTrueMass(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true) {
   obs_mass_true = rndm.BreitWigner(pars_mass.mean, pars_mass.gamma);
 }
