@@ -1,5 +1,5 @@
-#ifndef CPTOYMC_GENERATOR_H
-#define CPTOYMC_GENERATOR_H
+#ifndef CPTOYMC_GENERATOR_GENERATOR_H
+#define CPTOYMC_GENERATOR_GENERATOR_H
 
 // STL
 #include <memory>
@@ -20,17 +20,6 @@ class ToyConfig;
   
 namespace generator {
 
-class ToyGenerator {
-public:
-  ToyGenerator();
-  ToyGenerator(cptoymc::configuration::ToyConfig config);
-  ~ToyGenerator();
-
-  std::unique_ptr<TTree> GenerateToy();
-
-private:
-
-};
 
 struct Observables {
   double mass_true;
@@ -45,16 +34,6 @@ struct Observables {
   double eta_SS;
   int    bkg_cat;
 };
-
-class ToyGenerator {
-public:
-
-private:
-  int Bd_yield_exp_;
-  int Bs_yield_exp_;
-  int Bkg_yield_exp_;
-};
-
   
 void resetObs(cptoymc::generator::Observables& obs);
 
@@ -76,4 +55,4 @@ int yieldToGenerate(TRandom& rndm, double yield_exp);
 } // namespace generator
 } // namespace cptoymc
 
-#endif // CPTOYMC_GENERATOR_H
+#endif // CPTOYMC_GENERATOR_GENERATOR_H

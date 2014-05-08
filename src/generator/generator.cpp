@@ -1,4 +1,4 @@
-#include "Generator.h"
+#include "generator/generator.h"
 
 // from STL
 #include <cmath>
@@ -8,7 +8,7 @@
 #include "TRandom.h"
 
 // from project
-#include "Configuration.h"
+#include "configuration/configuration.h"
 
 
 void cptoymc::generator::resetObs(cptoymc::generator::Observables& obs) {

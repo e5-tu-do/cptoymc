@@ -10,8 +10,9 @@
 #include "TRandom3.h"
 
 // from Project
-#include "Configuration.h"
-#include "Generator.h"
+#include "configuration/configuration.h"
+#include "configuration/ToyConfig.h"
+#include "generator/generator.h"
 
 
 

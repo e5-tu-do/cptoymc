@@ -1,5 +1,5 @@
-#ifndef CPTOYMC_CONFIGURATION_H
-#define CPTOYMC_CONFIGURATION_H
+#ifndef CPTOYMC_CONFIGURATION_CONFIGURATION_H
+#define CPTOYMC_CONFIGURATION_CONFIGURATION_H
 
 // from STL
 #include <string>
@@ -44,17 +44,7 @@ struct ParsTagging {
   double dw_SS;
 };
 
-class ToyConfig {
-public:
-  ToyConfig();
-  ~ToyConfig();
 
-  void load(const std::string& config_file);
-
-private:
-
-
-};
 
 class CompConfig {
 public:
@@ -75,4 +65,4 @@ private:
 } // namespace configuration
 } // namespace cptoymc
 
-#endif // CPTOYMC_CONFIGURATION_H
+#endif // CPTOYMC_CONFIGURATION_CONFIGURATION_H
