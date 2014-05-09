@@ -6,9 +6,26 @@
 ; This defines, which other property trees are read out.
 Components  
 {
-  Sig_Bd 10000 
-  Sig_Bs   100
-  Bkg    10000
+  Sig_Bd 
+  {    
+    name     "Sig_Bd"
+    comp_cat 1
+    yield    10000
+    Type "BSig_CPV_P2VP"
+  }
+  Sig_Bs 
+  { 
+    name     "Sig_Bs"
+    comp_cat 10
+    yield    0
+    Type "BSig_CPV_P2VP"
+  }
+  Bkg
+  {
+    name     "Bkg"
+    comp_cat 100
+    yield    0
+  }
 } 
 
 ; observable dimensions to be generated. Specifies their name in the TTree.
