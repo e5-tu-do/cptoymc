@@ -11,20 +11,59 @@ Components
     name     "Sig_Bd"
     comp_cat 1
     yield    10000
-    Type "BSig_CPV_P2VP"
+    Model "BSig_CPV_P2VP" 
+    {
+      Mass {
+        mean      5279.15
+        width        0.
+      }
+      MassResol {
+        bias  = 0.
+        sigma = 8.
+      }
+      TimeAndCP {
+        tau = 1.519     ; lifetime in ps
+        dGamma = 0.     ; 
+        dm     = 0.517  ; Deltam in hbar ps^{-1}
+        Sf     = 0.7    ; 2*Im(lambda_f)/1+|lambda_f|^2
+        Cf     = 0.0    ; 1-|lambda_f|/1+|lambda_f|^2
+        Df     = 0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
+        AP     = 0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
+      }
+      TimeResol {
+        bias  = 0.
+        sigma = 0.050 
+      }
+      Tagging {
+        eff_OS    = 0.3292
+        eff_SS    = 0.0635
+        eff_SSOS  = 0.0436
+        w_OS      = 0.25
+        w_SS      = 0.25
+        dw_OS     = 0.
+        dw_SS     = 0.
+      }
+    }
   }
   Sig_Bs 
   { 
     name     "Sig_Bs"
     comp_cat 10
     yield    0
-    Type "BSig_CPV_P2VP"
+    Model "BSig_CPV_P2VP" 
+    {
+
+    }
   }
   Bkg
   {
     name     "Bkg"
     comp_cat 100
     yield    0
+    Model "CombBkg_NoAsym" 
+    {
+
+    }
   }
 } 
 

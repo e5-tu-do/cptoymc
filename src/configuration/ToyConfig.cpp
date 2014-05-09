@@ -39,11 +39,11 @@ void ToyConfig::load(const std::string& config_file) {
     std::cout << "Tree is empty!" << std::endl;
   }
 
-  // get component_trees
+  // get component_trees and extract infos
   auto pt_comp = pt.get_child("Components");
   for (auto pt_comp_it: pt_comp) {
     comp_configs_.emplace(
-      pt_comp_it.second.get<std::string>("name"),
+      pt_comp_it.first,
       CompConfig(pt_comp_it.second.get<std::string>("name"),
                  pt_comp_it.second.get("comp_cat",-1000),
                  pt_comp_it.second.get("yield",0))
