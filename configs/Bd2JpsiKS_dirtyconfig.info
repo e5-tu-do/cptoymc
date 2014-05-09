@@ -52,12 +52,41 @@ Components
     yield    0
     Model "BSig_CPV_P2VP" 
     {
-
+      Mass {
+        mean      5366.77
+        width        0.
+      }
+      MassResol {
+        bias  = 0.
+        sigma = 8.
+      }
+      TimeAndCP {
+        tau    = 1.497    ; lifetime in ps
+        dGamma = 0.100    ; decay width in ps^{-1} 
+        dm     = 17.69    ; Deltam in ps^{-1}
+        Sf     = -0.2559  ; 2*Im(lambda_f)/1+|lambda_f|^2
+        Cf     = -0.0115  ; 1-|lambda_f|/1+|lambda_f|^2
+        Df     = 0.9666   ; 2*Re(lambda_f)/1+|lambda_f|^2
+        AP     = 0.       ; production asymmetry R_Bb - R_B / R_Bb + R_B
+      }
+      TimeResol {
+        bias  = 0.
+        sigma = 0.050 
+      }
+      Tagging {
+        eff_OS    = 0.3292
+        eff_SS    = 0.0635
+        eff_SSOS  = 0.0436
+        w_OS      = 0.25
+        w_SS      = 0.25
+        dw_OS     = 0.
+        dw_SS     = 0.
+      }
     }
   }
-  Bkg
+  CombBkg
   {
-    name     "Bkg"
+    name     "CombBkg"
     comp_cat 100
     yield    0
     Model "CombBkg_NoAsym" 
