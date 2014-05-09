@@ -8,8 +8,8 @@ Observables::Observables() :
   mass_true(-1000.),
   time_true(-1000.),
   tag_true(0),
-  mass(-1000.),
-  time(-1000.),
+  mass_meas(-1000.),
+  time_meas(-1000.),
   tag_class(-10000),
   tag_OS(0),
   eta_OS(0.5),
@@ -29,8 +29,8 @@ void Observables::reset() {
   mass_true = -1000.;
   time_true = -1000.;
   tag_true  = 0;
-  mass      = -1000.;
-  time      = -1000.;
+  mass_meas = -1000.;
+  time_meas = -1000.;
   tag_class = -10000;
   tag_OS    = 0;
   eta_OS    = 0.5;

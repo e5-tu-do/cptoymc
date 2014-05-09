@@ -37,7 +37,7 @@ void ToyConfig::load(const std::string& config_file) {
   comp_configs_.emplace("Sig_Bd",CompConfig("Sig_Bd",0,10000));
   comp_configs_.emplace("Sig_Bs",CompConfig("Sig_Bs",0,100));
   comp_configs_.emplace("Bkg",   CompConfig("Bkg",0,10000));
-
+  
   
 }
 

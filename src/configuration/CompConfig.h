@@ -9,16 +9,16 @@ namespace configuration {
 
 class CompConfig {
 public:
-  CompConfig(const std::string& name, int bkg_cat, int yield);
+  CompConfig(const std::string& name, int comp_cat, int yield);
   ~CompConfig();
 
   const std::string& name() { return name_; }
-  int bkg_cat() { return bkg_cat_; }
+  int comp_cat() { return comp_cat_; }
   int yield() { return yield_; }
-
+  
 private:
   const std::string name_;
-  const int bkg_cat_;
+  const int comp_cat_;
   const int yield_;
 
 };

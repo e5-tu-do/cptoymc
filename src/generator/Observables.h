@@ -14,8 +14,8 @@ public:
   double mass_true;
   double time_true;
   int    tag_true;
-  double mass;
-  double time;
+  double mass_meas;
+  double time_meas;
   int    tag_class; // -1: SS&&!OS, 0: !OS&&!SS, 1: OS&&!SS, 10: OS&&SS
   int    tag_OS;
   double eta_OS;

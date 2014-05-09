@@ -3,9 +3,9 @@
 namespace cptoymc {
 namespace configuration {
 
-CompConfig::CompConfig(const std::string& name, int bkg_cat, int yield) :
+CompConfig::CompConfig(const std::string& name, int comp_cat, int yield) :
   name_(name),
-  bkg_cat_(bkg_cat),
+  comp_cat_(comp_cat),
   yield_(yield)
 {
   

@@ -1,6 +1,7 @@
 // STL
 #include <cmath>
 #include <iostream>
+#include <memory>
 #include <vector>
 
 // ROOT
@@ -10,23 +11,30 @@
 #include "TRandom3.h"
 
 // from Project
-#include "configuration/configuration.h"
 #include "configuration/ToyConfig.h"
-#include "generator/generator.h"
+#include "generator/ToyGenerator.h"
 
 
 
 
 int main() {
-  using namespace cptoymc::configuration;
+  using cptoymc::configuration::ToyConfig;
+  using cptoymc::generator::ToyGenerator;
 
   ToyConfig config;
   config.load("../configs/Bd2JpsiKS_dirtyconfig.info");
 
+  TFile out_file("ToyMC.root","RECREATE");
+  TTree out_tree("ToyMCTree","A tree filled with ToyMC observables");
   
+  ToyGenerator generator(config);
+  generator.GenerateToy(out_tree);
+  
+  out_file.Write();
+  out_file.Close();
 
   // int num_events = 100000;
-
+  
   // using namespace cptoymc;
   
   // //============================================================================

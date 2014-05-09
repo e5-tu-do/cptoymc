@@ -3,6 +3,7 @@
 
 // STL
 #include <memory>
+#include <string>
 
 class TRandom;
 class TTree;
@@ -21,16 +22,18 @@ class Observables;
 
 class ToyGenerator {
 public:
-  ToyGenerator();
-  ToyGenerator(cptoymc::configuration::ToyConfig config);
+  ToyGenerator(const cptoymc::configuration::ToyConfig& config);
   ~ToyGenerator();
 
-  std::unique_ptr<TTree> GenerateToy();
+ void GenerateToy(TTree& out_tree);
 
 private:
+  ToyGenerator();
   void GenerateBd(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables);
   void GenerateBs(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables);
   void GenerateBkg(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables);
+  const configuration::ToyConfig& config_;
+  
 };
 
 
