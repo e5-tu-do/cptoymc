@@ -17,7 +17,7 @@ struct ParsTimeAndCP;
 struct ParsMassResol;
 struct ParsTimeResol;
 struct ParsTagging;
-class ToyConfig;
+class CompConfig;
 } // namespace configuration
 
 namespace generator {
@@ -26,7 +26,11 @@ namespace generator {
 class Observables;
 
 
-// Signal
+// general production types
+  void generate_BSig_CPV_P2VP(TRandom& rndm, const configuration::CompConfig& comp_config, Observables& obs);
+  
+  
+
 void generateTrueMass(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true);
 void generateTrueTimeAndTag(TRandom& rndm, const cptoymc::configuration::ParsTimeAndCP& pars_time_CP, double& obs_time_true, int& obs_tag_true);
 

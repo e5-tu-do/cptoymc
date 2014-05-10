@@ -15,7 +15,7 @@ namespace cptoymc {
 namespace generator {
 
 
-void generateSig(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables) {
+void generate_BSig_CPV_P2VP(TRandom& rndm, const configuration::CompConfig& comp_config, Observables& obs){
   
 }
 
