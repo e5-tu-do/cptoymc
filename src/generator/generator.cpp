@@ -18,14 +18,14 @@ namespace generator {
 
 
 
-void generateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, double& obs_mass_true) {
+void GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, double& obs_mass_true) {
   obs_mass_true = rndm.BreitWigner(par_mean, par_gamma);
 }
 
-void generateTrueTimeAndTag(TRandom& rndm, double par_prod_asym,
-                            double par_tau, double par_dGamma, double par_dm,
-                            double par_Sf, double par_Cf, double par_Df,
-                            double& obs_time_true, int& obs_tag_true) {
+void GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
+                      double par_tau, double par_dGamma, double par_dm,
+                      double par_Sf, double par_Cf, double par_Df,
+                      double& obs_time_true, int& obs_tag_true) {
   // helper quantities
   double prob_B = (1. - par_prod_asym)/2.;
   double gamma_min = 1./par_tau - std::abs(par_dGamma)/2.;
@@ -60,7 +60,8 @@ void generateTrueTimeAndTag(TRandom& rndm, double par_prod_asym,
   obs_time_true = val_t;
 }
 
-double BCPV_PDF(double t, double d, double tau, double dGamma, double dm, double Sf, double Cf, double Df) {
+double BCPV_PDF(double t, double d, double tau, double dGamma, double dm,
+                double Sf, double Cf, double Df) {
   return exp(-t/tau)*(cosh(dGamma*t/2.)+Df*sinh(dGamma*t/2.)+d*Cf*cos(dm*t)-d*Sf*sin(dm*t));
 }
   
@@ -84,8 +85,21 @@ void GenerateTag(TRandom& rndm, double par_omega, double par_domega, int obs_tag
     obs_tag_meas = obs_tag_true;
   }
 }
+
+void GenerateTag(TRandom& rndm,
+                 std::function<double(double)>& func_omega,
+                 std::function<double(double)>& func_domega,
+                 int obs_tag_true, double obs_eta, int& obs_tag_meas) {
+  GenerateTag(rndm, func_omega(obs_eta), func_domega(obs_eta), obs_tag_true, obs_tag_meas);
+}
   
-  
+void GenerateRandomTag(TRandom& rndm, int& obs_tag_meas) {
+  obs_tag_meas = (rndm.Uniform() < 0.5) ? +1 : -1;
+}
+
+
+
+
 //void generateTagAndEta(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_OS, double& eta_OS, int& tag_SS, double& eta_SS, int& tag_class) {
 //  
 //  double random_val = rndm.Uniform();
