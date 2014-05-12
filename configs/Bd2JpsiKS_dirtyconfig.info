@@ -11,7 +11,7 @@ Components
     name     "Sig_Bd"
     comp_cat 1
     yield    10000
-    Model "BSig_CPV_P2VP" 
+    model    "BSig_CPV_P2VP" 
     {
       Mass {
         mean      5279.15
@@ -50,7 +50,7 @@ Components
     name     "Sig_Bs"
     comp_cat 10
     yield    0
-    Model "BSig_CPV_P2VP" 
+    model    "BSig_CPV_P2VP" 
     {
       Mass {
         mean      5366.77
@@ -89,7 +89,7 @@ Components
     name     "CombBkg"
     comp_cat 100
     yield    0
-    Model "CombBkg_NoAsym" 
+    model    "CombBkg_NoAsym" 
     {
 
     }

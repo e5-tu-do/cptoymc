@@ -9,7 +9,7 @@ namespace configuration {
 
 class CompConfig {
 public:
-  CompConfig(const std::string& name, int comp_cat, int yield);
+  CompConfig(const std::string& name, int comp_cat, int yield, const std::string& model);
   ~CompConfig();
 
   const std::string& name() const { return name_; }

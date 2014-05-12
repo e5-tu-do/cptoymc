@@ -4,6 +4,7 @@
 // from STL
 #include <algorithm>
 #include <map>
+#include <memory>
 #include <string>
 
 
@@ -18,35 +19,35 @@ namespace generator {
 
 class CompGenerator;
   
-//// Factory stuff
-//template<typename T>
-//std::shared_ptr<CompGenerator> createGenerator(const configuration::CompConfig& comp_config ) {
-//  return std::make_shared<T>(new T(comp_config));
-//}
 
-template<typename T>
-CompGenerator* createInstance(const configuration::CompConfig& comp_config ) {
-  return new T(comp_config);
-}
-
-class GeneratorFactory {
+class CompGeneratorFactory {
 public:
-  GeneratorFactory();
-  ~GeneratorFactory();
+  CompGeneratorFactory();
+  ~CompGeneratorFactory();
+
+  static CompGeneratorFactory* Instance();
+  void RegisterGenerator(const std::string& model_name,
+                         std::function<CompGenerator*(void)> generator_factory_function);
   
-  CompGenerator CreateGenerator(const configuration::CompConfig& comp_config) const;
-  
+  std::shared_ptr<CompGenerator> CreateGenerator(const configuration::CompConfig& comp_config) const;
+
+
 private:
-  std::map<std::string,std::function<CompGenerator(const configuration::CompConfig&)>> map_generators;
+  std::map<std::string,std::function<CompGenerator*(void)>> generator_registry;
   
 };
 
+  
+template<class T>
+class CompGeneratorRegistrar {
+public:
+  CompGeneratorRegistrar(const std::string& model_name)
+  {
+    // register the class factory function
+    CompGeneratorFactory::Instance()->RegisterGenerator(model_name, [](void) -> CompGenerator* { return new T();});
+  }
+};
 
-
-
-//map_generators.emplace("BSig_CPV_P2VP",createGenerator<BSig_CPV_P2VP_Generator>);
-//
-//std::shared_ptr<CompGenerator> GetGenerator(const configuration::CompConfig& comp_config);
 
 } // namespace generator
 } // namespace cptoymc

@@ -8,8 +8,14 @@
 #include <memory>
 #include <string>
 
+// from project
+#include "generator/CompGeneratorFactory.h"
+
+
 class TRandom;
 class TTree;
+
+
 
 namespace cptoymc {
   
@@ -24,24 +30,25 @@ namespace generator {
 class Observables;
 
 // Generator classes
-
 class CompGenerator {
 public:
-  CompGenerator(const configuration::CompConfig& comp_config);
+  CompGenerator();
   virtual ~CompGenerator();
-  
-  virtual void generateEvent(TRandom& rndm, Observables& observables) = 0;
+
+  virtual void Configure(const configuration::CompConfig& comp_config) = 0;
+  virtual void GenerateEvent(TRandom& rndm, Observables& observables)  = 0;
   
 protected:
-  const configuration::CompConfig& comp_config_;
+
 };
 
 class BSig_CPV_P2VP_Generator : public CompGenerator {
  public:
-  BSig_CPV_P2VP_Generator(const configuration::CompConfig& comp_config);
+  BSig_CPV_P2VP_Generator();
   virtual ~BSig_CPV_P2VP_Generator();
   
-  virtual void generateEvent(TRandom& rndm, Observables& observables);
+  virtual void Configure(const configuration::CompConfig& comp_config);
+  virtual void GenerateEvent(TRandom& rndm, Observables& observables);
 
  private:
   struct ParamsMass {
@@ -89,12 +96,16 @@ class BSig_CPV_P2VP_Generator : public CompGenerator {
 
 class LLBkg_Generator : public CompGenerator {
 public:
-  LLBkg_Generator(const configuration::CompConfig& comp_config);
+  LLBkg_Generator();
   virtual ~LLBkg_Generator();
-  
-  virtual void generateEvent(TRandom& rndm, Observables& observables);
+
+  virtual void Configure(const configuration::CompConfig& comp_config);
+  virtual void GenerateEvent(TRandom& rndm, Observables& observables);
 };
 
+// register classes to Factory
+static CompGeneratorRegistrar<BSig_CPV_P2VP_Generator> registrar("BSig_CPV_P2VP");
+  
 } // namespace generator
 } // namespace cptoymc
 

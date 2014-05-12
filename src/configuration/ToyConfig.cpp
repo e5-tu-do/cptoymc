@@ -46,7 +46,8 @@ void ToyConfig::load(const std::string& config_file) {
       pt_comp_it.first,
       CompConfig(pt_comp_it.second.get<std::string>("name"),
                  pt_comp_it.second.get("comp_cat",-1000),
-                 pt_comp_it.second.get("yield",0))
+                 pt_comp_it.second.get("yield",0),
+                 pt_comp_it.second.get<std::string>("model","NoModel"))
     );
   }
 
