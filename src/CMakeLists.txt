@@ -8,6 +8,7 @@ add_library( CPToyMC
   generator/generator.h         generator/generator.cpp
   generator/ToyGenerator.h      generator/ToyGenerator.cpp
   generator/Observables.h       generator/Observables.cpp
+  generator/CompGenerator.h     generator/CompGenerator.cpp
 )
 
 # Linker information

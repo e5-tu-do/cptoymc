@@ -15,9 +15,6 @@ namespace cptoymc {
 namespace generator {
 
 
-void generate_BSig_CPV_P2VP(TRandom& rndm, const configuration::CompConfig& comp_config, Observables& obs){
-  
-}
 
 
 
