@@ -29,9 +29,6 @@ public:
 
 private:
   ToyGenerator();
-  void GenerateBd(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables);
-  void GenerateBs(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables);
-  void GenerateBkg(TRandom& rndm, const cptoymc::configuration::ToyConfig& config, Observables& observables);
   const configuration::ToyConfig& config_;
   
 };

@@ -12,14 +12,16 @@ public:
   CompConfig(const std::string& name, int comp_cat, int yield);
   ~CompConfig();
 
-  const std::string& name() { return name_; }
-  int comp_cat() { return comp_cat_; }
-  int yield() { return yield_; }
+  const std::string& name() const { return name_; }
+  int comp_cat() const { return comp_cat_; }
+  int yield() const { return yield_; }
+  const std::string& model() const { return model_; }
   
 private:
   const std::string name_;
   const int comp_cat_;
   const int yield_;
+  std::string model_;
 
 };
 
