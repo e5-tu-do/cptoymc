@@ -39,11 +39,14 @@ protected:
 };
 
 class BSig_CPV_P2VP_Generator : public CompGenerator {
-public:
+ public:
   BSig_CPV_P2VP_Generator(const configuration::CompConfig& comp_config);
   virtual ~BSig_CPV_P2VP_Generator();
   
   virtual void generateEvent(TRandom& rndm, Observables& observables);
+
+ private:
+  
 };
 
 class LLBkg_Generator : public CompGenerator {

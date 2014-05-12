@@ -27,21 +27,27 @@ class Observables;
 
 // generate functions
 
-void generateTrueMass(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true);
-void generateTrueTimeAndTag(TRandom& rndm, const cptoymc::configuration::ParsTimeAndCP& pars_time_CP, double& obs_time_true, int& obs_tag_true);
+// True value generators and helper functions
 
-void generateMass(TRandom& rndm, const cptoymc::configuration::ParsMassResol& pars_mass_resol, const double obs_mass_true, double& obs_mass);
-void generateTime(TRandom& rndm, const cptoymc::configuration::ParsTimeResol& pars_time_resol, const double obs_time_true, double& obs_time);
-void generateTagAndEta(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_OS, double& eta_OS, int& tag_SS, double& eta_SS, int& tag_class);
+void GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, double& obs_mass_true);
 
-void generateTagAndEtaOS(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_OS, double& eta_OS);
-void generateTagAndEtaSS(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_SS, double& eta_SS);
+void GenerateCPV_P2PV(TRandom& rndm, const cptoymc::configuration::ParsTimeAndCP& pars_time_CP, double& obs_time_true, int& obs_tag_true);
 
 double BCPV_PDF(double t, double d, double tau, double dGamma, double dm, double Sf, double Cf, double Df);
 double BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, double Df);
 
+  
+// Resolution generators
+void ResolutionSingleGauss(TRandom& rndm, double par_bias, double par_sigma, double mass_true, double& mass_meas);
+  
+// Tagging generators
+
+void GenerateEtaFlat(TRandom& rndm, double& obs_eta);
+
+void GenerateTag(TRandom& rndm, double par_omega, double par_domega, int obs_tag_true, int& obs_tag_meas);
+
 // Background
-void generateMassBkg(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true);
+void GenerateMassBkg(TRandom& rndm, const cptoymc::configuration::ParsMass& pars_mass, double& obs_mass_true);
 // void generateTrueTimeAndTag
 
 int yieldToGenerate(TRandom& rndm, double yield_exp);
