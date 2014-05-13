@@ -85,7 +85,7 @@ class BSig_CPV_P2VP_Generator : public CompGenerator {
   struct ParamsTagging {
     double p1;
     double p0;
-    double eta;
+    double etabar;
     double dp1;
     double dp0;
   } params_taggingOS_, params_taggingSS_;
