@@ -34,7 +34,7 @@ BSig_CPV_P2VP_Generator::BSig_CPV_P2VP_Generator() :
   params_taggingSS_{1.0,0.25,0.25,0.0,0.0},
   comp_cat_(-1000),
   tag_calib_func_omegaOS_(
-                          [&](double eta) -> double { std::cout << "p1 " << params_taggingOS_.p1 << std::endl;return params_taggingOS_.p1*(eta-params_taggingOS_.etabar)+params_taggingOS_.p0; }
+    [&](double eta) -> double { return params_taggingOS_.p1*(eta-params_taggingOS_.etabar)+params_taggingOS_.p0; }
   ),
   tag_calib_func_domegaOS_(
     [&](double eta) -> double { return params_taggingOS_.dp1*(eta-params_taggingOS_.etabar)+params_taggingOS_.dp0; } ),
