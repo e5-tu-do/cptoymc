@@ -15,7 +15,7 @@ Observables::Observables() :
   eta_OS(0.5),
   tag_SS(0),
   eta_SS(0.5),
-  bkg_cat(-1000) 
+  comp_cat(-1000)
 {
 
 }
@@ -36,7 +36,7 @@ void Observables::reset() {
   eta_OS    = 0.5;
   tag_SS    = 0;
   eta_SS    = 0.5;
-  bkg_cat   = -1000;
+  comp_cat  = -1000;
 }
 
 } // namespace generator

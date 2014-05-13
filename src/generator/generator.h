@@ -40,8 +40,8 @@ double BCPV_PDF_Envelope(double t, double gamma_min,
                          double Sf, double Cf, double Df);
   
 // Resolution generators
-void ResolutionSingleGauss(TRandom& rndm, double par_bias, double par_sigma,
-                           double mass_true, double& mass_meas);
+void GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma,
+                           double obs_true, double& obs_meas);
   
 // Tagging generators
 

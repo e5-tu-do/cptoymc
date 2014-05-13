@@ -11,13 +11,9 @@ namespace cptoymc {
 namespace generator {
 
 
-CompGeneratorFactory::CompGeneratorFactory() {
-  //map_generators.emplace("BSig_CPV_P2VP",&createInstance<BSig_CPV_P2VP_Generator>);
-}
+CompGeneratorFactory::CompGeneratorFactory() { }
 
-CompGeneratorFactory::~CompGeneratorFactory() {
-  
-}
+CompGeneratorFactory::~CompGeneratorFactory() { }
 
 CompGeneratorFactory* CompGeneratorFactory::Instance() {
   static CompGeneratorFactory generator_factory;

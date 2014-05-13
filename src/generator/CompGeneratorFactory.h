@@ -22,7 +22,6 @@ class CompGenerator;
 
 class CompGeneratorFactory {
 public:
-  CompGeneratorFactory();
   ~CompGeneratorFactory();
 
   static CompGeneratorFactory* Instance();
@@ -33,6 +32,7 @@ public:
 
 
 private:
+  CompGeneratorFactory();
   std::map<std::string,std::function<CompGenerator*(void)>> generator_registry;
   
 };

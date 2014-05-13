@@ -69,7 +69,7 @@ double BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, doubl
   return exp(-t*gamma_min)*(1.+std::abs(Df)+sqrt(Sf*Sf+Cf*Cf));
 }
 
-void ResolutionSingleGauss(TRandom& rndm, double par_bias, double par_sigma, double obs_true, double& obs_meas) {
+void GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, double obs_true, double& obs_meas) {
   obs_meas = obs_true;
   obs_meas += rndm.Gaus(par_bias, par_sigma);
 }
@@ -97,38 +97,6 @@ void GenerateRandomTag(TRandom& rndm, int& obs_tag_meas) {
   obs_tag_meas = (rndm.Uniform() < 0.5) ? +1 : -1;
 }
 
-
-
-
-//void generateTagAndEta(TRandom& rndm, const cptoymc::configuration::ParsTagging& pars_tagging, const int tag_true, int& tag_OS, double& eta_OS, int& tag_SS, double& eta_SS, int& tag_class) {
-//  
-//  double random_val = rndm.Uniform();
-//  
-//  if (random_val < pars_tagging.eff_OS) {
-//    generateTagAndEtaOS(rndm, pars_tagging, tag_true, tag_OS, eta_OS);
-//    tag_SS = 1;
-//    eta_SS = 0.5;
-//    tag_class = 1;
-//  }
-//  else if (random_val < (pars_tagging.eff_OS + pars_tagging.eff_SS)) {
-//    generateTagAndEtaSS(rndm, pars_tagging, tag_true, tag_SS, eta_SS);
-//    tag_OS = 1;
-//    eta_OS = 0.5;
-//    tag_class = -1;
-//  }
-//  else if (random_val < (pars_tagging.eff_OS + pars_tagging.eff_SS + pars_tagging.eff_SSOS)) {
-//    generateTagAndEtaOS(rndm, pars_tagging, tag_true, tag_OS, eta_OS);
-//    generateTagAndEtaSS(rndm, pars_tagging, tag_true, tag_SS, eta_SS);
-//    tag_class = 10;
-//  }
-//  else {
-//    tag_SS = 1;
-//    eta_SS = 0.5;
-//    tag_OS = 1;
-//    eta_OS = 0.5;
-//    tag_class = 0;
-//  }
-//}
 
 
 

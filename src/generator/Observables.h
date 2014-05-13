@@ -21,8 +21,7 @@ public:
   double eta_OS;
   int    tag_SS;
   double eta_SS;
-  int    bkg_cat;
-
+  int    comp_cat;
 
 };
 

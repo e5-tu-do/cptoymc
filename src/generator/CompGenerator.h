@@ -68,7 +68,7 @@ class BSig_CPV_P2VP_Generator : public CompGenerator {
     double Sf;
     double Cf;
     double Df;
-    double AP;
+    double prod_asym;
   } params_timeandcp_;
   
   struct ParamsTimeResol {
@@ -90,6 +90,13 @@ class BSig_CPV_P2VP_Generator : public CompGenerator {
     double dp0;
   } params_taggingOS_, params_taggingSS_;
   
+  int comp_cat_;
+  
+  std::function<double(double)> tag_calib_func_omegaOS_;
+  std::function<double(double)> tag_calib_func_domegaOS_;
+  std::function<double(double)> tag_calib_func_omegaSS_;
+  std::function<double(double)> tag_calib_func_domegaSS_;
+
 };
   
   
