@@ -22,13 +22,13 @@ Components
         sigma = 8.
       }
       TimeAndCP {
-        tau = 1.519     ; lifetime in ps
-        dGamma = 0.     ; 
-        dm     = 0.517  ; Deltam in hbar ps^{-1}
-        Sf     = 0.7    ; 2*Im(lambda_f)/1+|lambda_f|^2
-        Cf     = 0.0    ; 1-|lambda_f|/1+|lambda_f|^2
-        Df     = 0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
-        AP     = 0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
+        tau       = 1.519     ; lifetime in ps
+        dGamma    = 0.     ; 
+        dm        = 0.517  ; Deltam in hbar ps^{-1}
+        Sf        = 0.7    ; 2*Im(lambda_f)/1+|lambda_f|^2
+        Cf        = 0.0    ; 1-|lambda_f|/1+|lambda_f|^2
+        Df        = 0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
+        prod_asym = 0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
       }
       TimeResol {
         bias  = 0.
@@ -38,10 +38,16 @@ Components
         eff_OS    = 0.3292
         eff_SS    = 0.0635
         eff_SSOS  = 0.0436
-        w_OS      = 0.25
-        w_SS      = 0.25
-        dw_OS     = 0.
-        dw_SS     = 0.
+        p1_OS     = 1.
+        p0_OS     = 0.25
+        etabar_OS = 0.25
+        dp1_OS    = 0.
+        dp0_OS    = 0.
+        p1_SS     = 1.
+        p0_SS     = 0.25
+        etabar_SS = 0.25
+        dp1_SS    = 0.
+        dp0_SS    = 0.
       }
     }
   }
@@ -49,7 +55,7 @@ Components
   { 
     name     "Sig_Bs"
     comp_cat 10
-    yield    0
+    yield    100
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -77,10 +83,16 @@ Components
         eff_OS    = 0.3292
         eff_SS    = 0.0635
         eff_SSOS  = 0.0436
-        w_OS      = 0.25
-        w_SS      = 0.25
-        dw_OS     = 0.
-        dw_SS     = 0.
+        p1_OS     = 1.
+        p0_OS     = 0.25
+        etabar_OS = 0.25
+        dp1_OS    = 0.
+        dp0_OS    = 0.
+        p1_SS     = 1.
+        p0_SS     = 0.25
+        etabar_SS = 0.25
+        dp1_SS    = 0.
+        dp0_SS    = 0.
       }
     }
   }

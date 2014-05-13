@@ -51,7 +51,47 @@ BSig_CPV_P2VP_Generator::~BSig_CPV_P2VP_Generator() {
 }
 
 void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_config) {
-
+  auto config_ptree = comp_config.model_ptree();
+  // Mass
+  auto sub_config_ptree = config_ptree.get_child("Mass");
+  params_mass_.mean  = sub_config_ptree.get("mean", params_mass_.mean);
+  params_mass_.width = sub_config_ptree.get("width",params_mass_.width);
+  
+  sub_config_ptree = config_ptree.get_child("MassResol");
+  params_massresol_.bias  = sub_config_ptree.get("bias",params_massresol_.bias);
+  params_massresol_.sigma = sub_config_ptree.get("sigma",params_massresol_.sigma);
+  
+  // TimeAndCP
+  sub_config_ptree = config_ptree.get_child("TimeAndCP");
+  params_timeandcp_.tau       = sub_config_ptree.get("tau",       params_timeandcp_.tau);
+  params_timeandcp_.dGamma    = sub_config_ptree.get("dGamma",    params_timeandcp_.dGamma);
+  params_timeandcp_.dm        = sub_config_ptree.get("dm",        params_timeandcp_.dm);
+  params_timeandcp_.Sf        = sub_config_ptree.get("Sf",        params_timeandcp_.Sf);
+  params_timeandcp_.Cf        = sub_config_ptree.get("Cf",        params_timeandcp_.Cf);
+  params_timeandcp_.Df        = sub_config_ptree.get("Df",        params_timeandcp_.Df);
+  params_timeandcp_.prod_asym = sub_config_ptree.get("prod_asym", params_timeandcp_.prod_asym);
+  
+  sub_config_ptree = config_ptree.get_child("TimeResol");
+  params_timeresol_.bias  = sub_config_ptree.get("bias" , params_timeresol_.bias  );
+  params_timeresol_.sigma = sub_config_ptree.get("sigma", params_timeresol_.sigma );
+  
+  // Tagging
+  sub_config_ptree = config_ptree.get_child("Tagging");
+  params_taggingeffs_.eff_OS    = sub_config_ptree.get("eff_OS"   ,params_taggingeffs_.eff_OS   );
+  params_taggingeffs_.eff_SS    = sub_config_ptree.get("eff_SS"   ,params_taggingeffs_.eff_SS   );
+  params_taggingeffs_.eff_SSOS  = sub_config_ptree.get("eff_SSOS" ,params_taggingeffs_.eff_SSOS );
+  
+  params_taggingOS_.p1      = sub_config_ptree.get("p1_OS"    , params_taggingOS_.p1    );
+  params_taggingOS_.p0      = sub_config_ptree.get("p0_OS"    , params_taggingOS_.p0    );
+  params_taggingOS_.etabar  = sub_config_ptree.get("etabar_OS", params_taggingOS_.etabar);
+  params_taggingOS_.dp1     = sub_config_ptree.get("dp1_OS"   , params_taggingOS_.dp1   );
+  params_taggingOS_.dp0     = sub_config_ptree.get("dp0_OS"   , params_taggingOS_.dp0   );
+  
+  params_taggingSS_.p1      = sub_config_ptree.get("p1_SS"    , params_taggingSS_.p1    );
+  params_taggingSS_.p0      = sub_config_ptree.get("p0_SS"    , params_taggingSS_.p0    );
+  params_taggingSS_.etabar  = sub_config_ptree.get("etabar_SS", params_taggingSS_.etabar);
+  params_taggingSS_.dp1     = sub_config_ptree.get("dp1_SS"   , params_taggingSS_.dp1   );
+  params_taggingSS_.dp0     = sub_config_ptree.get("dp0_SS"   , params_taggingSS_.dp0   );
 }
 
 void BSig_CPV_P2VP_Generator::GenerateEvent(TRandom& rndm, Observables& observables) {
