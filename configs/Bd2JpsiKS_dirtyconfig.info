@@ -96,12 +96,12 @@ Components
       }
     }
   }
-  CombBkg
+  Bkg
   {
-    name     "CombBkg"
+    name     "Bkg"
     comp_cat 100
     yield    0
-    model    "CombBkg_NoAsym" 
+    model    "LLBkg" 
     {
 
     }

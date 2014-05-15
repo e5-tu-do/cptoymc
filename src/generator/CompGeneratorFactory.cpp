@@ -1,17 +1,23 @@
 #include "generator/CompGeneratorFactory.h"
 
 // from STL
-#include <iostream>
 
 // from project
-#include "generator/CompGenerator.h"
 #include "configuration/CompConfig.h"
+
+// from project - component generators
+#include "generator/CompGenerator.h"
+#include "generator/BSig_CPV_P2VP_Generator.h"
+#include "generator/LLBkg_Generator.h"
 
 namespace cptoymc {
 namespace generator {
 
 
-CompGeneratorFactory::CompGeneratorFactory() { }
+CompGeneratorFactory::CompGeneratorFactory() {
+  RegisterGenerator<BSig_CPV_P2VP_Generator>("BSig_CPV_P2VP");
+  RegisterGenerator<LLBkg_Generator>("LLBkg");
+}
 
 CompGeneratorFactory::~CompGeneratorFactory() { }
 
@@ -24,7 +30,7 @@ void CompGeneratorFactory::RegisterGenerator(const std::string& model_name,
                                          std::function<CompGenerator*(void)> generator_factory_function) {
   generator_registry.emplace(model_name,generator_factory_function);
 }
-
+  
 std::shared_ptr<CompGenerator> CompGeneratorFactory::CreateGenerator(const configuration::CompConfig& comp_config) const {
   CompGenerator* generator_instance = nullptr;
 

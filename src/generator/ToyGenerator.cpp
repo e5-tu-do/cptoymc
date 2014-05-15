@@ -8,8 +8,12 @@
 #include "configuration/CompConfig.h"
 #include "generator/generator.h"
 #include "generator/Observables.h"
+
+// from project - component generators
 #include "generator/CompGenerator.h"
 #include "generator/CompGeneratorFactory.h"
+#include "generator/BSig_CPV_P2VP_Generator.h"
+
 
 // from ROOT
 #include "TRandom3.h"
@@ -32,7 +36,8 @@ ToyGenerator::~ToyGenerator() {
 
 void ToyGenerator::GenerateToy(TTree& out_tree) {
   using configuration::CompConfig;
-  
+  //CompGeneratorRegistrar<BSig_CPV_P2VP_Generator> registrar("BSig_CPV_P2VP");
+
   TRandom3 rndm;
   
   std::string tree_name = "ToyMC";

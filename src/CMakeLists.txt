@@ -10,7 +10,9 @@ add_library( CPToyMC
   generator/Observables.h       	generator/Observables.cpp
   generator/CompGenerator.h     	generator/CompGenerator.cpp
   generator/CompGeneratorFactory.h 	generator/CompGeneratorFactory.cpp
-)
+  generator/BSig_CPV_P2VP_Generator.h   generator/BSig_CPV_P2VP_Generator.cpp
+  generator/LLBkg_Generator.h           generator/LLBkg_Generator.cpp
+ )
 
 # Linker information
 

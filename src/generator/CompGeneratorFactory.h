@@ -6,7 +6,7 @@
 #include <map>
 #include <memory>
 #include <string>
-
+#include <iostream>
 
 namespace cptoymc {
   
@@ -35,19 +35,14 @@ private:
   CompGeneratorFactory();
   std::map<std::string,std::function<CompGenerator*(void)>> generator_registry;
   
+  template<class T>
+  void RegisterGenerator(const std::string& model_name) {
+    RegisterGenerator(model_name, [](void) -> CompGenerator* { return new T();});
+  }
+  
 };
 
   
-template<class T>
-class CompGeneratorRegistrar {
-public:
-  CompGeneratorRegistrar(const std::string& model_name)
-  {
-    // register the class factory function
-    CompGeneratorFactory::Instance()->RegisterGenerator(model_name, [](void) -> CompGenerator* { return new T();});
-  }
-};
-
 
 } // namespace generator
 } // namespace cptoymc
