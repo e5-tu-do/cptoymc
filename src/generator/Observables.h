@@ -77,7 +77,7 @@ private:
 class Observables {
 public:
   Observables();
-  ~Observables();
+  ~Observables() {};
 
   void reset();
 
