@@ -18,7 +18,9 @@
 namespace cptoymc {
 namespace generator {
 
-CompGenerator::CompGenerator() { }
+  CompGenerator::CompGenerator() :
+    max_tries_(10000)
+  { }
 
 
 CompGenerator::~CompGenerator() { }

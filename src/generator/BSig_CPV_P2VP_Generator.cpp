@@ -88,59 +88,63 @@ void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_co
 void BSig_CPV_P2VP_Generator::GenerateEvent(TRandom& rndm, Observables& observables) {
   observables.comp_cat.set_value(comp_cat_);
   
-  GenerateMassBreitWigner(rndm, params_mass_.mean, params_mass_.width, observables.mass_true);
-  
-  GenerateResolSingleGauss(rndm, params_massresol_.bias, params_massresol_.sigma, observables.mass_true, observables.mass_meas);
-  
-  GenerateCPV_P2PV(rndm, params_timeandcp_.prod_asym, params_timeandcp_.tau,
-                   params_timeandcp_.dGamma, params_timeandcp_.dm,
-                   params_timeandcp_.Sf, params_timeandcp_.Cf, params_timeandcp_.Df,
-                   observables.time_true, observables.tag_true);
-  
-  GenerateResolSingleGauss(rndm, params_timeresol_.bias, params_timeresol_.sigma,
-                           observables.time_true, observables.time_meas);
+  GenerateMass(rndm, observables.mass_true, observables.mass_meas);
   
   
-  
-  
-  double random_val = rndm.Uniform();
-  
-  if (random_val < params_taggingeffs_.eff_OS) {
-    GenerateEtaFlat(rndm, observables.eta_OS);
-    GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
-                observables.tag_true, observables.eta_OS, observables.tag_OS);
-    observables.tag_SS = 1;
-    observables.eta_SS = 0.5;
-    observables.tag_class = 1;
-  }
-  else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) {
-    GenerateEtaFlat(rndm, observables.eta_SS);
-    GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
-                observables.tag_true, observables.eta_SS, observables.tag_SS);
-    observables.tag_OS = 1;
-    observables.eta_OS = 0.5;
-    observables.tag_class = -1;
-  }
-  else if (random_val < (   params_taggingeffs_.eff_OS
-                         + params_taggingeffs_.eff_SS
-                         + params_taggingeffs_.eff_SSOS) ) {
-    GenerateEtaFlat(rndm, observables.eta_OS);
-    GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
-                observables.tag_true, observables.eta_OS, observables.tag_OS);
-    GenerateEtaFlat(rndm, observables.eta_SS);
-    GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
-                observables.tag_true, observables.eta_SS, observables.tag_SS);
-    observables.tag_class = 10;
-  }
-  else {
-    observables.tag_SS = 1;
-    observables.eta_SS = 0.5;
-    observables.tag_OS = 1;
-    observables.eta_OS = 0.5;
-    observables.tag_class = 0;
-  }
+//  GenerateCPV_P2PV(rndm, params_timeandcp_.prod_asym, params_timeandcp_.tau,
+//                   params_timeandcp_.dGamma, params_timeandcp_.dm,
+//                   params_timeandcp_.Sf, params_timeandcp_.Cf, params_timeandcp_.Df,
+//                   observables.time_true, observables.tag_true);
+//  
+//  GenerateResolSingleGauss(rndm, params_timeresol_.bias, params_timeresol_.sigma,
+//                           observables.time_true, observables.time_meas);
+//  
+//  
+//  double random_val = rndm.Uniform();
+//  
+//  if (random_val < params_taggingeffs_.eff_OS) {
+//    GenerateEtaFlat(rndm, observables.eta_OS);
+//    GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
+//                observables.tag_true, observables.eta_OS, observables.tag_OS);
+//    observables.tag_SS = 1;
+//    observables.eta_SS = 0.5;
+//    observables.tag_class = 1;
+//  }
+//  else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) {
+//    GenerateEtaFlat(rndm, observables.eta_SS);
+//    GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
+//                observables.tag_true, observables.eta_SS, observables.tag_SS);
+//    observables.tag_OS = 1;
+//    observables.eta_OS = 0.5;
+//    observables.tag_class = -1;
+//  }
+//  else if (random_val < (   params_taggingeffs_.eff_OS
+//                         + params_taggingeffs_.eff_SS
+//                         + params_taggingeffs_.eff_SSOS) ) {
+//    GenerateEtaFlat(rndm, observables.eta_OS);
+//    GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
+//                observables.tag_true, observables.eta_OS, observables.tag_OS);
+//    GenerateEtaFlat(rndm, observables.eta_SS);
+//    GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
+//                observables.tag_true, observables.eta_SS, observables.tag_SS);
+//    observables.tag_class = 10;
+//  }
+//  else {
+//    observables.tag_SS = 1;
+//    observables.eta_SS = 0.5;
+//    observables.tag_OS = 1;
+//    observables.eta_OS = 0.5;
+//    observables.tag_class = 0;
+//  }
   
 }
 
+void BSig_CPV_P2VP_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas) {
+  GenerateMassBreitWigner(rndm, params_mass_.mean, params_mass_.width, obs_mass_true.value_);
+  
+  GenerateResolSingleGauss(rndm, params_massresol_.bias, params_massresol_.sigma, obs_mass_true.value(), obs_mass_meas.value_);
+
+}
+  
 } // namespace generator
 } // namespace cptoymc
