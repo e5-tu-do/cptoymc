@@ -27,13 +27,13 @@ public:
   ObservableReal(const std::string& dim_name, const std::string& var_name, const std::string& var_title, double value, double min_value, double max_value);
   virtual ~ObservableReal() { };
   
+  void set_value(double value) { value_ = value; }
+  double value() const { return value_; }
+  
   void set_range(double min_value, double max_value) {
     min_value_ = min_value;
     max_value_ = max_value;
   }
-  
-  void set_value(double value) { value_ = value; }
-  double value() const { return value_; }
   
   virtual bool HasValidValue() {
     return IsValidValue(value_);
@@ -42,9 +42,9 @@ public:
   bool IsValidValue(double value) {
     return (value < max_value_) && (value >= min_value_);
   }
-  
-private:
   double value_;
+ 
+private:
   double min_value_;
   double max_value_;
 };
@@ -54,14 +54,18 @@ public:
   ObservableInt(const std::string& dim_name, const std::string& var_name, const std::string& var_title, int value, const std::set<int>& valid_values);
   virtual ~ObservableInt() { };
   
+  void set_value(int value) { value_ = value; }
+  void set_valid_values(const std::set<int> valid_values) {valid_values_ = valid_values;}
+  
   virtual bool HasValidValue() {return IsValidValue(value_);}
   
   bool IsValidValue(int value) {
     return (valid_values_.find(value) != valid_values_.end());
   }
+
+  int value_;
   
 private:
-  int value_;
   std::set<int> valid_values_;
 };
   
@@ -72,17 +76,17 @@ public:
 
   void reset();
 
-  double mass_true;
-  double time_true;
-  int    tag_true;
-  double mass_meas;
-  double time_meas;
-  int    tag_class; // -1: SS&&!OS, 0: !OS&&!SS, 1: OS&&!SS, 10: OS&&SS
-  int    tag_OS;
-  double eta_OS;
-  int    tag_SS;
-  double eta_SS;
-  int    comp_cat;
+  ObservableReal mass_true;
+  ObservableReal time_true;
+  ObservableInt  tag_true;
+  ObservableReal mass_meas;
+  ObservableReal time_meas;
+  ObservableInt  tag_class; // -1: SS&&!OS, 0: !OS&&!SS, 1: OS&&!SS, 10: OS&&SS
+  ObservableInt  tag_OS;
+  ObservableReal eta_OS;
+  ObservableInt  tag_SS;
+  ObservableReal eta_SS;
+  ObservableInt  comp_cat;
 
 };
 

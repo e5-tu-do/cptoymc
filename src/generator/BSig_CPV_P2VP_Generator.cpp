@@ -86,7 +86,7 @@ void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_co
 }
 
 void BSig_CPV_P2VP_Generator::GenerateEvent(TRandom& rndm, Observables& observables) {
-  observables.comp_cat = comp_cat_;
+  observables.comp_cat.set_value(comp_cat_);
   
   GenerateMassBreitWigner(rndm, params_mass_.mean, params_mass_.width, observables.mass_true);
   

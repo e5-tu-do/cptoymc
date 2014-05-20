@@ -47,16 +47,16 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
   Observables obs;
   
   // Prepare Tree
-  out_tree.Branch("obsMassTrue"       , &(obs.mass_true)  , "obsMassTrue/D"       );
-  out_tree.Branch("obsTimeTrue"       , &(obs.time_true)  , "obsTimeTrue/D"       );
-  out_tree.Branch("obsTagTrue"        , &(obs.tag_true)   , "obsTagTrue/I"        );
-  out_tree.Branch("obsMass"           , &(obs.mass_meas)  , "obsMass/D"           );
-  out_tree.Branch("obsTime"           , &(obs.time_meas)  , "obsTime/D"           );
-  out_tree.Branch("catTaggedOSSSPion" , &(obs.tag_class)  , "catTaggedOSSSPion/I" );
-  out_tree.Branch("obsTagOS"          , &(obs.tag_OS)     , "obsTagOS/I"          );
-  out_tree.Branch("obsEtaOS"          , &(obs.eta_OS)     , "obsEtaOS/D"          );
-  out_tree.Branch("obsTagSSPion"      , &(obs.tag_SS)     , "obsTagSSPion/I"      );
-  out_tree.Branch("obsEtaSSPion"      , &(obs.eta_SS)     , "obsEtaSSPion/D"      );
+  out_tree.Branch("obsMassTrue"       , &(obs.mass_true.value_)  , "obsMassTrue/D"       );
+  out_tree.Branch("obsTimeTrue"       , &(obs.time_true.value_)  , "obsTimeTrue/D"       );
+  out_tree.Branch("obsTagTrue"        , &(obs.tag_true.value_)   , "obsTagTrue/I"        );
+  out_tree.Branch("obsMass"           , &(obs.mass_meas.value_)  , "obsMass/D"           );
+  out_tree.Branch("obsTime"           , &(obs.time_meas.value_)  , "obsTime/D"           );
+  out_tree.Branch("catTaggedOSSSPion" , &(obs.tag_class.value_)  , "catTaggedOSSSPion/I" );
+  out_tree.Branch("obsTagOS"          , &(obs.tag_OS.value_)     , "obsTagOS/I"          );
+  out_tree.Branch("obsEtaOS"          , &(obs.eta_OS.value_)     , "obsEtaOS/D"          );
+  out_tree.Branch("obsTagSSPion"      , &(obs.tag_SS.value_)     , "obsTagSSPion/I"      );
+  out_tree.Branch("obsEtaSSPion"      , &(obs.eta_SS.value_)     , "obsEtaSSPion/D"      );
   
   
   // loop over components, get their yield
