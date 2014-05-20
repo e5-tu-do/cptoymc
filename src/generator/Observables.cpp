@@ -39,9 +39,6 @@ Observables::Observables() :
 
 }
 
-Observables::~Observables() {
-  
-}
 
 
 void Observables::reset() {

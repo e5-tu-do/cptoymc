@@ -16,6 +16,10 @@ public:
   
   virtual bool HasValidValue() = 0;
 
+  const std::string& dim_name() const {return dim_name_;}
+  const std::string& var_name() const {return var_name_;}
+  const std::string& var_title() const {return var_title_;}
+  
 protected:
   std::string dim_name_;
   std::string var_name_;
@@ -55,6 +59,7 @@ public:
   virtual ~ObservableInt() { };
   
   void set_value(int value) { value_ = value; }
+  int value() const { return value_; }
   void set_valid_values(const std::set<int> valid_values) {valid_values_ = valid_values;}
   
   virtual bool HasValidValue() {return IsValidValue(value_);}

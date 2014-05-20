@@ -19,7 +19,7 @@ namespace cptoymc {
 namespace generator {
 
   CompGenerator::CompGenerator() :
-    max_tries_(10000)
+    max_trials_(10000)
   { }
 
 

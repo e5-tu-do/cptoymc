@@ -28,6 +28,11 @@ public:
   
 private:
   void GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas);
+  void GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas);
+  void GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_tag_true,
+                         ObservableInt& obs_tag_OS, ObservableReal& obs_eta_OS,
+                         ObservableInt& obs_tag_SS, ObservableReal& obs_eta_SS,
+                         ObservableInt& obs_tag_class);
   
   struct ParamsMass {
     double mean;
