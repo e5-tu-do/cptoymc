@@ -45,14 +45,15 @@ Observables::Observables() :
 {
   observables_real_.emplace(mass_true.dim_name() , &mass_true );
   observables_real_.emplace(time_true.dim_name() , &time_true );
-  observables_int_.emplace(tag_true.dim_name()  , &tag_true  );
   observables_real_.emplace(mass_meas.dim_name() , &mass_meas );
   observables_real_.emplace(time_meas.dim_name() , &time_meas );
+  observables_real_.emplace(eta_OS.dim_name()    , &eta_OS    );
+  observables_real_.emplace(eta_SS.dim_name()    , &eta_SS    );
+
+  observables_int_.emplace(tag_true.dim_name()  , &tag_true  );
   observables_int_.emplace(tag_class.dim_name() , &tag_class );
   observables_int_.emplace(tag_OS.dim_name()    , &tag_OS    );
-  observables_real_.emplace(eta_OS.dim_name()    , &eta_OS    );
   observables_int_.emplace(tag_SS.dim_name()    , &tag_SS    );
-  observables_real_.emplace(eta_SS.dim_name()    , &eta_SS    );
   observables_int_.emplace(comp_cat.dim_name()  , &comp_cat  );
 }
 

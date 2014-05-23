@@ -45,8 +45,7 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
   
   // Prepare Observables
   Observables obs;
-  
-  
+   
   
   // Prepare Tree
   obs.registerObservableBranches(out_tree);
