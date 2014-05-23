@@ -51,7 +51,8 @@ void ToyConfig::load(const std::string& config_file) {
                  pt_comp_it.second.get_child("model"))
     );
   }
-
+  
+  
   
   
 }

@@ -3,8 +3,12 @@
 
 // from STL
 #include <iostream>
+#include <map>
 #include <set>
 #include <string>
+
+// forward declarations
+class TTree;
 
 namespace cptoymc {
 namespace generator {
@@ -19,6 +23,7 @@ public:
   const std::string& dim_name() const {return dim_name_;}
   const std::string& var_name() const {return var_name_;}
   const std::string& var_title() const {return var_title_;}
+  virtual const std::string& var_type() = 0;
   
 protected:
   std::string dim_name_;
@@ -48,9 +53,14 @@ public:
   }
   double value_;
  
+  virtual const std::string& var_type() {
+    return var_type_;
+  }
+  
 private:
   double min_value_;
   double max_value_;
+  const std::string var_type_;
 };
 
 class ObservableInt : public Observable {
@@ -68,18 +78,24 @@ public:
     return (valid_values_.find(value) != valid_values_.end());
   }
 
+  virtual const std::string& var_type() {
+    return var_type_;
+  }
+  
   int value_;
   
 private:
   std::set<int> valid_values_;
+  const std::string var_type_;
 };
   
 class Observables {
 public:
   Observables();
-  ~Observables() {};
+  ~Observables() { }
 
   void reset();
+  void registerObservableBranches(TTree& out_tree);
 
   ObservableReal mass_true;
   ObservableReal time_true;
@@ -93,6 +109,10 @@ public:
   ObservableReal eta_SS;
   ObservableInt  comp_cat;
 
+private:
+  std::map<std::string,ObservableReal*> observables_real_;
+  std::map<std::string,ObservableInt*> observables_int_;
+  
 };
 
 } // generator
