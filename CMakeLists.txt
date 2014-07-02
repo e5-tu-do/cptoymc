@@ -27,9 +27,9 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 message( STATUS "CXX flags are ${CMAKE_CXX_FLAGS}")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "$ENV{DOOFITSYS}/cmake/Modules/")
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "$ENV{DOOCORESYS}/cmake/Modules/")
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "$ENV{DOOSELECTIONSYS}/cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "$ENV{DOOFITSYS}/cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "$ENV{DOOCORESYS}/cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "$ENV{DOOSELECTIONSYS}/cmake/Modules/")
 
 set(BASEPATH "${CMAKE_SOURCE_DIR}/src")
 include_directories(${BASEPATH})
@@ -41,26 +41,26 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 find_package(Boost 1.55 COMPONENTS program_options filesystem thread system random REQUIRED)
 
 find_package(ROOT REQUIRED)
-#find_package(DooCore REQUIRED)
-#find_package(DooSelection REQUIRED)
-#find_package(DooFit REQUIRED)
+find_package(DooCore REQUIRED)
+find_package(DooSelection REQUIRED)
+find_package(DooFit REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIR})
 
-#include_directories(${DooCore_INCLUDE_DIR})
-#link_directories(${DooCore_LIBRARY_DIR})
+include_directories(${DooCore_INCLUDE_DIR})
+link_directories(${DooCore_LIBRARY_DIR})
 
-#include_directories(${DooSelection_INCLUDE_DIR})
-#link_directories(${DooSelection_LIBRARY_DIR})
+include_directories(${DooSelection_INCLUDE_DIR})
+link_directories(${DooSelection_LIBRARY_DIR})
 
-#include_directories(${DooFit_INCLUDE_DIR})
-#link_directories(${DooFit_LIBRARY_DIR})
+include_directories(${DooFit_INCLUDE_DIR})
+link_directories(${DooFit_LIBRARY_DIR})
 
 include_directories(${ROOT_INCLUDE_DIR})
 
-#set(ALL_LIBRARIES ${DooSelection_LIBRARIES} ${DooFit_LIBRARIES} ${DooCore_LIBRARIES} ${ROOT_LIBRARIES} ${ROOFIT_LIBRARIES} ${ADDITIONAL_LIBRARIES} "-lTreePlayer")
 set(ALL_LIBRARIES ${ROOT_LIBRARIES} ${ROOFIT_LIBRARIES} ${ADDITIONAL_LIBRARIES} "-lTreePlayer")
+set(ALL_LIBRARIES ${ALL_LIBRARIES} ${DooSelection_LIBRARIES} ${DooFit_LIBRARIES} ${DooCore_LIBRARIES})
 
 add_subdirectory(main)
 add_subdirectory(sandbox)
