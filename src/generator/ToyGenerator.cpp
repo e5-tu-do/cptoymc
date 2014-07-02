@@ -38,7 +38,8 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
   using configuration::CompConfig;
   //CompGeneratorRegistrar<BSig_CPV_P2VP_Generator> registrar("BSig_CPV_P2VP");
 
-  TRandom3 rndm;
+  TRandom3 rndm(0);
+
   
   std::string tree_name = "ToyMC";
   std::string tree_desc = "ToyMC Tree";
