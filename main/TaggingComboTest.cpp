@@ -35,6 +35,7 @@
 #include "RooHistPdf.h"
 #include "RooExtendPdf.h"
 #include "RooSimultaneous.h"
+#include "RooBCPGenDecay.h"
 
 // from DooCore
 #include "doocore/io/MsgStream.h"
@@ -43,6 +44,8 @@
 
 // from DooFit
 #include "doofit/roofit/functions/SinCoeffWithProdAsymm.h"
+// #include "doofit/roofit/functions/CosCoeffWithProdAsymm.h"
+// #include "doofit/roofit/functions/CosCoeffCombo.h"
 #include "doofit/roofit/functions/SinCoeffCombo.h"
 #include "doofit/roofit/functions/CoshCoeff.h"
 #include "doofit/roofit/functions/CoshCoeffCombo.h"
@@ -53,6 +56,7 @@
 #include "doofit/toy/ToyFactoryStd/ToyFactoryStdConfig.h"
 #include "doofit/toy/ToyStudyStd/ToyStudyStd.h"
 #include "doofit/toy/ToyStudyStd/ToyStudyStdConfig.h"
+
 #include "configuration/ToyConfig.h"
 #include "generator/ToyGenerator.h"
 
@@ -148,20 +152,26 @@ int main(int argc, char * argv[]){
   RooConstVar                             parSigEtaP0_SS("parSigEtaP0_SS","parSigEtaP0_SS",0.);
   RooConstVar                             parSigEtaP1_SS("parSigEtaP1_SS","parSigEtaP1_SS",1.);
   RooConstVar                             parSigEtaMean_SS("parSigEtaMean_SS","parSigEtaMean_SS",0.);
+  RooConstVar                             parSigEtaDeltaP0_SS("parSigEtaDeltaP0_SS","parSigEtaDeltaP0_SS",0.);
+  RooConstVar                             parSigEtaDeltaP1_SS("parSigEtaDeltaP1_SS","parSigEtaDeltaP1_SS",0.);
   SingleMistagCalibrationWithAsymmetries  parSigTimeOmega_OS_Bd("parSigTimeOmega_OS_Bd","tagging calibration of OS taggers",obsEtaOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaMean_OS,SingleMistagCalibrationWithAsymmetries::kBdType);
   SingleMistagCalibrationWithAsymmetries  parSigTimeOmega_OS_Bdb("parSigTimeOmega_OS_Bdb","tagging calibration of OS taggers",obsEtaOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaMean_OS,SingleMistagCalibrationWithAsymmetries::kBdbType);
 
   // Decay Time PDF
   // RooBDecay params
   RooConstVar             parSigTimeSinh("parSigTimeSinh","Sh_{f}",0.0);
-  CoshCoeff               parSigTimeCosh_OS("parSigTimeCosh_11_OS","cosh coefficient OS 2011",parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd,obsTagOS);
-  SinCoeffWithProdAsymm   parSigTimeSin_OS("parSigTimeSin_11_OS",parSigTimeSin2b,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kSType);
-  SinCoeffWithProdAsymm   parSigTimeCos_OS("parSigTimeCos_11_OS",parSigTimeCjpsiKS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kCType);
+  CoshCoeff               parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS",parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd,obsTagOS);
+  SinCoeffWithProdAsymm   parSigTimeSin_OS("parSigTimeSin_OS",parSigTimeSin2b,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kSType);
+  SinCoeffWithProdAsymm   parSigTimeCos_OS("parSigTimeCos_OS",parSigTimeCjpsiKS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kCType);
+
+  // RooFormulaVar           parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS","1.0 - @0*@1*(1.0 - 2.0*@2)",RooArgList(parSigEtaDeltaProd,obsTagOS,obsEtaOS));
+  // RooFormulaVar           parSigTimeSin_OS("parSigTimeSin_OS","sin coefficient OS","-@0*(@1*(1.0 - @2 - @3)- @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeSin2b,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
+  // RooFormulaVar           parSigTimeCos_OS("parSigTimeCos_OS","cos coefficient OS"," @0*(@1*(1.0 - @2 - @3)- @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeCjpsiKS,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
 
   
-  CoshCoeffCombo    parSigTimeCosh("parSigTimeCosh",obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigTimeDelta,parSigTimeDelta,obsTagSSPion,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSSPion,parSigTimeDelta,parSigTimeDelta,parSigTimeDelta);
-  SinCoeffCombo     parSigTimeSin("parSigTimeSin",parSigTimeSin2b,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigTimeDelta,parSigTimeDelta,obsTagSSPion,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSSPion,parSigTimeDelta,parSigTimeDelta,parSigTimeDelta,SinCoeffCombo::kSType);
-  SinCoeffCombo     parSigTimeCos("parSigTimeCos",parSigTimeCjpsiKS,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigTimeDelta,parSigTimeDelta,obsTagSSPion,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSSPion,parSigTimeDelta,parSigTimeDelta,parSigTimeDelta,SinCoeffCombo::kCType);
+  CoshCoeffCombo    parSigTimeCosh("parSigTimeCosh",obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSSPion,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSSPion,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd);
+  SinCoeffCombo     parSigTimeSin("parSigTimeSin",parSigTimeSin2b,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSSPion,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSSPion,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,SinCoeffCombo::kSType);
+  SinCoeffCombo     parSigTimeCos("parSigTimeCos",parSigTimeCjpsiKS,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSSPion,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSSPion,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,SinCoeffCombo::kCType);
 
   // Eta PDF
   TH1D*                   histSigEta_OS = new TH1D("histSigEta_OS","histogram of OS tagger",100,obsEtaOS.getMin(),obsEtaOS.getMax());
@@ -187,6 +197,7 @@ int main(int argc, char * argv[]){
   RooAddPdf               pdfSigEta_OS_Combo("pdfSigEta_OS_Combo","OS eta PDF including untagged distribution",RooArgList(pdfSigEta_OS,pdfSigEta_OS_ut),parSigEtaOSTaggingFraction);
 
   RooDecay                pdfSigTimeDecay_OS("pdfSigTimeDecay_OS","P_{S}^{OS}(t)",obsTime,parSigTimeTau,resGauss,RooDecay::SingleSided);
+  // RooBCPGenDecay          pdfSigTime_OS("pdfSigTime_OS","P_{S}^{l}(t,d|#eta)",obsTime,obsTagOS,parSigTimeTau,parSigTimeDeltaM,obsEtaOS,parSigTimeCjpsiKS,parSigTimeSin2b,parSigTimeDelta,parSigEtaDeltaProd,resGauss,RooBCPGenDecay::SingleSided);
   RooBDecay               pdfSigTime_OS("pdfSigTime_OS","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_OS,parSigTimeSinh,parSigTimeCos_OS,parSigTimeSin_OS,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
   RooProdPdf              pdfSigTimeCond_OS("pdfSigTimeCond_OS","pdfSigTimeCond_OS",RooArgList(pdfSigEta_OS),Conditional(pdfSigTime_OS,RooArgSet(obsTime,obsTagOS)));
   RooBDecay               pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh,parSigTimeSinh,parSigTimeCos,parSigTimeSin,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
@@ -287,7 +298,6 @@ int main(int argc, char * argv[]){
     cfg_cptoymc.load(argv[3]);
     ToyGenerator  cptoymc(cfg_cptoymc);
     
-    // TTree       tree("ToyMCTreetree","Tree of generation");
     RooDataSet* data = NULL;
 
     if (method.EqualTo("g")) {
@@ -314,30 +324,6 @@ int main(int argc, char * argv[]){
       tstudy.PlotEvaluatedParameters();
     }
   }
-
-  // plot_frame = obsTime.frame();
-  // canvas.SetLogy(true);
-  // data.plotOn(plot_frame,Binning(180));
-  // pdf->plotOn(plot_frame,LineColor(1),ProjWData(RooArgSet(obsTagOS,obsTagSSPion,obsEtaOS,obsEtaSSPion,catTaggedExclOSSSPion),data,true),NumCPU(num_cpu),Normalization(1./data.sumEntries()));
-  // plot_frame->SetMinimum(0.5);
-  // plot_frame->SetMaximum(1.3*plot_frame->GetMaximum());
-  // plot_frame->GetYaxis()->SetTitle((TString::Format("Candidates / ( %4.2f %s )", obsTime.getBinWidth(1), obsTime.getUnit()) ).Data());
-  
-  // PlotPulls("Time",plot_frame,label,"/home/fmeier/tank/run/ToyMC/Generic",true);
-
-  // plot_frame = obsEtaOS.frame();
-  // canvas.SetLogy(true);
-  // data.plotOn(plot_frame);
-  // // parSigEta_OS.setVal(0.2485);
-  // untaggedvalue.setVal(0.4985);
-  // pdfSigEta_OS_Combo.plotOn(plot_frame,LineColor(1),ProjWData(RooArgSet(catTaggedExclOSSSPion),data,true));
-  // plot_frame->SetMinimum(0.5);
-  // plot_frame->SetMaximum(1.3*plot_frame->GetMaximum());
-  // plot_frame->GetYaxis()->SetTitle((TString::Format("Candidates / ( %4.4f %s )", obsEtaOS.getBinWidth(1), obsEtaOS.getUnit()) ).Data());
-  
-  // PlotPulls("EtaOS",plot_frame,label,"/home/fmeier/tank/run/ToyMC/Generic",true);
-
-  // obsEtaOS.getBinning().Print();
   
   return 0 ;
 }
