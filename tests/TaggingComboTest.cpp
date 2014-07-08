@@ -80,25 +80,22 @@ int main(int argc, char * argv[]){
   // TLatex label(0.7,0.83,"Toys");
   // label.SetNDC();
   
-  if (argc < 5)
+  if (argc < 6)
   {
     cout  <<  "You need to provide:"  <<  endl;
     cout  <<  "the method (g for generation of toys, e for evaluation of toy study)"  <<  endl;
+    cout  <<  "the number of toys to generate"  <<  endl;
     cout  <<  "the number of CPUs to fit on"  <<  endl;
     cout  <<  "the name of the config file for the toy production"  <<  endl;
     cout  <<  "the name of the starting values file" <<  endl;
     return 1;
   }
 
-  TString           method;
-  if (argc >= 2) {
-    method = argv[1];
-  }
-  int num_cpu;
-  if (argc >= 3) {
-    TString         StringNumCPU = argv[2];
-    num_cpu = StringNumCPU.Atoi();
-  }
+  TString           method = argv[1];
+  TString           StringNumToys = argv[2];
+  int num_toys = StringNumToys.Atoi();
+  TString           StringNumCPU = argv[3];
+  int num_cpu = StringNumCPU.Atoi();
   
   RooRealVar        obsTime("obsTime","#it{t}",0.,18.,"ps");
   RooRealVar        obsEtaOS("obsEtaOS","#eta_{OS}",0.001,0.501);
@@ -295,20 +292,20 @@ int main(int argc, char * argv[]){
     fitting_args.Add((TObject*)(new RooCmdArg(Optimize(1))));
 
     ToyConfig     cfg_cptoymc;
-    cfg_cptoymc.load(argv[3]);
+    cfg_cptoymc.load(argv[4]);
     ToyGenerator  cptoymc(cfg_cptoymc);
     
     RooDataSet* data = NULL;
 
     if (method.EqualTo("g")) {
-      for (int i = 0; i < 1000; ++i) {
+      for (int i = 0; i < num_toys; ++i) {
         cout  <<  i <<  endl;
         try {
           TTree       tree("ToyMCTreetree","Tree of generation");
           cptoymc.GenerateToy(tree);
           data = new RooDataSet("data","Toy MC data",&tree, observables);
           data->Print();
-          pdfSigTimeCond_OS.getParameters(*data)->readFromFile(argv[4]);
+          pdfSigTimeCond_OS.getParameters(*data)->readFromFile(argv[5]);
           RooFitResult* fit_result = pdfSigTimeCond_OS.fitTo(*data,fitting_args);
           tstudy.StoreFitResult(fit_result);
           delete data;
