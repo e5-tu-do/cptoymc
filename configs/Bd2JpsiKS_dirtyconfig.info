@@ -10,7 +10,7 @@ Components
   {    
     name     "Sig_Bd"
     comp_cat 1
-    yield    10000
+    yield    10000000
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -55,7 +55,7 @@ Components
   { 
     name     "Sig_Bs"
     comp_cat 10
-    yield    100
+    yield    1000000
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -99,7 +99,7 @@ Components
   Bkg
   {
     name     "Bkg"
-    comp_cat 100
+    comp_cat 100000
     yield    0
     model    "LLBkg" 
     {
