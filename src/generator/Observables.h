@@ -57,6 +57,9 @@ public:
     return var_type_;
   }
   
+  double max_value() const {return max_value_;}
+  double min_value() const {return min_value_;}
+  
 private:
   double min_value_;
   double max_value_;

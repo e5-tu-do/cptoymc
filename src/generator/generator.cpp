@@ -14,14 +14,16 @@
 namespace cptoymc {
 namespace generator {
 
-
-
+void GenerateExpo(TRandom& rndm, double par_expo, double& obs, double min, double max) {
+  obs = (-1./par_expo)*log(exp(-1.*max*par_expo)+rndm.Uniform()*(exp(-1.*min*par_expo)-exp(-1.*max*par_expo)));
+}
 
 
 void GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, double& obs_mass_true) {
   obs_mass_true = rndm.BreitWigner(par_mean, par_gamma);
 }
 
+ 
 void GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
                       double par_tau, double par_dGamma, double par_dm,
                       double par_Sf, double par_Cf, double par_Df,

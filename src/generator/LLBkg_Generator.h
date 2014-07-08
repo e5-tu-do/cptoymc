@@ -55,6 +55,7 @@ private:
   
   struct ParamsTagging {
     double omega;
+    double domega;
   } params_taggingOS_, params_taggingSS_;
 
   int comp_cat_;

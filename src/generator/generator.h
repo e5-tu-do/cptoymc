@@ -23,11 +23,15 @@ class Observables;
 
 // generate functions
 
-// True value generators and helper functions
+void GenerateExpo(TRandom& rndm, double par_expo, double& obs, double min, double max);
 
+  
+// True value generators and helper functions
+  
 void GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma,
                              double& obs_mass_true);
 
+  
 void GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
                       double par_tau, double par_dGamma, double par_dm,
                       double par_Sf, double par_Cf, double par_Df,
