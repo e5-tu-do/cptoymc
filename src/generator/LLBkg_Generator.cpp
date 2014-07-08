@@ -34,14 +34,17 @@ LLBkg_Generator::~LLBkg_Generator() {
 
 void LLBkg_Generator::Configure(const configuration::CompConfig& comp_config) {
   auto config_ptree = comp_config.model_ptree();
+
+  comp_cat_ = comp_config.comp_cat();
+  
   // Mass
   auto sub_config_ptree = config_ptree.get_child("Mass");
   params_mass_.expo  = sub_config_ptree.get("expo", params_mass_.expo);
   
   // TimeAndCP
   sub_config_ptree = config_ptree.get_child("TimeAndCP");
-  params_timeandcp_.tau       = sub_config_ptree.get("tau",       params_timeandcp_.tau);
-  params_timeandcp_.prod_asym = sub_config_ptree.get("prod_asym", params_timeandcp_.prod_asym);
+  params_timeandcp_.tau       = sub_config_ptree.get("tau", params_timeandcp_.tau);
+  params_timeandcp_.prod_asym = sub_config_ptree.get("AP" , params_timeandcp_.prod_asym);
   
   sub_config_ptree = config_ptree.get_child("TimeResol");
   params_timeresol_.bias  = sub_config_ptree.get("bias" , params_timeresol_.bias  );

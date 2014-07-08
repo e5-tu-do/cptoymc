@@ -45,7 +45,10 @@ BSig_CPV_P2VP_Generator::~BSig_CPV_P2VP_Generator() {
 }
 
 void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_config) {
+  comp_cat_ = comp_config.comp_cat();
+  
   auto config_ptree = comp_config.model_ptree();
+  
   // Mass
   auto sub_config_ptree = config_ptree.get_child("Mass");
   params_mass_.mean  = sub_config_ptree.get("mean", params_mass_.mean);
@@ -57,13 +60,13 @@ void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_co
   
   // TimeAndCP
   sub_config_ptree = config_ptree.get_child("TimeAndCP");
-  params_timeandcp_.tau       = sub_config_ptree.get("tau",       params_timeandcp_.tau);
-  params_timeandcp_.dGamma    = sub_config_ptree.get("dGamma",    params_timeandcp_.dGamma);
-  params_timeandcp_.dm        = sub_config_ptree.get("dm",        params_timeandcp_.dm);
-  params_timeandcp_.Sf        = sub_config_ptree.get("Sf",        params_timeandcp_.Sf);
-  params_timeandcp_.Cf        = sub_config_ptree.get("Cf",        params_timeandcp_.Cf);
-  params_timeandcp_.Df        = sub_config_ptree.get("Df",        params_timeandcp_.Df);
-  params_timeandcp_.prod_asym = sub_config_ptree.get("prod_asym", params_timeandcp_.prod_asym);
+  params_timeandcp_.tau       = sub_config_ptree.get("tau",     params_timeandcp_.tau);
+  params_timeandcp_.dGamma    = sub_config_ptree.get("dGamma",  params_timeandcp_.dGamma);
+  params_timeandcp_.dm        = sub_config_ptree.get("dm",      params_timeandcp_.dm);
+  params_timeandcp_.Sf        = sub_config_ptree.get("Sf",      params_timeandcp_.Sf);
+  params_timeandcp_.Cf        = sub_config_ptree.get("Cf",      params_timeandcp_.Cf);
+  params_timeandcp_.Df        = sub_config_ptree.get("Df",      params_timeandcp_.Df);
+  params_timeandcp_.prod_asym = sub_config_ptree.get("AP",      params_timeandcp_.prod_asym);
   
   sub_config_ptree = config_ptree.get_child("TimeResol");
   params_timeresol_.bias  = sub_config_ptree.get("bias" , params_timeresol_.bias  );
@@ -97,10 +100,6 @@ void BSig_CPV_P2VP_Generator::GenerateEvent(TRandom& rndm, Observables& observab
                     observables.tag_OS, observables.eta_OS,
                     observables.tag_SS, observables.eta_SS,
                     observables.tag_class);
-  
-  
-  
-
 }
 
 void BSig_CPV_P2VP_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas) {

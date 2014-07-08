@@ -10,7 +10,7 @@ Components
   {    
     name     "Sig_Bd"
     comp_cat 1
-    yield    10000000
+    yield    0
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -55,7 +55,7 @@ Components
   { 
     name     "Sig_Bs"
     comp_cat 10
-    yield    1000000
+    yield    0
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -99,11 +99,30 @@ Components
   Bkg
   {
     name     "Bkg"
-    comp_cat 100000
-    yield    0
+    comp_cat 100
+    yield    10000
     model    "LLBkg" 
     {
-
+      Mass {
+        expo      0.
+      }
+      TimeAndCP {
+        tau     1.       ; lifetime in ps
+        AP      0.       ; production asymmetry R_Bb - R_B / R_Bb + R_B
+      }
+      TimeResol {
+        bias  0.
+        sigma 0.050 
+      }
+      Tagging {
+        eff_OS    0.3292
+        eff_SS    0.0635
+        eff_SSOS  0.0436
+        omega_OS  0.4
+        domega_OS 0.
+        omega_SS  0.4
+        domega_SS 0.
+      }
     }
   }
 } 
@@ -114,7 +133,7 @@ Dimensions {
     comp_cat {
       name          "catBkg"
       desc          "catBkg"
-      range         [-1,0,1,100]
+      range         [1,10,100]
     }      
   }
   Mass {

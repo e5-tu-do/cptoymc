@@ -15,7 +15,11 @@ namespace cptoymc {
 namespace generator {
 
 void GenerateExpo(TRandom& rndm, double par_expo, double& obs, double min, double max) {
-  obs = (-1./par_expo)*log(exp(-1.*max*par_expo)+rndm.Uniform()*(exp(-1.*min*par_expo)-exp(-1.*max*par_expo)));
+  if (par_expo != 0.) {
+    obs = (-1./par_expo)*log(exp(-1.*max*par_expo)+rndm.Uniform()*(exp(-1.*min*par_expo)-exp(-1.*max*par_expo)));
+  } else {
+    obs = rndm.Uniform(min,max);
+  }
 }
 
 
