@@ -77,4 +77,7 @@ endif()
 add_subdirectory(main)
 add_subdirectory(sandbox)
 add_subdirectory(src)
-#if()
+
+if(DEFINED ENV{DOOCORESYS} AND DEFINED ENV{DOOFITSYS})
+  add_subdirectory(tests)
+endif()
