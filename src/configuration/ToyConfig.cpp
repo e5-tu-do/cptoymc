@@ -13,8 +13,8 @@
 
 namespace cptoymc {
 namespace configuration {
-  
-ToyConfig::ToyConfig() 
+
+ToyConfig::ToyConfig()
 {
 
 }
@@ -30,36 +30,22 @@ void ToyConfig::load(const std::string& config_file) {
   // parse input file
   boost::property_tree::info_parser::read_info(config_file, pt);
 
-  if (!pt.empty()){ 
-    for (auto pt_it: pt) {
-      // Prepare Components
-      
+  if (!pt.empty()){
+    auto pt_comp = pt.get_child("Components");
+    for (auto pt_comp_it : pt_comp) {
+      comp_configs_.emplace(
+        pt_comp_it.first,
+        CompConfig(pt_comp_it.second.get<std::string>("name"),
+                   pt_comp_it.second.get("comp_cat",-1000),
+                   pt_comp_it.second.get("yield",0),
+                   pt_comp_it.second.get<std::string>("model","NoModel"),
+                   pt_comp_it.second.get_child("model"))
+      );
     }
   } else {
     std::cout << "Tree is empty!" << std::endl;
   }
 
-  
-  // get tree of observables
-  //obs_ptree_ =
-  
-  // get component_trees and extract infos
-  auto pt_comp = pt.get_child("Components");
-  for (auto pt_comp_it: pt_comp) {
-    comp_configs_.emplace(
-      pt_comp_it.first,
-      CompConfig(pt_comp_it.second.get<std::string>("name"),
-                 pt_comp_it.second.get("comp_cat",-1000),
-                 pt_comp_it.second.get("yield",0),
-                 pt_comp_it.second.get<std::string>("model","NoModel"),
-                 pt_comp_it.second.get_child("model"))
-    );
-  }
-  
-  
-  
-  
-  
 }
 
 } // namespace configuration
