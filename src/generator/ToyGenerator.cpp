@@ -38,25 +38,18 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
   using configuration::CompConfig;
   //CompGeneratorRegistrar<BSig_CPV_P2VP_Generator> registrar("BSig_CPV_P2VP");
 
-  TRandom3 rndm;
+  TRandom3 rndm(0);
+
   
   std::string tree_name = "ToyMC";
   std::string tree_desc = "ToyMC Tree";
   
   // Prepare Observables
   Observables obs;
+   
   
   // Prepare Tree
-  out_tree.Branch("obsMassTrue"       , &(obs.mass_true)  , "obsMassTrue/D"       );
-  out_tree.Branch("obsTimeTrue"       , &(obs.time_true)  , "obsTimeTrue/D"       );
-  out_tree.Branch("obsTagTrue"        , &(obs.tag_true)   , "obsTagTrue/I"        );
-  out_tree.Branch("obsMass"           , &(obs.mass_meas)  , "obsMass/D"           );
-  out_tree.Branch("obsTime"           , &(obs.time_meas)  , "obsTime/D"           );
-  out_tree.Branch("catTaggedOSSSPion" , &(obs.tag_class)  , "catTaggedOSSSPion/I" );
-  out_tree.Branch("obsTagOS"          , &(obs.tag_OS)     , "obsTagOS/I"          );
-  out_tree.Branch("obsEtaOS"          , &(obs.eta_OS)     , "obsEtaOS/D"          );
-  out_tree.Branch("obsTagSSPion"      , &(obs.tag_SS)     , "obsTagSSPion/I"      );
-  out_tree.Branch("obsEtaSSPion"      , &(obs.eta_SS)     , "obsEtaSSPion/D"      );
+  obs.registerObservableBranches(out_tree);
   
   
   // loop over components, get their yield

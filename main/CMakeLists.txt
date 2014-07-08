@@ -5,4 +5,3 @@ add_executable(DoToyGen DoToyGenMain.cpp)
 
 # Linker information
 target_link_libraries(DoToyGen CPToyMC ${ALL_LIBRARIES})
-

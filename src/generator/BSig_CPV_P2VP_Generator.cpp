@@ -1,5 +1,8 @@
 #include "generator/BSig_CPV_P2VP_Generator.h"
 
+// from STL
+#include <iostream>
+
 // from ROOT
 #include "TRandom.h"
 
@@ -86,61 +89,107 @@ void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_co
 }
 
 void BSig_CPV_P2VP_Generator::GenerateEvent(TRandom& rndm, Observables& observables) {
-  observables.comp_cat = comp_cat_;
+  observables.comp_cat.set_value(comp_cat_);
   
-  GenerateMassBreitWigner(rndm, params_mass_.mean, params_mass_.width, observables.mass_true);
-  
-  GenerateResolSingleGauss(rndm, params_massresol_.bias, params_massresol_.sigma, observables.mass_true, observables.mass_meas);
-  
-  GenerateCPV_P2PV(rndm, params_timeandcp_.prod_asym, params_timeandcp_.tau,
-                   params_timeandcp_.dGamma, params_timeandcp_.dm,
-                   params_timeandcp_.Sf, params_timeandcp_.Cf, params_timeandcp_.Df,
-                   observables.time_true, observables.tag_true);
-  
-  GenerateResolSingleGauss(rndm, params_timeresol_.bias, params_timeresol_.sigma,
-                           observables.time_true, observables.time_meas);
+  GenerateMass(rndm, observables.mass_true, observables.mass_meas);
+  GenerateTimeAndTrueTag(rndm, observables.time_true, observables.tag_true, observables.time_meas);
+  GenerateTagAndEta(rndm, observables.tag_true,
+                    observables.tag_OS, observables.eta_OS,
+                    observables.tag_SS, observables.eta_SS,
+                    observables.tag_class);
   
   
   
+
+}
+
+void BSig_CPV_P2VP_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas) {
+  unsigned int trials = 0;
+  while (trials < max_trials_) {
+    GenerateMassBreitWigner(rndm, params_mass_.mean, params_mass_.width, obs_mass_true.value_);
+    
+    GenerateResolSingleGauss(rndm, params_massresol_.bias, params_massresol_.sigma, obs_mass_true.value(), obs_mass_meas.value_);
+    
+    if (obs_mass_true.HasValidValue() && obs_mass_meas.HasValidValue()) {
+      break;
+    } else {
+      ++trials;
+    }
+    std::cout
+    << "Problem in generation: Maximum trials reached without generating valid values for "
+    << obs_mass_true.dim_name() << " and " << obs_mass_meas.dim_name() << " !!!"
+    << std::endl;
+  }
+}
   
+void BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas) {
+  unsigned int trials = 0;
+  while (trials < max_trials_) {
+    GenerateCPV_P2PV(rndm, params_timeandcp_.prod_asym, params_timeandcp_.tau,
+                     params_timeandcp_.dGamma, params_timeandcp_.dm,
+                     params_timeandcp_.Sf, params_timeandcp_.Cf, params_timeandcp_.Df,
+                     obs_time_true.value_, obs_tag_true.value_);
+    
+    GenerateResolSingleGauss(rndm, params_timeresol_.bias, params_timeresol_.sigma,
+                             obs_time_true.value_, obs_time_meas.value_);
+    
+    
+    if (obs_time_true.HasValidValue() && obs_time_meas.HasValidValue() && obs_tag_true.HasValidValue()) {
+      break;
+    } else {
+      ++trials;
+    }
+    std::cout
+    << "Problem in generation: Maximum trials reached without generating valid values for "
+    << obs_tag_true.dim_name()  << ","
+    << obs_time_true.dim_name() << " and " << obs_time_meas.dim_name() << " !!!"
+    << std::endl;
+  }
+}
+  
+  
+void BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_tag_true,
+                                            ObservableInt& obs_tag_OS, ObservableReal& obs_eta_OS,
+                                            ObservableInt& obs_tag_SS, ObservableReal& obs_eta_SS,
+                                            ObservableInt& obs_tag_class)
+{
   double random_val = rndm.Uniform();
   
   if (random_val < params_taggingeffs_.eff_OS) {
-    GenerateEtaFlat(rndm, observables.eta_OS);
+    GenerateEtaFlat(rndm, obs_eta_OS.value_);
     GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
-                observables.tag_true, observables.eta_OS, observables.tag_OS);
-    observables.tag_SS = 1;
-    observables.eta_SS = 0.5;
-    observables.tag_class = 1;
+                obs_tag_true.value(), obs_eta_OS.value_, obs_tag_OS.value_);
+    obs_tag_SS.value_ = 1;
+    obs_eta_SS.value_ = 0.5;
+    obs_tag_class.value_ = 1;
   }
   else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) {
-    GenerateEtaFlat(rndm, observables.eta_SS);
+    GenerateEtaFlat(rndm, obs_eta_SS.value_);
     GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
-                observables.tag_true, observables.eta_SS, observables.tag_SS);
-    observables.tag_OS = 1;
-    observables.eta_OS = 0.5;
-    observables.tag_class = -1;
+                obs_tag_true.value(), obs_eta_SS.value_, obs_tag_SS.value_);
+    obs_tag_OS.value_ = 1;
+    obs_eta_OS.value_ = 0.5;
+    obs_tag_class.value_ = -1;
   }
-  else if (random_val < (   params_taggingeffs_.eff_OS
+  else if (random_val < (  params_taggingeffs_.eff_OS
                          + params_taggingeffs_.eff_SS
                          + params_taggingeffs_.eff_SSOS) ) {
-    GenerateEtaFlat(rndm, observables.eta_OS);
+    GenerateEtaFlat(rndm, obs_eta_OS.value_);
     GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
-                observables.tag_true, observables.eta_OS, observables.tag_OS);
-    GenerateEtaFlat(rndm, observables.eta_SS);
+                obs_tag_true.value(), obs_eta_OS.value_, obs_tag_OS.value_);
+    GenerateEtaFlat(rndm, obs_eta_SS.value_);
     GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
-                observables.tag_true, observables.eta_SS, observables.tag_SS);
-    observables.tag_class = 10;
+                obs_tag_true.value(), obs_eta_SS.value_, obs_tag_SS.value_);
+    obs_tag_class.value_ = 10;
   }
   else {
-    observables.tag_SS = 1;
-    observables.eta_SS = 0.5;
-    observables.tag_OS = 1;
-    observables.eta_OS = 0.5;
-    observables.tag_class = 0;
+    obs_tag_SS.value_ = 1;
+    obs_eta_SS.value_ = 0.5;
+    obs_tag_OS.value_ = 1;
+    obs_eta_OS.value_ = 0.5;
+    obs_tag_class.value_ = 0;
   }
-  
 }
-
+  
 } // namespace generator
 } // namespace cptoymc

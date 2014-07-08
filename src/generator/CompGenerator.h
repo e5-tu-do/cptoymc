@@ -26,7 +26,7 @@ public:
   virtual void GenerateEvent(TRandom& rndm, Observables& observables)  = 0;
   
 protected:
-
+  unsigned int max_trials_;
 };
 
 } // namespace generator

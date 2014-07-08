@@ -10,7 +10,7 @@ Components
   {    
     name     "Sig_Bd"
     comp_cat 1
-    yield    10000000
+    yield    100000
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -28,7 +28,7 @@ Components
         Sf        0.7    ; 2*Im(lambda_f)/1+|lambda_f|^2
         Cf        0.0    ; 1-|lambda_f|/1+|lambda_f|^2
         Df        0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
-        prod_asym 0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
+        prod_asym 0.02   ; production asymmetry R_Bb - R_B / R_Bb + R_B
       }
       TimeResol {
         bias  0.
@@ -55,7 +55,7 @@ Components
   { 
     name     "Sig_Bs"
     comp_cat 10
-    yield    1000000
+    yield    0
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -99,7 +99,7 @@ Components
   Bkg
   {
     name     "Bkg"
-    comp_cat 100000
+    comp_cat 100
     yield    0
     model    "LLBkg" 
     {
@@ -111,67 +111,30 @@ Components
 ; observable dimensions to be generated. Specifies their name in the TTree.
 Dimensions {
   EventInfo {
-    comp_cat {
-      name          "catBkg"
-      desc          "catBkg"
-      range         [-1,0,1,100]
-    }      
+    bkg_cat       "catBackground"
   }
   Mass {
-    mass_true {
-      name          "obsMassTrue"
-      desc          "m'"
-      range         [5000.,5500.]
-    }
-    mass_meas {
-      name          "obsMass"
-      desc          "m"
-      range         [5200.,5400.]
-    }      
+    mass_true       "obsMassTrue"
+    mass_meas       "obsMass"
+    mass_err_true   "obsMassErrTrue"
+    mass_err_meas   "obsMassErr"
   }
   Time {
-    time_true {
-      name          "obsTimeTrue"
-      desc          "t'"
-      range         [0.,18.]
-    }
-    time_meas {
-      name          "obsTime"
-      desc          "t"
-      range         [-2.,20]
-    }
+    time_true       "obsTimeTrue"
+    time_meas       "obsTime"
+    time_err_true   "obsTimeErrTrue"
+    time_err_meas   "obsTimeErr"
   }
   Tagging {
-    tag_true {
-      name          "obsTagTrue"
-      desc          "d'"
-      range         [-1,+1]
-    }
-    tag_OS {
-      name          "obsTagOS"
-      desc          "d_{OS}"
-      range         [-1,+1]
-    }
-    eta_OS {
-      name          "obsEtaOS"
-      desc          "#eta_{OS}"
-      range         [0.,0.5]
-    }
-    tag_SS {
-      name          "obsTagSS"
-      desc          "d_{SS}"
-      range         [-1,+1]
-    }
-    eta_SS {
-      name          "obsEtaSS"
-      desc          "#eta_{SS}"
-      range         [0.,0.5]
-    }
-    tag_class {
-      name          "catTaggedOSSSPion"
-      desc          "catTag"
-      range         [0,1,10,100]
-    }
+    tag_true        "obsTagTrue"
+    tag_OS_meas     "obsTagOS"
+    eta_OS_meas     "obsEtaOS"
+    tag_SS_meas     "obsTagSS"
+    eta_SS_meas     "obsEtaSS"
+    tagComb_meas    "obsTagComb"
+    etaComb_meas    "obsEtaComb" 
+    tag_class       "catTaggedOSSSPion"
   }
 }
+
 

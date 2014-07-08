@@ -23,7 +23,7 @@ public:
   
 private:
   std::map<std::string,CompConfig> comp_configs_;
-
+  //boost::property_tree::ptree obs_ptree_;
 };
 
 } // namespace configuration
