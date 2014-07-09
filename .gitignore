@@ -1,1 +1,4 @@
-build/
+build*/
+*.swp
+.DS_Store
+._*
