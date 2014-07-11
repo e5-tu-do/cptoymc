@@ -58,7 +58,6 @@ Observables::Observables() :
 }
 
 
-
 void Observables::reset() {
   mass_true.set_value(-1000.);
   time_true.set_value(-1000.);

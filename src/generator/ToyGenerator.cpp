@@ -28,7 +28,9 @@ ToyGenerator::ToyGenerator(const cptoymc::configuration::ToyConfig& config, unsi
   seed_(seed),
   rndm_(new TRandom3(seed_))
 {
+  // initialize observables
   
+  // initialize component generators
 }
   
   
