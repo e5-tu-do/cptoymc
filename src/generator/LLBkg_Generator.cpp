@@ -76,7 +76,7 @@ void LLBkg_Generator::GenerateEvent(TRandom& rndm, Observables& observables) {
 void LLBkg_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas) {
   
   obs_mass_true.value_ = -1000.;
-  GenerateExpo(rndm,params_mass_.expo,obs_mass_meas.value_,obs_mass_meas.min_value(),obs_mass_meas.max_value());
+  GenerateExpo(rndm,-1.*params_mass_.expo,obs_mass_meas.value_,obs_mass_meas.min_value(),obs_mass_meas.max_value());
 }
 
 void LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas) {
