@@ -22,15 +22,17 @@ class Observables;
 
 class ToyGenerator {
 public:
-  ToyGenerator(const cptoymc::configuration::ToyConfig& config);
+  ToyGenerator(const cptoymc::configuration::ToyConfig& config, unsigned int seed = 0);
   ~ToyGenerator();
 
- void GenerateToy(TTree& out_tree);
+  void GenerateToy(TTree& out_tree);
+  void GenerateToy(TTree& out_tree, unsigned int seed);
 
 private:
   ToyGenerator();
   const configuration::ToyConfig& config_;
-  
+  unsigned int seed_;
+  TRandom* rndm_;
 };
 
 
