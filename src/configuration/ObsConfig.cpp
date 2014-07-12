@@ -2,6 +2,7 @@
 
 namespace cptoymc {
 namespace configuration {
+
   
 ObsConfig::ObsConfig(const boost::property_tree::ptree& obs_ptree) :
   obs_ptree_(obs_ptree),
@@ -25,7 +26,7 @@ ObsConfig::ObsConfig(const boost::property_tree::ptree& obs_ptree) :
     obs_title = pt_obs_it.second.get("title","No Title Given");
     obs_type  = pt_obs_it.second.get<std::string>("type");
 
-    std::cout << "   Adding Observables " << obs_internal_name
+    std::cout << "   Preparing observable " << obs_internal_name
     << " with name " << obs_name;
     if ( obs_type == "Integer") {
       allowed_vals.clear();
@@ -45,11 +46,17 @@ ObsConfig::ObsConfig(const boost::property_tree::ptree& obs_ptree) :
       obs_configs_real_.emplace(obs_internal_name,ObsConfReal(obs_name,obs_title,min,max));
       std::cout << " and allowed range [ " << min << ", " << max << " ]." << std::endl;
     }
+    else {
+      std::cout << " with unknown type " << obs_type << "! "
+                << "Cannot add this observable!" << std::endl;
+    }
     
   }
 }
   
 ObsConfig::~ObsConfig() { }
 
+  
+  
 } // namespace configuration
 } // namespace cptoymc

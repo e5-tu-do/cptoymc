@@ -39,7 +39,7 @@ void ToyConfig::load(const std::string& config_file) {
   
   // Configuration of observables
   auto pt_obs = pt.get_child("Observables");
-  obs_config_ = std::unique_ptr<ObsConfig>(new ObsConfig(pt_obs));
+  obs_config_ = std::shared_ptr<ObsConfig>(new ObsConfig(pt_obs));
     
   
   // Configuriation of components

@@ -183,7 +183,7 @@ Observables {
     }
   }
   tag_OS {
-    name          "obsTagOS"
+    name          "obsTagOSis"
     desc          "d_{OS}"
     type          Integer
     range {

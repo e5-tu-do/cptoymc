@@ -31,6 +31,7 @@ ToyGenerator::ToyGenerator(const cptoymc::configuration::ToyConfig& config, unsi
   rndm_(new TRandom3(seed_))
 {
   // initialize observables
+  obs_.Configure(config_.obs_config());
   
   // initialize component generators
   for ( auto comp_config : config_.comp_configs() ) {
@@ -48,8 +49,8 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
   using configuration::CompConfig;
   
   // Prepare Tree
-  obs_.reset();
-  obs_.registerObservableBranches(out_tree);
+  obs_.Reset();
+  obs_.RegisterObservableBranches(out_tree);
   
   
   // loop over components, get their yield
@@ -73,7 +74,7 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
     auto comp_generator = comp_generators_.find(comp_name);
     if (comp_generator != comp_generators_.end()) {
       for (int i=0; i < num_events_of_comp; ++i) {
-        obs_.reset();
+        obs_.Reset();
         comp_generator->second->GenerateEvent(*rndm_, obs_);
         out_tree.Fill();
       }
