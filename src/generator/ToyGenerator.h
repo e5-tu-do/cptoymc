@@ -4,6 +4,10 @@
 // STL
 #include <memory>
 #include <string>
+#include <map>
+
+// from project
+#include "Observables.h"
 
 class TRandom;
 class TTree;
@@ -16,9 +20,6 @@ class ToyConfig;
 } // namespace configuration
   
 namespace generator {
-// forward declaration
-class Observables;
-
 
 class ToyGenerator {
 public:
@@ -31,8 +32,10 @@ public:
 private:
   ToyGenerator();
   const configuration::ToyConfig& config_;
+  Observables obs_;
   unsigned int seed_;
   TRandom* rndm_;
+
 };
 
 

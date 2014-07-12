@@ -25,6 +25,7 @@ namespace generator {
 
 ToyGenerator::ToyGenerator(const cptoymc::configuration::ToyConfig& config, unsigned int seed) :
   config_(config),
+  obs_(),
   seed_(seed),
   rndm_(new TRandom3(seed_))
 {
@@ -45,12 +46,10 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
   std::string tree_name = "ToyMC";
   std::string tree_desc = "ToyMC Tree";
   
-  // Prepare Observables
-  Observables obs;
-   
   
   // Prepare Tree
-  obs.registerObservableBranches(out_tree);
+  obs_.reset();
+  obs_.registerObservableBranches(out_tree);
   
   
   // loop over components, get their yield
@@ -74,8 +73,8 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
               << std::endl;
     auto comp_generator = CompGeneratorFactory::Instance()->CreateGenerator(comp_config.second);
     for (int i=0; i < num_events_of_comp; ++i) {
-      obs.reset();
-      comp_generator->GenerateEvent(*rndm_, obs);
+      obs_.reset();
+      comp_generator->GenerateEvent(*rndm_, obs_);
       out_tree.Fill();
     }
   }
