@@ -14,21 +14,23 @@
 namespace cptoymc {
 namespace generator {
 
-void GenerateExpo(TRandom& rndm, double par_expo, double& obs, double min, double max) {
+bool GenerateExpo(TRandom& rndm, double par_expo, double& obs, double min, double max) {
   if (par_expo != 0.) {
     obs = (-1./par_expo)*log(exp(-1.*max*par_expo)+rndm.Uniform()*(exp(-1.*min*par_expo)-exp(-1.*max*par_expo)));
   } else {
     obs = rndm.Uniform(min,max);
   }
+  return true;
 }
 
 
-void GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, double& obs_mass_true) {
+bool GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, double& obs_mass_true) {
   obs_mass_true = rndm.BreitWigner(par_mean, par_gamma);
+  return true;
 }
 
  
-void GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
+bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
                       double par_tau, double par_dGamma, double par_dm,
                       double par_Sf, double par_Cf, double par_Df,
                       double& obs_time_true, int& obs_tag_true) {
@@ -64,6 +66,8 @@ void GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
   
   obs_tag_true  = val_d;
   obs_time_true = val_t;
+  
+  return true;
 }
 
 double BCPV_PDF(double t, double d, double tau, double dGamma, double dm,
@@ -75,32 +79,37 @@ double BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, doubl
   return exp(-t*gamma_min)*(1.+std::abs(Df)+sqrt(Sf*Sf+Cf*Cf));
 }
 
-void GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, double obs_true, double& obs_meas) {
+bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, double obs_true, double& obs_meas) {
   obs_meas = obs_true;
   obs_meas += rndm.Gaus(par_bias, par_sigma);
+  
+  return true;
 }
 
-void GenerateEtaFlat(TRandom& rndm, double& obs_eta) {
+bool GenerateEtaFlat(TRandom& rndm, double& obs_eta) {
   obs_eta = rndm.Uniform(0.0,0.5);
+  return true;
 }
 
-void GenerateTag(TRandom& rndm, double par_omega, double par_domega, int obs_tag_true, int& obs_tag_meas) {
+bool GenerateTag(TRandom& rndm, double par_omega, double par_domega, int obs_tag_true, int& obs_tag_meas) {
   if (rndm.Uniform() < (par_omega+(double)obs_tag_true*par_domega/2.) ) {
     obs_tag_meas = -1*obs_tag_true;
   } else {
     obs_tag_meas = obs_tag_true;
   }
+  return true;
 }
 
-void GenerateTag(TRandom& rndm,
+bool GenerateTag(TRandom& rndm,
                  std::function<double(double)>& func_omega,
                  std::function<double(double)>& func_domega,
                  int obs_tag_true, double obs_eta, int& obs_tag_meas) {
-  GenerateTag(rndm, func_omega(obs_eta), func_domega(obs_eta), obs_tag_true, obs_tag_meas);
+  return GenerateTag(rndm, func_omega(obs_eta), func_domega(obs_eta), obs_tag_true, obs_tag_meas);
 }
   
-void GenerateRandomTag(TRandom& rndm, int& obs_tag_meas) {
+bool GenerateRandomTag(TRandom& rndm, int& obs_tag_meas) {
   obs_tag_meas = (rndm.Uniform() < 0.5) ? +1 : -1;
+  return true;
 }
 
 

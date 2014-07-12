@@ -1,7 +1,10 @@
 #include "generator/Observables.h"
 
 // from ROOT
-#include "TTree.h"
+#include <TTree.h>
+
+// from Project
+#include "configuration/ObsConfig.h"
 
 namespace cptoymc {
 namespace generator {
@@ -57,9 +60,36 @@ Observables::Observables() :
   observables_int_.emplace(comp_cat.dim_name()  , &comp_cat  );
 }
 
+void Observables::Configure(const std::shared_ptr<configuration::ObsConfig> obs_config) {
+  // loop over real observables
+  for ( auto obs_real_config_entry : obs_config->obs_configs_real()) {
+    auto obs_real_entry = observables_real_.find(obs_real_config_entry.first);
+    if (obs_real_entry != observables_real_.end()) {
+      auto obs_real = obs_real_entry->second;
+      auto obs_real_config = obs_real_config_entry.second;
+      obs_real->set_var_name(std::get<0>(obs_real_config));
+      obs_real->set_var_title(std::get<1>(obs_real_config));
+      obs_real->set_range(std::get<2>(obs_real_config), std::get<3>(obs_real_config));
+    } else {
+      std::cout << "No observable called " << obs_real_config_entry.first << " known to generator." << std::endl;
+    }
+  }
+  // loop over int obervables
+  for ( auto obs_int_config_entry : obs_config->obs_configs_int()) {
+    auto obs_int_entry = observables_int_.find(obs_int_config_entry.first);
+    if (obs_int_entry != observables_int_.end()) {
+      auto obs_int = obs_int_entry->second;
+      auto obs_int_config = obs_int_config_entry.second;
+      obs_int->set_var_name(std::get<0>(obs_int_config));
+      obs_int->set_var_title(std::get<1>(obs_int_config));
+      obs_int->set_valid_values(std::get<2>(obs_int_config));
+    } else {
+      std::cout << "No observable called " << obs_int_config_entry.first << " known to generator." << std::endl;
+    }
+  }
+}
 
-
-void Observables::reset() {
+void Observables::Reset() {
   mass_true.set_value(-1000.);
   time_true.set_value(-1000.);
   tag_true.set_value(0);
@@ -73,7 +103,7 @@ void Observables::reset() {
   comp_cat.set_value(-10000);
 }
 
-void Observables::registerObservableBranches(TTree& out_tree) {
+void Observables::RegisterObservableBranches(TTree& out_tree) {
   for (auto& obs_pair : observables_real_) {
     out_tree.Branch(obs_pair.second->var_name().c_str(),
                     &(obs_pair.second->value_),

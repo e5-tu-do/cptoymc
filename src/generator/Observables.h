@@ -11,6 +11,11 @@
 class TTree;
 
 namespace cptoymc {
+namespace configuration{
+// forward declaration
+class ObsConfig;
+} // namespace configuration
+  
 namespace generator {
 
 class Observable {
@@ -23,10 +28,14 @@ public:
   const std::string& dim_name() const {return dim_name_;}
   const std::string& var_name() const {return var_name_;}
   const std::string& var_title() const {return var_title_;}
+  
+  void set_var_name(const std::string& var_name)   { var_name_  = var_name;}
+  void set_var_title(const std::string& var_title) { var_title_ = var_title;}
+  
   virtual const std::string& var_type() = 0;
   
 protected:
-  std::string dim_name_;
+  const std::string dim_name_;
   std::string var_name_;
   std::string var_title_;
 };
@@ -97,8 +106,9 @@ public:
   Observables();
   ~Observables() { }
 
-  void reset();
-  void registerObservableBranches(TTree& out_tree);
+  void Configure(const std::shared_ptr<configuration::ObsConfig> obs_config);
+  void Reset();
+  void RegisterObservableBranches(TTree& out_tree);
 
   ObservableReal mass_true;
   ObservableReal time_true;

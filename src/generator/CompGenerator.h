@@ -23,9 +23,10 @@ public:
   virtual ~CompGenerator();
 
   virtual void Configure(const configuration::CompConfig& comp_config) = 0;
-  virtual void GenerateEvent(TRandom& rndm, Observables& observables)  = 0;
+  void GenerateEvent(TRandom& rndm, Observables& observables);
   
 protected:
+  virtual bool TryGenerateEvent(TRandom& rndm, Observables& observables) = 0;
   unsigned int max_trials_;
 };
 

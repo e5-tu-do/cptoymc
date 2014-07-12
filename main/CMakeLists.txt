@@ -1,6 +1,5 @@
 # Executables
 add_executable(DoToyGen DoToyGenMain.cpp)
-
 # Aliases for module libs
 
 # Linker information

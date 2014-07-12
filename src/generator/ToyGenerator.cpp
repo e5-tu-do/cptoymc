@@ -23,33 +23,34 @@ namespace cptoymc {
 namespace generator {
 
 
-ToyGenerator::ToyGenerator(const cptoymc::configuration::ToyConfig& config) :
-  config_(config)
+ToyGenerator::ToyGenerator(const cptoymc::configuration::ToyConfig& config, unsigned int seed) :
+  config_(config),
+  obs_(),
+  comp_generators_(),
+  seed_(seed),
+  rndm_(new TRandom3(seed_))
 {
+  // initialize observables
+  obs_.Configure(config_.obs_config());
   
+  // initialize component generators
+  for ( auto comp_config : config_.comp_configs() ) {
+    comp_generators_.emplace(comp_config.first,CompGeneratorFactory::Instance()->CreateGenerator(comp_config.second));
+  }
+
 }
   
   
 ToyGenerator::~ToyGenerator() {
-  
+  delete rndm_;
 }
 
 void ToyGenerator::GenerateToy(TTree& out_tree) {
   using configuration::CompConfig;
-  //CompGeneratorRegistrar<BSig_CPV_P2VP_Generator> registrar("BSig_CPV_P2VP");
-
-  TRandom3 rndm(0);
-
-  
-  std::string tree_name = "ToyMC";
-  std::string tree_desc = "ToyMC Tree";
-  
-  // Prepare Observables
-  Observables obs;
-   
   
   // Prepare Tree
-  obs.registerObservableBranches(out_tree);
+  obs_.Reset();
+  obs_.RegisterObservableBranches(out_tree);
   
   
   // loop over components, get their yield
@@ -59,26 +60,35 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
   int num_events_of_comp = 0;
   int num_events_total   = 0;
   
-  
-  
   for ( auto comp_config : config_.comp_configs() ) {
     comp_name = comp_config.first;
     comp_cat  = comp_config.second.comp_cat();
-    exp_events_of_comp = comp_config.second.yield();
+    exp_events_of_comp = comp_config.second.exp_yield();
     
-    num_events_of_comp = generator::yieldToGenerate(rndm, exp_events_of_comp);
+    num_events_of_comp = generator::yieldToGenerate(*rndm_, exp_events_of_comp);
     num_events_total += num_events_of_comp;
     std::cout << "Generating " << num_events_of_comp << " events for component "
               << comp_name << " (expected yield: " << exp_events_of_comp << ")"
               << std::endl;
-    auto comp_generator = CompGeneratorFactory::Instance()->CreateGenerator(comp_config.second);
-    for (int i=0; i < num_events_of_comp; ++i) {
-      obs.reset();
-      comp_generator->GenerateEvent(rndm, obs);
-      out_tree.Fill();
+    
+    auto comp_generator = comp_generators_.find(comp_name);
+    if (comp_generator != comp_generators_.end()) {
+      for (int i=0; i < num_events_of_comp; ++i) {
+        obs_.Reset();
+        comp_generator->second->GenerateEvent(*rndm_, obs_);
+        out_tree.Fill();
+      }
+    } else {
+      std:: cout << "Could not find component generator for component " << comp_name << std::endl;
     }
+    
   }
   
+}
+  
+void ToyGenerator::GenerateToy(TTree& out_tree, unsigned int seed) {
+  rndm_->SetSeed(seed);
+  GenerateToy(out_tree);
 }
   
 } // namespace cptoymc
