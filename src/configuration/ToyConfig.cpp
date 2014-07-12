@@ -40,6 +40,7 @@ void ToyConfig::load(const std::string& config_file) {
   // Configuration of observables
   auto pt_obs = pt.get_child("Observables");
   obs_config_ = std::unique_ptr<ObsConfig>(new ObsConfig(pt_obs));
+    
   
   // Configuriation of components
   std::cout << "Configuring the generators for the different components." << std::endl;

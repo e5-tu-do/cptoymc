@@ -134,7 +134,11 @@ Observables {
     name          "catBkg"
     desc          "catBkg"
     type          Integer
-    range         [1,10,100]
+    range         {
+      "" 1 
+      "" 10 
+      "" 100
+    }
   }      
   
   ; Mass 
@@ -142,64 +146,84 @@ Observables {
     name          "obsMassTrue"
     desc          "m'"
     type          Real
-    range         [5000.,5500.]
+    min           5000. 
+    max           5500.
   }
   mass_meas {
     name          "obsMass"
     desc          "m"
     type          Real
-    range         [5200.,5400.]
+    min           5200.
+    max           5400.
   }      
   
   ; Time 
   time_true {
-      name          "obsTimeTrue"
-      desc          "t'"
-      type          Real
-      range         [0.,18.]
-    }
-    time_meas {
-      name          "obsTime"
-      desc          "t"
-      type          Real
-      range         [-2.,20]
-    }
+    name          "obsTimeTrue"
+    desc          "t'"
+    type          Real
+    min           0.
+    max           18.
+  }
+  time_meas {
+    name          "obsTime"
+    desc          "t"
+    type          Real
+    min           -2.
+    max           20.
+  }
   ; Tagging
   tag_true {
     name          "obsTagTrue"
     desc          "d'"
     type          Integer
-    range         [-1,+1]
+    range {
+      "" -1
+      "" +1
+    }
   }
   tag_OS {
     name          "obsTagOS"
     desc          "d_{OS}"
     type          Integer
-    range         [-1,+1]
+    range {
+      "" -1
+      "" +1
+    }
   }
   eta_OS {
     name          "obsEtaOS"
     desc          "#eta_{OS}"
     type          Real
-    range         [0.,0.5]
+    min           0.
+    max           0.5
   }
   tag_SS {
     name          "obsTagSS"
     desc          "d_{SS}"
     type          Integer
-    range         [-1,+1]
+    range {
+     "" -1 
+     "" +1
+    }
   }
   eta_SS {
     name          "obsEtaSS"
     desc          "#eta_{SS}"
     type          Real
-    range         [0.,0.5]
+    min           0.
+    max           0.5    
   }
   tag_class {
     name          "catTaggedOSSSPion"
     desc          "catTag"
     type          Integer
-    range         [0,1,10,100]
+    range         {
+      "" 0
+      "" 1
+      "" 10 
+      "" 100
+    } 
   }
 }
 
