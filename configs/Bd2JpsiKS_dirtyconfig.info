@@ -10,7 +10,7 @@ Components
   {    
     name     "Sig_Bd"
     comp_cat 1
-    yield    0
+    yield    10000
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -55,7 +55,7 @@ Components
   { 
     name     "Sig_Bs"
     comp_cat 10
-    yield    0
+    yield    10000
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -128,69 +128,102 @@ Components
 } 
 
 ; observable dimensions to be generated. Specifies their name in the TTree.
-Dimensions {
-  EventInfo {
-    comp_cat {
-      name          "catBkg"
-      desc          "catBkg"
-      range         [1,10,100]
-    }      
+Observables {
+  ; EventInfo
+  comp_cat {
+    name          "catBkg"
+    desc          "catBkg"
+    type          Integer
+    range         {
+      "" 1 
+      "" 10 
+      "" 100
+    }
+  }      
+  
+  ; Mass 
+  mass_true {
+    name          "obsMassTrue"
+    desc          "m'"
+    type          Real
+    min           5000. 
+    max           5500.
   }
-  Mass {
-    mass_true {
-      name          "obsMassTrue"
-      desc          "m'"
-      range         [5000.,5500.]
-    }
-    mass_meas {
-      name          "obsMass"
-      desc          "m"
-      range         [5200.,5400.]
-    }      
+  mass_meas {
+    name          "obsMass"
+    desc          "m"
+    type          Real
+    min           5200.
+    max           5400.
+  }      
+  
+  ; Time 
+  time_true {
+    name          "obsTimeTrue"
+    desc          "t'"
+    type          Real
+    min           0.
+    max           18.
   }
-  Time {
-    time_true {
-      name          "obsTimeTrue"
-      desc          "t'"
-      range         [0.,18.]
-    }
-    time_meas {
-      name          "obsTime"
-      desc          "t"
-      range         [-2.,20]
+  time_meas {
+    name          "obsTime"
+    desc          "t"
+    type          Real
+    min           -2.
+    max           20.
+  }
+  ; Tagging
+  tag_true {
+    name          "obsTagTrue"
+    desc          "d'"
+    type          Integer
+    range {
+      "" -1
+      "" +1
     }
   }
-  Tagging {
-    tag_true {
-      name          "obsTagTrue"
-      desc          "d'"
-      range         [-1,+1]
+  tag_OS {
+    name          "obsTagOSis"
+    desc          "d_{OS}"
+    type          Integer
+    range {
+      "" -1
+      "" +1
     }
-    tag_OS {
-      name          "obsTagOS"
-      desc          "d_{OS}"
-      range         [-1,+1]
+  }
+  eta_OS {
+    name          "obsEtaOS"
+    desc          "#eta_{OS}"
+    type          Real
+    min           0.
+    max           0.5
+  }
+  tag_SS {
+    name          "obsTagSS"
+    desc          "d_{SS}"
+    type          Integer
+    range {
+     "" -1 
+     "" +1
     }
-    eta_OS {
-      name          "obsEtaOS"
-      desc          "#eta_{OS}"
-      range         [0.,0.5]
-    }
-    tag_SS {
-      name          "obsTagSS"
-      desc          "d_{SS}"
-      range         [-1,+1]
-    }
-    eta_SS {
-      name          "obsEtaSS"
-      desc          "#eta_{SS}"
-      range         [0.,0.5]
-    }
-    tag_class {
-      name          "catTaggedOSSSPion"
-      desc          "catTag"
-      range         [0,1,10,100]
-    }
+  }
+  eta_SS {
+    name          "obsEtaSS"
+    desc          "#eta_{SS}"
+    type          Real
+    min           0.
+    max           0.5    
+  }
+  tag_class {
+    name          "catTaggedOSSSPion"
+    desc          "catTag"
+    type          Integer
+    range         {
+      "" 0
+      "" 1
+      "" 10 
+      "" 100
+    } 
   }
 }
 
