@@ -128,69 +128,78 @@ Components
 } 
 
 ; observable dimensions to be generated. Specifies their name in the TTree.
-Dimensions {
-  EventInfo {
-    comp_cat {
-      name          "catBkg"
-      desc          "catBkg"
-      range         [1,10,100]
-    }      
+Observables {
+  ; EventInfo
+  comp_cat {
+    name          "catBkg"
+    desc          "catBkg"
+    type          Integer
+    range         [1,10,100]
+  }      
+  
+  ; Mass 
+  mass_true {
+    name          "obsMassTrue"
+    desc          "m'"
+    type          Real
+    range         [5000.,5500.]
   }
-  Mass {
-    mass_true {
-      name          "obsMassTrue"
-      desc          "m'"
-      range         [5000.,5500.]
-    }
-    mass_meas {
-      name          "obsMass"
-      desc          "m"
-      range         [5200.,5400.]
-    }      
-  }
-  Time {
-    time_true {
+  mass_meas {
+    name          "obsMass"
+    desc          "m"
+    type          Real
+    range         [5200.,5400.]
+  }      
+  
+  ; Time 
+  time_true {
       name          "obsTimeTrue"
       desc          "t'"
+      type          Real
       range         [0.,18.]
     }
     time_meas {
       name          "obsTime"
       desc          "t"
+      type          Real
       range         [-2.,20]
     }
+  ; Tagging
+  tag_true {
+    name          "obsTagTrue"
+    desc          "d'"
+    type          Integer
+    range         [-1,+1]
   }
-  Tagging {
-    tag_true {
-      name          "obsTagTrue"
-      desc          "d'"
-      range         [-1,+1]
-    }
-    tag_OS {
-      name          "obsTagOS"
-      desc          "d_{OS}"
-      range         [-1,+1]
-    }
-    eta_OS {
-      name          "obsEtaOS"
-      desc          "#eta_{OS}"
-      range         [0.,0.5]
-    }
-    tag_SS {
-      name          "obsTagSS"
-      desc          "d_{SS}"
-      range         [-1,+1]
-    }
-    eta_SS {
-      name          "obsEtaSS"
-      desc          "#eta_{SS}"
-      range         [0.,0.5]
-    }
-    tag_class {
-      name          "catTaggedOSSSPion"
-      desc          "catTag"
-      range         [0,1,10,100]
-    }
+  tag_OS {
+    name          "obsTagOS"
+    desc          "d_{OS}"
+    type          Integer
+    range         [-1,+1]
+  }
+  eta_OS {
+    name          "obsEtaOS"
+    desc          "#eta_{OS}"
+    type          Real
+    range         [0.,0.5]
+  }
+  tag_SS {
+    name          "obsTagSS"
+    desc          "d_{SS}"
+    type          Integer
+    range         [-1,+1]
+  }
+  eta_SS {
+    name          "obsEtaSS"
+    desc          "#eta_{SS}"
+    type          Real
+    range         [0.,0.5]
+  }
+  tag_class {
+    name          "catTaggedOSSSPion"
+    desc          "catTag"
+    type          Integer
+    range         [0,1,10,100]
   }
 }
 

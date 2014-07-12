@@ -14,7 +14,9 @@
 namespace cptoymc {
 namespace configuration {
 
-ToyConfig::ToyConfig()
+ToyConfig::ToyConfig() :
+  comp_configs_(),
+  obs_config_()
 {
 
 }
@@ -34,7 +36,13 @@ void ToyConfig::load(const std::string& config_file) {
     std::cout << "Tree is empty! Cannot configure the toy generator. Aborting." << std::endl;
     return;
   }
-
+  
+  // Configuration of observables
+  auto pt_obs = pt.get_child("Observables");
+  obs_config_ = std::unique_ptr<ObsConfig>(new ObsConfig(pt_obs));
+  
+  // Configuriation of components
+  std::cout << "Configuring the generators for the different components." << std::endl;
   auto pt_comp = pt.get_child("Components");
   for (auto pt_comp_it : pt_comp) {
     comp_configs_.emplace(
@@ -45,6 +53,7 @@ void ToyConfig::load(const std::string& config_file) {
                  pt_comp_it.second.get<std::string>("model","NoModel"),
                  pt_comp_it.second.get_child("model"))
                  );
+    std::cout << "   Added component " << pt_comp_it.first << std::endl;
   }
 
 

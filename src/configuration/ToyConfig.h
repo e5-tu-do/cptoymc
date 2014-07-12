@@ -7,6 +7,7 @@
 
 // from project
 #include "configuration/CompConfig.h"
+#include "configuration/ObsConfig.h"
 
 namespace cptoymc {
 namespace configuration {
@@ -23,7 +24,7 @@ public:
   
 private:
   std::map<std::string,CompConfig> comp_configs_;
-  //boost::property_tree::ptree obs_ptree_;
+  std::unique_ptr<ObsConfig> obs_config_;
 };
 
 } // namespace configuration
