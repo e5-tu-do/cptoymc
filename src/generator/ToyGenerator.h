@@ -20,7 +20,10 @@ class ToyConfig;
 } // namespace configuration
   
 namespace generator {
-
+// forward declarations
+class CompGenerator;
+  
+  
 class ToyGenerator {
 public:
   ToyGenerator(const cptoymc::configuration::ToyConfig& config, unsigned int seed = 0);
@@ -33,9 +36,10 @@ private:
   ToyGenerator();
   const configuration::ToyConfig& config_;
   Observables obs_;
+  std::map<std::string,std::shared_ptr<CompGenerator>> comp_generators_;
+  
   unsigned int seed_;
   TRandom* rndm_;
-
 };
 
 
