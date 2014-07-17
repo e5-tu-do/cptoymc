@@ -106,18 +106,15 @@ int main(int argc, char * argv[]){
   RooCategory       obsTagOS("obsTagOS","Flavour Tag");
   obsTagOS.defineType("B0",1);
   obsTagOS.defineType("B0bar",-1);
-  obsTagOS.defineType("untagged",0);
   RooRealVar        obsEtaSS("obsEtaSS","#eta_{SS#pi}",0.,0.5);
   RooCategory       obsTagSS("obsTagSS","Flavour Tag");
   obsTagSS.defineType("B0",1);
   obsTagSS.defineType("B0bar",-1);
-  obsTagSS.defineType("untagged",0);
   
   RooCategory       catTaggedOSSSPion("catTaggedOSSSPion","OS or SSPion tagged");
   catTaggedOSSSPion.defineType("OS",1);
-  // catTaggedOSSSPion.defineType("SS",-1);
-  // catTaggedOSSSPion.defineType("OSSS",10);
-  // catTaggedOSSSPion.defineType("ut",0);
+  catTaggedOSSSPion.defineType("SS",-1);
+  catTaggedOSSSPion.defineType("OSSS",10);
   
   RooArgSet         observables(obsTime,obsMass,obsEtaOS,obsTagOS,obsEtaSS,obsTagSS,catTaggedOSSSPion,"observables");
   
@@ -150,9 +147,9 @@ int main(int argc, char * argv[]){
   RooConstVar                             parSigEtaDeltaP0_OS("parSigEtaDeltaP0_OS","parSigEtaDeltaP0_OS",0.);
   RooConstVar                             parSigEtaDeltaP1_OS("parSigEtaDeltaP1_OS","parSigEtaDeltaP1_OS",0.);
   RooConstVar                             parSigEtaMean_OS("parSigEtaMean_OS","parSigEtaMean_OS",0.25);
-  RooConstVar                             parSigEtaP0_SS("parSigEtaP0_SS","parSigEtaP0_SS",0.);
+  RooConstVar                             parSigEtaP0_SS("parSigEtaP0_SS","parSigEtaP0_SS",0.25);
   RooConstVar                             parSigEtaP1_SS("parSigEtaP1_SS","parSigEtaP1_SS",1.);
-  RooConstVar                             parSigEtaMean_SS("parSigEtaMean_SS","parSigEtaMean_SS",0.);
+  RooConstVar                             parSigEtaMean_SS("parSigEtaMean_SS","parSigEtaMean_SS",0.25);
   RooConstVar                             parSigEtaDeltaP0_SS("parSigEtaDeltaP0_SS","parSigEtaDeltaP0_SS",0.);
   RooConstVar                             parSigEtaDeltaP1_SS("parSigEtaDeltaP1_SS","parSigEtaDeltaP1_SS",0.);
   SingleMistagCalibrationWithAsymmetries  parSigTimeOmega_OS_Bd("parSigTimeOmega_OS_Bd","tagging calibration of OS taggers",obsEtaOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaMean_OS,SingleMistagCalibrationWithAsymmetries::kBdType);
@@ -163,13 +160,13 @@ int main(int argc, char * argv[]){
   // Decay Time PDF
   // RooBDecay params
   RooConstVar             parSigTimeSinh("parSigTimeSinh","Sh_{f}",0.0);
-  // CoshCoeff               parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS",parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd,obsTagOS);
-  // SinCoeffWithProdAsymm   parSigTimeSin_OS("parSigTimeSin_OS",parSigTimeSin2b,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kSType);
-  // SinCoeffWithProdAsymm   parSigTimeCos_OS("parSigTimeCos_OS",parSigTimeCjpsiKS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kCType);
+  CoshCoeff               parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS",parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd,obsTagOS);
+  SinCoeffWithProdAsymm   parSigTimeSin_OS("parSigTimeSin_OS",parSigTimeSin2b,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kSType);
+  SinCoeffWithProdAsymm   parSigTimeCos_OS("parSigTimeCos_OS",parSigTimeCjpsiKS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kCType);
 
-  RooFormulaVar           parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS","1.0 - @0*@1*(1.0 - 2.0*@2)",RooArgList(parSigEtaDeltaProd,obsTagOS,obsEtaOS));
-  RooFormulaVar           parSigTimeSin_OS("parSigTimeSin_OS","sin coefficient OS","-@0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeSin2b,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
-  RooFormulaVar           parSigTimeCos_OS("parSigTimeCos_OS","cos coefficient OS"," @0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeCjpsiKS,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
+  // RooFormulaVar           parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS","1.0 - @0*@1*(1.0 - 2.0*@2)",RooArgList(parSigEtaDeltaProd,obsTagOS,obsEtaOS));
+  // RooFormulaVar           parSigTimeSin_OS("parSigTimeSin_OS","sin coefficient OS","-@0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeSin2b,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
+  // RooFormulaVar           parSigTimeCos_OS("parSigTimeCos_OS","cos coefficient OS"," @0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeCjpsiKS,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
 
   CoshCoeff               parSigTimeCosh_SS("parSigTimeCosh_SS","cosh coefficient OS",parSigTimeOmega_SS_Bd,parSigTimeOmega_SS_Bdb,parSigEtaDeltaProd,obsTagSS);
   SinCoeffWithProdAsymm   parSigTimeSin_SS("parSigTimeSin_SS",parSigTimeSin2b,parSigTimeOmega_SS_Bd,parSigTimeOmega_SS_Bdb,obsTagSS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kSType);
@@ -268,9 +265,8 @@ int main(int argc, char * argv[]){
 
   RooSimultaneous         simpdf("simpdf","simpdf",catTaggedOSSSPion);
   simpdf.addPdf(pdf_OS,"OS");
-  // simpdf.addPdf(pdf_Combo,"OSSS");
-  // simpdf.addPdf(pdf_SS,"SS");
-  // simpdf.addPdf(pdf_ut,"ut");
+  simpdf.addPdf(pdf_Combo,"OSSS");
+  simpdf.addPdf(pdf_SS,"SS");
 
   if (method.EqualTo("g") || method.EqualTo("e")) {
             
