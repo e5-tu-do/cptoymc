@@ -165,7 +165,7 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
   bool gen_success = true;
   double random_val = rndm.Uniform();
   
-  if (random_val < params_taggingeffs_.eff_OS) {
+  if (random_val < params_taggingeffs_.eff_OS) { // generate OS tags and mistags
     gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
                                obs_tag_true.value(), obs_eta_OS.value_, obs_tag_OS.value_);
@@ -173,7 +173,7 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
     obs_eta_SS.value_ = 0.5;
     obs_tag_class.value_ = 1;
   }
-  else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) {
+  else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) { // generate SS tags and mistags
     gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
                                obs_tag_true.value(), obs_eta_SS.value_, obs_tag_SS.value_);
@@ -183,14 +183,14 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
   }
   else if (random_val < (  params_taggingeffs_.eff_OS
                          + params_taggingeffs_.eff_SS
-                         + params_taggingeffs_.eff_SSOS) ) {
+                         + params_taggingeffs_.eff_SSOS) ) { // generate overlap tags and mistags
     gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
                                obs_tag_true.value(), obs_eta_OS.value_, obs_tag_OS.value_);
     gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
                                obs_tag_true.value(), obs_eta_SS.value_, obs_tag_SS.value_);
-    obs_tag_class.value_ = 10;
+    obs_tag_class.value_ = -1;
   }
   else {
     obs_tag_SS.value_ = 1;
