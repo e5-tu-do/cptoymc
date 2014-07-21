@@ -192,7 +192,7 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
                                obs_tag_true.value(), obs_eta_SS.value_, obs_tag_SS.value_);
     obs_tag_class.value_ = -1;
   }
-  else {
+  else { // untagged
     obs_tag_SS.value_ = 1;
     obs_eta_SS.value_ = 0.5;
     obs_tag_OS.value_ = 1;
