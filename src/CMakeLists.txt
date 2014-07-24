@@ -15,5 +15,19 @@ add_library( CPToyMC
   generator/LLBkg_Generator.h           generator/LLBkg_Generator.cpp
  )
 
-# Linker information
-
+install(TARGETS CPToyMC DESTINATION lib)
+install(FILES 
+configuration/configuration.h
+configuration/ToyConfig.h
+configuration/CompConfig.h
+configuration/ObsConfig.h
+DESTINATION include/configuration)
+install(FILES 
+generator/generator.h
+generator/ToyGenerator.h
+generator/Observables.h
+generator/CompGenerator.h
+generator/CompGeneratorFactory.h
+generator/BSig_CPV_P2VP_Generator.h
+generator/LLBkg_Generator.h
+DESTINATION include/generator)

@@ -28,7 +28,7 @@ Components
         Sf        0.7    ; 2*Im(lambda_f)/1+|lambda_f|^2
         Cf        0.0    ; 1-|lambda_f|/1+|lambda_f|^2
         Df        0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
-        prod_asym 0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
+        AP        0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
       }
       TimeResol {
         bias  0.
