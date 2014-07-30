@@ -100,9 +100,9 @@ int main(int argc, char * argv[]){
   TString           StringNumCPU = argv[4];
   int num_cpu = StringNumCPU.Atoi();
   
-  RooRealVar        obsTime("obsTime","#it{t}",0.,18.,"ps");
+  RooRealVar        obsTime("obsTime","#it{t}",-2.,18.,"ps");
   RooRealVar        obsEtaOS("obsEtaOS","#eta_{OS}",0.,0.5);
-  RooRealVar        obsMass("obsMass","#it{m_{J/#kern[-0.3]{#psi} K_{S}}}",5200,5400,"MeV/c^{2}");
+  RooRealVar        obsMass("obsMass","#it{m_{J/#kern[-0.3]{#psi} K_{S}}}",5230,5330,"MeV/c^{2}");
   RooCategory       obsTagOS("obsTagOS","Flavour Tag");
   obsTagOS.defineType("B0",1);
   obsTagOS.defineType("B0bar",-1);
@@ -204,14 +204,11 @@ int main(int argc, char * argv[]){
   RooProdPdf              pdfSigTimeCond_SS("pdfSigTimeCond_SS","pdfSigTimeCond_OS",RooArgList(pdfSigEta_SS),Conditional(pdfSigTime_SS,RooArgSet(obsTime,obsTagSS)));
   RooBDecay               pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_Combo,parSigTimeSinh,parSigTimeCos_Combo,parSigTimeSin_Combo,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
   RooProdPdf              pdfSigTimeCond_Combo("pdfSigTimeCond_Combo","P_{S}^{l}(t,d|#eta)",RooArgList(pdfSigEta_OS,pdfSigEta_SS),Conditional(pdfSigTime_Combo,RooArgSet(obsTime,obsTagOS,obsTagSS)));
-
-  RooDecay                pdfSigTime_ut("pdfSigTime_ut","pdfSigTime_ut",obsTime,parSigTimeTau,resGauss,RooDecay::SingleSided);
   
   // Combination of observables
   RooProdPdf              pdfSig_OS("pdfSig_OS","pdfSig_OS",RooArgList(pdfSigTimeCond_OS,pdfSigMass));
   RooProdPdf              pdfSig_SS("pdfSig_SS","pdfSig_SS",RooArgList(pdfSigTimeCond_SS,pdfSigMass));
   RooProdPdf              pdfSig_Combo("pdfSig_Combo","pdfSig_Combo",RooArgList(pdfSigTimeCond_Combo,pdfSigMass));
-  RooProdPdf              pdfSig_ut("pdfSig_ut","pdfSig_ut",RooArgList(pdfSigTime_ut,pdfSigMass));
 
   // Background
   // Mass model
@@ -239,29 +236,24 @@ int main(int argc, char * argv[]){
   RooDataHist             datahistBkgEta_SS("datahistBkgEta_SS","data histogram of SSPion tagger",obsEtaSS,histBkgEta_SS);
   RooHistPdf              pdfBkgEta_SS("pdfBkgEta_SS","Background Eta SSPion PDF",obsEtaSS,datahistBkgEta_SS);
 
-  BiasDelta               pdfBkgEta_ut("pdfBkgEta_ut","untagged background eta distribution",obsEtaOS,untaggedvalue);
   
   // Combination of observables
   RooProdPdf              pdfBkg_OS("pdfBkg_OS","pdfBkg_OS",RooArgList(pdfBkgTime,pdfBkgMass,pdfBkgEta_OS));
   RooProdPdf              pdfBkg_SS("pdfBkg_SS","pdfBkg_SS",RooArgList(pdfBkgTime,pdfBkgMass,pdfBkgEta_SS));
   RooProdPdf              pdfBkg_Combo("pdfBkg_Combo","pdfBkg_Combo",RooArgList(pdfBkgTime,pdfBkgMass,pdfBkgEta_OS,pdfBkgEta_SS));
-  RooProdPdf              pdfBkg_ut("pdfBkg_ut","pdfBkg_ut",RooArgList(pdfBkgTime,pdfBkgMass));
 
   // Combining signal and background
   RooRealVar              parSigYield_OS("parSigYield_OS","parSigYield_OS",100000,0,200000);
   RooRealVar              parSigYield_SS("parSigYield_SS","parSigYield_SS",100000,0,200000);
   RooRealVar              parSigYield_Combo("parSigYield_Combo","parSigYield_Combo",100000,0,200000);
-  RooRealVar              parSigYield_ut("parSigYield_ut","parSigYield_ut",100000,0,200000);
 
   RooRealVar              parBkgYield_OS("parBkgYield_OS","parBkgYield_OS",100000,0,200000);
   RooRealVar              parBkgYield_SS("parBkgYield_SS","parBkgYield_SS",100000,0,200000);
   RooRealVar              parBkgYield_Combo("parBkgYield_Combo","parBkgYield_Combo",100000,0,200000);
-  RooRealVar              parBkgYield_ut("parBkgYield_ut","parBkgYield_ut",100000,0,200000);
 
   RooAddPdf               pdf_OS("pdf_OS","pdf_OS",RooArgList(pdfSig_OS,pdfBkg_OS),RooArgList(parSigYield_OS,parBkgYield_OS));
   RooAddPdf               pdf_SS("pdf_SS","pdf_SS",RooArgList(pdfSig_SS,pdfBkg_SS),RooArgList(parSigYield_SS,parBkgYield_SS));
   RooAddPdf               pdf_Combo("pdf_Combo","pdf_Combo",RooArgList(pdfSig_Combo,pdfBkg_Combo),RooArgList(parSigYield_Combo,parBkgYield_Combo));
-  RooAddPdf               pdf_ut("pdf_ut","pdf_ut",RooArgList(pdfSig_ut,pdfBkg_ut),RooArgList(parSigYield_ut,parBkgYield_ut));
 
   RooSimultaneous         simpdf("simpdf","simpdf",catTaggedOSSSPion);
   simpdf.addPdf(pdf_OS,"OS");
@@ -287,7 +279,8 @@ int main(int argc, char * argv[]){
     
     RooLinkedList fitting_args;
     fitting_args.Add((TObject*)(new RooCmdArg(NumCPU(num_cpu))));
-    fitting_args.Add((TObject*)(new RooCmdArg(Minos(false))));
+    RooArgSet minosargset(parSigTimeSin2b,parSigTimeCjpsiKS);
+    fitting_args.Add((TObject*)(new RooCmdArg(Minos(minosargset))));
     fitting_args.Add((TObject*)(new RooCmdArg(Strategy(2))));
     fitting_args.Add((TObject*)(new RooCmdArg(Save(true))));
     fitting_args.Add((TObject*)(new RooCmdArg(Timer(true))));

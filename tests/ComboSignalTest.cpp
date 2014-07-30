@@ -44,8 +44,6 @@
 
 // from DooFit
 #include "doofit/roofit/functions/SinCoeffWithProdAsymm.h"
-// #include "doofit/roofit/functions/CosCoeffWithProdAsymm.h"
-// #include "doofit/roofit/functions/CosCoeffCombo.h"
 #include "doofit/roofit/functions/SinCoeffCombo.h"
 #include "doofit/roofit/functions/CoshCoeff.h"
 #include "doofit/roofit/functions/CoshCoeffCombo.h"
@@ -72,14 +70,6 @@ using namespace cptoymc::generator;
 
 int main(int argc, char * argv[]){
   
-  // Plots
-  // gROOT->SetStyle("Plain");
-  // setStyle("LHCb");
-  // TCanvas canvas("canvas","canvas",800,600);
-  // RooPlot* plot_frame;
-  // TLatex label(0.7,0.83,"Toys");
-  // label.SetNDC();
-  
   if (argc < 6)
   {
     cout  <<  "You need to provide:"  <<  endl;
@@ -100,17 +90,18 @@ int main(int argc, char * argv[]){
   TString           StringNumCPU = argv[4];
   int num_cpu = StringNumCPU.Atoi();
   
-  RooRealVar        obsTime("obsTime","#it{t}",0.,18.,"ps");
+  RooRealVar        obsTime("obsTime","#it{t}",-2.,18.,"ps");
+  RooRealVar        obsMass("obsMass","#it{m_{J/#kern[-0.3]{#psi} K_{S}}}",5230,5330,"MeV/c^{2}");
+  RooRealVar        obsEtaOS("obsEtaOS","#eta_{OS}",0.,0.5);
   RooCategory       obsTagOS("obsTagOS","Flavour Tag");
   obsTagOS.defineType("B0",1);
   obsTagOS.defineType("B0bar",-1);
-  obsTagOS.defineType("untagged",0);
+  RooRealVar        obsEtaSS("obsEtaSS","#eta_{SS#pi}",0.,0.5);
   RooCategory       obsTagSS("obsTagSS","Flavour Tag");
   obsTagSS.defineType("B0",1);
   obsTagSS.defineType("B0bar",-1);
-  obsTagSS.defineType("untagged",0);
   
-  RooArgSet         observables(obsTime,obsTagOS,obsTagSS,"observables");
+  RooArgSet         observables(obsTime,obsMass,obsTagOS,obsTagSS,obsEtaOS,obsEtaSS,"observables");
   
   // Resolution model
   RooRealVar        parResMean("parResMean","parResMean",0.);
@@ -134,11 +125,22 @@ int main(int argc, char * argv[]){
   // Decay Time PDF
   // RooBDecay params
   RooConstVar       parSigTimeSinh("parSigTimeSinh","Sh_{f}",0.0);
-  CoshCoeffCombo    parSigTimeCosh_Combo("parSigTimeCosh_Combo",obsTagOS,RooConst(0.),RooConst(1.),RooConst(0.),parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsTagSS,RooConst(0.),RooConst(1.),RooConst(0.),parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd);
-  SinCoeffCombo     parSigTimeSin_Combo("parSigTimeSin_Combo",parSigTimeSin2b,obsTagOS,RooConst(0.),RooConst(1.),RooConst(0.),parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsTagSS,RooConst(0.),RooConst(1.),RooConst(0.),parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,SinCoeffCombo::kSType);
-  SinCoeffCombo     parSigTimeCos_Combo("parSigTimeCos_Combo",parSigTimeCjpsiKS,obsTagOS,RooConst(0.),RooConst(1.),RooConst(0.),parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsTagSS,RooConst(0.),RooConst(1.),RooConst(0.),parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,SinCoeffCombo::kCType);
+  CoshCoeffCombo    parSigTimeCosh_Combo("parSigTimeCosh_Combo",obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsEtaOS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),obsEtaSS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd);
+  SinCoeffCombo     parSigTimeSin_Combo("parSigTimeSin_Combo",parSigTimeSin2b,obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsEtaOS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),obsEtaSS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,SinCoeffCombo::kSType);
+  SinCoeffCombo     parSigTimeCos_Combo("parSigTimeCos_Combo",parSigTimeCjpsiKS,obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsEtaOS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),obsEtaSS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,SinCoeffCombo::kCType);
 
-  RooBDecay               pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_Combo,parSigTimeSinh,parSigTimeCos_Combo,parSigTimeSin_Combo,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
+  RooBDecay         pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_Combo,parSigTimeSinh,parSigTimeCos_Combo,parSigTimeSin_Combo,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
+
+  // Mass PDF
+  RooRealVar        parSigMassMean("parSigMassMean","Bd Mean Mass",5279,5270,5290,"MeV/c^{2}");
+  RooRealVar        parSigMassSigma("parSigMassSigma","Sigma of Gaussian Mass",8.0,4.0,12.0,"MeV/c^{2}");
+  RooGaussian       pdfSigMass("pdfSigMass","Mass PDF",obsMass,parSigMassMean,parSigMassSigma);
+
+  // Full PDF
+  RooProdPdf        pdf_Combo("pdf_Combo","pdf_Combo",RooArgList(pdfSigTime_Combo,pdfSigMass));
+  RooRealVar        parSigYield_Combo("parSigYield_Combo","parSigYield_Combo",100000,0,200000);
+  RooExtendPdf      pdfExtend_Combo("pdfExtend_Combo","pdfExtend_Combo",pdf_Combo,parSigYield_Combo);
+
   if (method.EqualTo("g") || method.EqualTo("e")) {
             
     doofit::config::CommonConfig cfg_com("common");
@@ -164,9 +166,8 @@ int main(int argc, char * argv[]){
     fitting_args.Add((TObject*)(new RooCmdArg(Timer(true))));
     fitting_args.Add((TObject*)(new RooCmdArg(Minimizer("Minuit2","migrad"))));
     fitting_args.Add((TObject*)(new RooCmdArg(SumW2Error(false))));
-    fitting_args.Add((TObject*)(new RooCmdArg(Extended(false))));
+    fitting_args.Add((TObject*)(new RooCmdArg(Extended(true))));
     fitting_args.Add((TObject*)(new RooCmdArg(Optimize(1))));
-    // fitting_args.Add((TObject*)(new RooCmdArg(ConditionalObservables(obsEtaOS))));
 
     ToyConfig     cfg_cptoymc;
     cfg_cptoymc.load(argv[5]);
@@ -178,16 +179,11 @@ int main(int argc, char * argv[]){
       for (int i = 0; i < num_toys; ++i) {
         cout  <<  i <<  endl;
         try {
-          // TFile       outfile("ToyMC.root","recreate");
           TTree       tree("ToyMCTreetree","Tree of generation");
           cptoymc.GenerateToy(tree,random_seed);
-          // outfile.Write();
-          // outfile.Close();
           data = new RooDataSet("data","Toy MC data",&tree, observables);
-          // data->Print("v");
-          pdfSigTime_Combo.getParameters(*data)->readFromFile(argv[6]);
-          RooFitResult* fit_result = pdfSigTime_Combo.fitTo(*data,fitting_args);
-          // fit_result->Print("v");
+          pdfExtend_Combo.getParameters(*data)->readFromFile(argv[6]);
+          RooFitResult* fit_result = pdfExtend_Combo.fitTo(*data,fitting_args);
           tstudy.StoreFitResult(fit_result);
           delete data;
         } catch (...) {

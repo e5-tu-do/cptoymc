@@ -8,6 +8,7 @@
 #include "TROOT.h"
 #include "TH1.h"
 #include "TLine.h"
+#include "TTree.h"
 
 //from RooFit
 #include "RooCmdArg.h"
@@ -83,9 +84,8 @@ int main(int argc, char * argv[]){
   TString           StringNumCPU = argv[4];
   int num_cpu = StringNumCPU.Atoi();
   
-  RooRealVar        obsTime("obsTime","#it{t}",0.,18.,"ps");
-  RooRealVar        obsEtaOS("obsEtaOS","#eta_{OS}",0.,0.5);
-  RooRealVar        obsMass("obsMass","#it{m_{J/#kern[-0.3]{#psi} K_{S}}}",5200,5400,"MeV/c^{2}");
+  RooRealVar        obsTime("obsTime","#it{t}",-2.,18.,"ps");
+  RooRealVar        obsMass("obsMass","#it{m_{J/#kern[-0.3]{#psi} K_{S}}}",5230,5330,"MeV/c^{2}");
   RooCategory       obsTagOS("obsTagOS","Flavour Tag");
   obsTagOS.defineType("B0",1);
   obsTagOS.defineType("B0bar",-1);
@@ -122,10 +122,6 @@ int main(int argc, char * argv[]){
   CoshCoeff               parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS",parSigEtaMean_OS,parSigEtaMean_OS,parSigEtaDeltaProd,obsTagOS);
   SinCoeffWithProdAsymm   parSigTimeSin_OS("parSigTimeSin_OS",parSigTimeSin2b,parSigEtaMean_OS,parSigEtaMean_OS,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kSType);
   SinCoeffWithProdAsymm   parSigTimeCos_OS("parSigTimeCos_OS",parSigTimeCjpsiKS,parSigEtaMean_OS,parSigEtaMean_OS,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kCType);
-
-  // RooFormulaVar           parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS","1.0 - @0*@1*(1.0 - 2.0*@2)",RooArgList(parSigEtaDeltaProd,obsTagOS,obsEtaOS));
-  // RooFormulaVar           parSigTimeSin_OS("parSigTimeSin_OS","sin coefficient OS","-@0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeSin2b,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
-  // RooFormulaVar           parSigTimeCos_OS("parSigTimeCos_OS","cos coefficient OS"," @0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeCjpsiKS,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
   
   RooDecay                pdfSigTimeDecay_OS("pdfSigTimeDecay_OS","P_{S}^{OS}(t)",obsTime,parSigTimeTau,resGauss,RooDecay::SingleSided);
   // RooBCPGenDecay          pdfSigTime_OS("pdfSigTime_OS","P_{S}^{l}(t,d|#eta)",obsTime,obsTagOS,parSigTimeTau,parSigTimeDeltaM,obsEtaOS,parSigTimeCjpsiKS,parSigTimeSin2b,parSigTimeDelta,parSigEtaDeltaProd,resGauss,RooBCPGenDecay::SingleSided);
@@ -164,12 +160,12 @@ int main(int argc, char * argv[]){
     
     cfg_com.CheckHelpFlagAndPrintHelp();
         
-    RooWorkspace* ws = new RooWorkspace("ws");
-    ws->import(pdf_OS);
-    ws->defineSet("observables",observables);
-    ws->Print();
-    cfg_tfac.set_workspace(ws);
-    ToyFactoryStd tfac(cfg_com, cfg_tfac);
+    // RooWorkspace* ws = new RooWorkspace("ws");
+    // ws->import(pdf_OS);
+    // ws->defineSet("observables",observables);
+    // ws->Print();
+    // cfg_tfac.set_workspace(ws);
+    // ToyFactoryStd tfac(cfg_com, cfg_tfac);
 
     cfg_com.PrintAll();
     
@@ -185,11 +181,10 @@ int main(int argc, char * argv[]){
     fitting_args.Add((TObject*)(new RooCmdArg(SumW2Error(false))));
     fitting_args.Add((TObject*)(new RooCmdArg(Extended(true))));
     fitting_args.Add((TObject*)(new RooCmdArg(Optimize(1))));
-    // fitting_args.Add((TObject*)(new RooCmdArg(ConditionalObservables(obsEtaOS))));
 
-    // ToyConfig     cfg_cptoymc;
-    // cfg_cptoymc.load(argv[5]);
-    // ToyGenerator  cptoymc(cfg_cptoymc);
+    ToyConfig     cfg_cptoymc;
+    cfg_cptoymc.load(argv[5]);
+    ToyGenerator  cptoymc(cfg_cptoymc);
     
     RooDataSet* data = NULL;
 
@@ -197,10 +192,10 @@ int main(int argc, char * argv[]){
       for (int i = 0; i < num_toys; ++i) {
         cout  <<  i <<  endl;
         try {
-          // TTree       tree("ToyMCTreetree","Tree of generation");
-          // cptoymc.GenerateToy(tree,random_seed);
-          // data = new RooDataSet("data","Toy MC data",&tree, observables);
-          data = tfac.Generate();
+          TTree       tree("ToyMCTreetree","Tree of generation");
+          cptoymc.GenerateToy(tree,random_seed);
+          data = new RooDataSet("data","Toy MC data",&tree, observables);
+          // data = tfac.Generate();
           pdf_OS.getParameters(*data)->readFromFile(argv[6]);
           RooFitResult* fit_result = pdf_OS.fitTo(*data,fitting_args);
           tstudy.StoreFitResult(fit_result);
