@@ -28,7 +28,7 @@ Components
         Sf        0.7    ; 2*Im(lambda_f)/1+|lambda_f|^2
         Cf        0.0    ; 1-|lambda_f|/1+|lambda_f|^2
         Df        0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
-        prod_asym 0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
+        AP        0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
       }
       TimeResol {
         bias  0.
@@ -44,8 +44,8 @@ Components
         dp1_OS     0.
         dp0_OS     0.
         p1_SS      1.
-        p0_SS      0.25
-        etabar_SS  0.25
+        p0_SS      0.22
+        etabar_SS  0.22
         dp1_SS     0.
         dp0_SS     0.
       }
@@ -89,8 +89,8 @@ Components
         dp1_OS    0.
         dp0_OS    0.
         p1_SS     1.
-        p0_SS     0.25
-        etabar_SS 0.25
+        p0_SS     0.22
+        etabar_SS 0.22
         dp1_SS    0.
         dp0_SS    0.
       }
@@ -120,7 +120,7 @@ Components
         eff_SSOS  0.0436
         omega_OS  0.4
         domega_OS 0.
-        omega_SS  0.4
+        omega_SS  0.35
         domega_SS 0.
       }
     }
@@ -183,7 +183,7 @@ Observables {
     }
   }
   tag_OS {
-    name          "obsTagOSis"
+    name          "obsTagOS"
     desc          "d_{OS}"
     type          Integer
     range {
@@ -212,7 +212,7 @@ Observables {
     desc          "#eta_{SS}"
     type          Real
     min           0.
-    max           0.5    
+    max           0.44    
   }
   tag_class {
     name          "catTaggedOSSSPion"

@@ -109,7 +109,7 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
   bool gen_success = true;
   double random_val = rndm.Uniform();
   
-  if (random_val < params_taggingeffs_.eff_OS) {
+  if (random_val < params_taggingeffs_.eff_OS) { // generate OS tags and mistags
     gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
                 obs_tag_true.value(), obs_tag_OS.value_);
@@ -117,7 +117,7 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
     obs_eta_SS.value_ = 0.5;
     obs_tag_class.value_ = 1;
   }
-  else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) {
+  else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) { // generate SS tags and mistags
     gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
                 obs_tag_true.value(), obs_tag_SS.value_);
@@ -127,16 +127,16 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
   }
   else if (random_val < (  params_taggingeffs_.eff_OS
                          + params_taggingeffs_.eff_SS
-                         + params_taggingeffs_.eff_SSOS) ) {
+                         + params_taggingeffs_.eff_SSOS) ) { // generate overlap tags and mistags
     gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
                                obs_tag_true.value(), obs_tag_OS.value_);
     gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
                                obs_tag_true.value(), obs_tag_SS.value_);
-    obs_tag_class.value_ = 10;
+    obs_tag_class.value_ = -1;
   }
-  else {
+  else { // untagged
     obs_tag_SS.value_ = 1;
     obs_eta_SS.value_ = 0.5;
     obs_tag_OS.value_ = 1;
