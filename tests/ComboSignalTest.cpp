@@ -43,11 +43,7 @@
 #include "doocore/io/EasyTuple.h"
 
 // from DooFit
-#include "doofit/roofit/functions/SinCoeffWithProdAsymm.h"
-#include "doofit/roofit/functions/SinCoeffCombo.h"
-#include "doofit/roofit/functions/CoshCoeff.h"
-#include "doofit/roofit/functions/CoshCoeffCombo.h"
-#include "doofit/roofit/functions/SingleMistagCalibrationWithAsymmetries.h"
+#include "doofit/roofit/functions/CPCoefficient.h"
 #include "doofit/roofit/pdfs/BiasDelta.h"
 #include "doofit/config/CommonConfig.h"
 #include "doofit/toy/ToyFactoryStd/ToyFactoryStd.h"
@@ -120,14 +116,14 @@ int main(int argc, char * argv[]){
   // Tagging asymmetries
   RooRealVar        parSigEtaDeltaProd("parSigEtaDeltaProd","asymmetry",0.02,-0.5,0.5);
   RooConstVar       parSigEtaMean_OS("parSigEtaMean_OS","parSigEtaMean_OS",0.25);
-  RooConstVar       parSigEtaMean_SS("parSigEtaMean_SS","parSigEtaMean_SS",0.25);
+  RooConstVar       parSigEtaMean_SS("parSigEtaMean_SS","parSigEtaMean_SS",0.22);
 
   // Decay Time PDF
   // RooBDecay params
   RooConstVar       parSigTimeSinh("parSigTimeSinh","Sh_{f}",0.0);
-  CoshCoeffCombo    parSigTimeCosh_Combo("parSigTimeCosh_Combo",obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsEtaOS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),obsEtaSS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd);
-  SinCoeffCombo     parSigTimeSin_Combo("parSigTimeSin_Combo",parSigTimeSin2b,obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsEtaOS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),obsEtaSS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,SinCoeffCombo::kSType);
-  SinCoeffCombo     parSigTimeCos_Combo("parSigTimeCos_Combo",parSigTimeCjpsiKS,obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsEtaOS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),obsEtaSS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,SinCoeffCombo::kCType);
+  CPCoefficient     parSigTimeCosh_Combo("parSigTimeCosh_Combo",RooConst(1.0),obsTagOS,parSigEtaMean_OS,RooConst(1.),parSigEtaMean_OS,obsEtaOS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(1.),parSigEtaMean_SS,obsEtaSS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,CPCoefficient::kCosh);
+  CPCoefficient     parSigTimeSin_Combo("parSigTimeSin_Combo",parSigTimeSin2b,obsTagOS,parSigEtaMean_OS,RooConst(1.),parSigEtaMean_OS,obsEtaOS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(1.),parSigEtaMean_SS,obsEtaSS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,CPCoefficient::kSin);
+  CPCoefficient     parSigTimeCos_Combo("parSigTimeCos_Combo",parSigTimeCjpsiKS,obsTagOS,parSigEtaMean_OS,RooConst(1.),parSigEtaMean_OS,obsEtaOS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(1.),parSigEtaMean_SS,obsEtaSS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,CPCoefficient::kCos);
 
   RooBDecay         pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_Combo,parSigTimeSinh,parSigTimeCos_Combo,parSigTimeSin_Combo,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
 
@@ -168,6 +164,7 @@ int main(int argc, char * argv[]){
     fitting_args.Add((TObject*)(new RooCmdArg(SumW2Error(false))));
     fitting_args.Add((TObject*)(new RooCmdArg(Extended(true))));
     fitting_args.Add((TObject*)(new RooCmdArg(Optimize(1))));
+    fitting_args.Add((TObject*)(new RooCmdArg(ConditionalObservables(RooArgSet(obsEtaOS,obsEtaSS)))));
 
     ToyConfig     cfg_cptoymc;
     cfg_cptoymc.load(argv[5]);
