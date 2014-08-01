@@ -32,9 +32,9 @@ ObservableInt::ObservableInt(const std::string& dim_name, const std::string& var
   valid_values_(),
   var_type_("I")
 {
-//  for (auto type_value_pair : types_) {
-//    types_.emplace(type_value_pair.second);
-//  }
+  for (auto type_value_pair : types_) {
+    valid_values_.emplace(type_value_pair.second);
+  }
 }
   
 
