@@ -7,7 +7,6 @@ add_executable(OSTest OSTest.cpp)
 add_executable(ComboTest ComboTest.cpp)
 add_executable(SpecialComboTest SpecialComboTest.cpp)
 add_executable(SelfGenerationComboTest SelfGenerationComboTest.cpp)
-add_executable(FormulaVarGenerationComboTest FormulaVarGenerationComboTest.cpp)
 
 # Aliases for module libs
 
@@ -20,4 +19,3 @@ target_link_libraries(OSTest CPToyMC ${DOOSOFT_LIBRARIES} ${ALL_LIBRARIES})
 target_link_libraries(ComboTest CPToyMC ${DOOSOFT_LIBRARIES} ${ALL_LIBRARIES})
 target_link_libraries(SpecialComboTest CPToyMC ${DOOSOFT_LIBRARIES} ${ALL_LIBRARIES})
 target_link_libraries(SelfGenerationComboTest ${DOOSOFT_LIBRARIES} ${ALL_LIBRARIES})
-target_link_libraries(FormulaVarGenerationComboTest ${DOOSOFT_LIBRARIES} ${ALL_LIBRARIES})

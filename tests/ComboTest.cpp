@@ -43,10 +43,6 @@
 #include "doocore/io/EasyTuple.h"
 
 // from DooFit
-#include "doofit/roofit/functions/SinCoeffWithProdAsymm.h"
-#include "doofit/roofit/functions/SinCoeffCombo.h"
-#include "doofit/roofit/functions/CoshCoeff.h"
-#include "doofit/roofit/functions/CoshCoeffCombo.h"
 #include "doofit/roofit/functions/CPCoefficient.h"
 #include "doofit/roofit/pdfs/BiasDelta.h"
 #include "doofit/config/CommonConfig.h"

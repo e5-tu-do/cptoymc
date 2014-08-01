@@ -43,13 +43,7 @@
 #include "doocore/io/EasyTuple.h"
 
 // from DooFit
-#include "doofit/roofit/functions/SinCoeffWithProdAsymm.h"
-// #include "doofit/roofit/functions/CosCoeffWithProdAsymm.h"
-// #include "doofit/roofit/functions/CosCoeffCombo.h"
-#include "doofit/roofit/functions/SinCoeffCombo.h"
-#include "doofit/roofit/functions/CoshCoeff.h"
-#include "doofit/roofit/functions/CoshCoeffCombo.h"
-#include "doofit/roofit/functions/SingleMistagCalibrationWithAsymmetries.h"
+#include "doofit/roofit/functions/CPCoefficient.h"
 #include "doofit/roofit/pdfs/BiasDelta.h"
 #include "doofit/config/CommonConfig.h"
 #include "doofit/toy/ToyFactoryStd/ToyFactoryStd.h"
@@ -152,29 +146,25 @@ int main(int argc, char * argv[]){
   RooConstVar                             parSigEtaMean_SS("parSigEtaMean_SS","parSigEtaMean_SS",0.25);
   RooConstVar                             parSigEtaDeltaP0_SS("parSigEtaDeltaP0_SS","parSigEtaDeltaP0_SS",0.);
   RooConstVar                             parSigEtaDeltaP1_SS("parSigEtaDeltaP1_SS","parSigEtaDeltaP1_SS",0.);
-  SingleMistagCalibrationWithAsymmetries  parSigTimeOmega_OS_Bd("parSigTimeOmega_OS_Bd","tagging calibration of OS taggers",obsEtaOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaMean_OS,SingleMistagCalibrationWithAsymmetries::kBdType);
-  SingleMistagCalibrationWithAsymmetries  parSigTimeOmega_OS_Bdb("parSigTimeOmega_OS_Bdb","tagging calibration of OS taggers",obsEtaOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaMean_OS,SingleMistagCalibrationWithAsymmetries::kBdbType);
-  SingleMistagCalibrationWithAsymmetries  parSigTimeOmega_SS_Bd("parSigTimeOmega_SS_Bd","tagging calibration of SS taggers",obsEtaSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaMean_SS,SingleMistagCalibrationWithAsymmetries::kBdType);
-  SingleMistagCalibrationWithAsymmetries  parSigTimeOmega_SS_Bdb("parSigTimeOmega_SS_Bdb","tagging calibration of SS taggers",obsEtaSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaMean_SS,SingleMistagCalibrationWithAsymmetries::kBdbType);
 
   // Decay Time PDF
   // RooBDecay params
-  RooConstVar             parSigTimeSinh("parSigTimeSinh","Sh_{f}",0.0);
-  CoshCoeff               parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS",parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd,obsTagOS);
-  SinCoeffWithProdAsymm   parSigTimeSin_OS("parSigTimeSin_OS",parSigTimeSin2b,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kSType);
-  SinCoeffWithProdAsymm   parSigTimeCos_OS("parSigTimeCos_OS",parSigTimeCjpsiKS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,obsTagOS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kCType);
+  RooConstVar       parSigTimeSinh("parSigTimeSinh","Sh_{f}",0.0);
+  CPCoefficient     parSigTimeCosh_OS("parSigTimeCosh_OS",RooConst(1.0),obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaDeltaProd,CPCoefficient::kCosh);
+  CPCoefficient     parSigTimeSin_OS("parSigTimeSin_OS",parSigTimeSin2b,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaDeltaProd,CPCoefficient::kSin);
+  CPCoefficient     parSigTimeCos_OS("parSigTimeCos_OS",parSigTimeCjpsiKS,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaDeltaProd,CPCoefficient::kCos);
 
   // RooFormulaVar           parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS","1.0 - @0*@1*(1.0 - 2.0*@2)",RooArgList(parSigEtaDeltaProd,obsTagOS,obsEtaOS));
   // RooFormulaVar           parSigTimeSin_OS("parSigTimeSin_OS","sin coefficient OS","-@0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeSin2b,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
   // RooFormulaVar           parSigTimeCos_OS("parSigTimeCos_OS","cos coefficient OS"," @0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeCjpsiKS,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
 
-  CoshCoeff               parSigTimeCosh_SS("parSigTimeCosh_SS","cosh coefficient OS",parSigTimeOmega_SS_Bd,parSigTimeOmega_SS_Bdb,parSigEtaDeltaProd,obsTagSS);
-  SinCoeffWithProdAsymm   parSigTimeSin_SS("parSigTimeSin_SS",parSigTimeSin2b,parSigTimeOmega_SS_Bd,parSigTimeOmega_SS_Bdb,obsTagSS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kSType);
-  SinCoeffWithProdAsymm   parSigTimeCos_SS("parSigTimeCos_SS",parSigTimeCjpsiKS,parSigTimeOmega_SS_Bd,parSigTimeOmega_SS_Bdb,obsTagSS,parSigEtaDeltaProd,SinCoeffWithProdAsymm::kCType);  
+  CPCoefficient     parSigTimeCosh_SS("parSigTimeCosh_SS",RooConst(1.0),obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kCosh);
+  CPCoefficient     parSigTimeSin_SS("parSigTimeSin_SS",parSigTimeSin2b,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kSin);
+  CPCoefficient     parSigTimeCos_SS("parSigTimeCos_SS",parSigTimeCjpsiKS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kCos);  
   
-  CoshCoeffCombo    parSigTimeCosh_Combo("parSigTimeCosh_Combo",obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd);
-  SinCoeffCombo     parSigTimeSin_Combo("parSigTimeSin_Combo",parSigTimeSin2b,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,SinCoeffCombo::kSType);
-  SinCoeffCombo     parSigTimeCos_Combo("parSigTimeCos_Combo",parSigTimeCjpsiKS,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,SinCoeffCombo::kCType);
+  CPCoefficient     parSigTimeCosh_Combo("parSigTimeCosh_Combo",RooConst(1.0),obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kCosh);
+  CPCoefficient     parSigTimeSin_Combo("parSigTimeSin_Combo",parSigTimeSin2b,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kSin);
+  CPCoefficient     parSigTimeCos_Combo("parSigTimeCos_Combo",parSigTimeCjpsiKS,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kCos);
 
   // Eta PDF
   TH1D*                   histSigEta_OS = new TH1D("histSigEta_OS","histogram of OS tagger",100,obsEtaOS.getMin(),obsEtaOS.getMax());

@@ -45,11 +45,7 @@
 #include "doocore/io/EasyTuple.h"
 
 // from DooFit
-#include "doofit/roofit/functions/SinCoeffWithProdAsymm.h"
-#include "doofit/roofit/functions/SinCoeffCombo.h"
-#include "doofit/roofit/functions/CoshCoeff.h"
-#include "doofit/roofit/functions/CoshCoeffCombo.h"
-#include "doofit/roofit/functions/SingleMistagCalibrationWithAsymmetries.h"
+#include "doofit/roofit/functions/CPCoefficient.h"
 #include "doofit/roofit/pdfs/BiasDelta.h"
 #include "doofit/config/CommonConfig.h"
 #include "doofit/toy/ToyFactoryStd/ToyFactoryStd.h"
@@ -127,16 +123,16 @@ int main(int argc, char * argv[]){
   // Decay Time PDF
   // RooBDecay params
   RooConstVar       parSigTimeSinh("parSigTimeSinh","Sh_{f}",0.0);
-  CoshCoeffCombo    parSigTimeCosh_Combo("parSigTimeCosh_Combo",obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd);
-  SinCoeffCombo     parSigTimeSin_Combo("parSigTimeSin_Combo",parSigTimeSin2b,obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,SinCoeffCombo::kSType);
-  SinCoeffCombo     parSigTimeCos_Combo("parSigTimeCos_Combo",parSigTimeCjpsiKS,obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,SinCoeffCombo::kCType);
+  CPCoefficient     parSigTimeCosh_Combo("parSigTimeCosh_Combo",RooConst(1.0),obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,CPCoefficient::kCosh);
+  CPCoefficient     parSigTimeSin_Combo("parSigTimeSin_Combo",parSigTimeSin2b,obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,CPCoefficient::kSin);
+  CPCoefficient     parSigTimeCos_Combo("parSigTimeCos_Combo",parSigTimeCjpsiKS,obsTagOS,parSigEtaMean_OS,RooConst(0.),RooConst(0.),parSigEtaMean_OS,RooConst(0.),RooConst(0.),obsTagSS,parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaMean_SS,RooConst(0.),RooConst(0.),parSigEtaDeltaProd,CPCoefficient::kCos);     
 
-  RooBDecay         pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_Combo,parSigTimeSinh,parSigTimeCos_Combo,parSigTimeSin_Combo,parSigTimeDeltaM,tm,RooBDecay::SingleSided);
+  // RooBDecay         pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_Combo,parSigTimeSinh,parSigTimeCos_Combo,parSigTimeSin_Combo,parSigTimeDeltaM,tm,RooBDecay::SingleSided);
 
   RooFormulaVar     parSigTimeCosh("parSigTimeCosh","parSigTimeCosh","1.0 - @0*@1*(1-2.0*@2)",RooArgList(obsTagOS,parSigEtaDeltaProd,parSigEtaMean_OS));
   RooFormulaVar     parSigTimeCos("parSigTimeCos","parSigTimeCos","@0*(@1*(1-2.0*@2)-@3)",RooArgList(parSigTimeCjpsiKS,obsTagOS,parSigEtaMean_OS,parSigEtaDeltaProd));
   RooFormulaVar     parSigTimeSin("parSigTimeSin","parSigTimeSin","-@0*(@1*(1-2.0*@2)-@3)",RooArgList(parSigTimeSin2b,obsTagOS,parSigEtaMean_OS,parSigEtaDeltaProd));
-  // RooBDecay         pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh,parSigTimeSinh,parSigTimeCos,parSigTimeSin,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
+  RooBDecay         pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh,parSigTimeSinh,parSigTimeCos,parSigTimeSin,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
 
   // Combination of observables
   RooProdPdf        pdfSig_Combo("pdfSig_Combo","pdfSig_Combo",RooArgList(pdfSigTime_Combo,pdfSigMass));
@@ -160,6 +156,22 @@ int main(int argc, char * argv[]){
   RooExtendPdf            pdfBkgExtend_Combo("pdfBkgExtend_Combo","pdfBkgExtend_Combo",pdfBkg_Combo,parBkgYield_Combo);
   RooAddPdf               pdf_Combo("pdf_Combo","pdf_Combo",RooArgList(pdfSigExtend_Combo,pdfBkgExtend_Combo));
   // RooAddPdf               pdf_Combo("pdf_Combo","pdf_Combo",RooArgList(pdfSig_Combo,pdfBkg_Combo),RooArgList(parSigYield_Combo,parBkgYield_Combo));
+
+  RooDataSet* testdata = NULL;
+  pdf_Combo.getParameters(*testdata)->readFromFile(argv[4]);
+  // obsTime.setVal(0.);
+  // obsTagOS.setIndex(1);obsTagSS.setIndex(1);
+  // pdfSigTime_Combo.Print();
+  pdfSigTime_Combo.createIntegral(RooArgSet(obsTime,obsTagOS,obsTagSS),NormSet(RooArgSet(obsTime,obsTagOS,obsTagSS)),Range("B0OS"),Range("B0SS"))->Print();
+  // obsTagOS.setIndex(1);obsTagSS.setIndex(-1);
+  // pdfSigTime_Combo.Print();
+  pdfSigTime_Combo.createIntegral(RooArgSet(obsTime,obsTagOS,obsTagSS),NormSet(RooArgSet(obsTime,obsTagOS,obsTagSS)),Range("B0OS"),Range("B0barSS"))->Print();
+  // obsTagOS.setIndex(-1);obsTagSS.setIndex(-1);
+  // pdfSigTime_Combo.Print();
+  pdfSigTime_Combo.createIntegral(RooArgSet(obsTime,obsTagOS,obsTagSS),NormSet(RooArgSet(obsTime,obsTagOS,obsTagSS)),Range("B0barOS"),Range("B0barSS"))->Print();
+  // obsTagOS.setIndex(-1);obsTagSS.setIndex(1);
+  // pdfSigTime_Combo.Print();
+  pdfSigTime_Combo.createIntegral(RooArgSet(obsTime,obsTagOS,obsTagSS),NormSet(RooArgSet(obsTime,obsTagOS,obsTagSS)),Range("B0barOS"),Range("B0SS"))->Print();
 
   if (method.EqualTo("g") || method.EqualTo("e")) {
             
@@ -224,19 +236,6 @@ int main(int argc, char * argv[]){
           EasyTuple tuple_bkg(*bkg_data);
           tuple_bkg.WriteDataSetToTree("selfgeneration_bkg.root","Bd2JpsiKS");
           pdf_Combo.getParameters(*data)->readFromFile(argv[4]);
-          // obsTime.setVal(0.);
-          // obsTagOS.setIndex(1);obsTagSS.setIndex(1);
-          // pdfSigTime_Combo.Print();
-          pdfSigTime_Combo.createIntegral(obsTime,Range("B0OS"),Range("B0SS"))->Print();
-          // obsTagOS.setIndex(1);obsTagSS.setIndex(-1);
-          // pdfSigTime_Combo.Print();
-          pdfSigTime_Combo.createIntegral(obsTime,Range("B0OS"),Range("B0barSS"))->Print();
-          // obsTagOS.setIndex(-1);obsTagSS.setIndex(-1);
-          // pdfSigTime_Combo.Print();
-          pdfSigTime_Combo.createIntegral(obsTime,Range("B0barOS"),Range("B0barSS"))->Print();
-          // obsTagOS.setIndex(-1);obsTagSS.setIndex(1);
-          // pdfSigTime_Combo.Print();
-          pdfSigTime_Combo.createIntegral(obsTime,Range("B0barOS"),Range("B0SS"))->Print();
           RooFitResult* fit_result = pdf_Combo.fitTo(*data,fitting_args);
           tstudy.StoreFitResult(fit_result);
           delete data;
