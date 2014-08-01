@@ -123,7 +123,7 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
                 obs_tag_true.value(), obs_tag_SS.value_);
     obs_tag_OS.value_ = 1;
     obs_eta_OS.value_ = 0.5;
-    obs_tag_class.value_ = -1;
+    obs_tag_class.value_ = 2;
   }
   else if (random_val < (  params_taggingeffs_.eff_OS
                          + params_taggingeffs_.eff_SS
@@ -134,7 +134,7 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
     gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
                                obs_tag_true.value(), obs_tag_SS.value_);
-    obs_tag_class.value_ = -1;
+    obs_tag_class.value_ = 2;
   }
   else { // untagged
     obs_tag_SS.value_ = 1;

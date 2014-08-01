@@ -153,8 +153,8 @@ Observables {
     name          "obsMass"
     desc          "m"
     type          Real
-    min           5200.
-    max           5400.
+    min           5180.
+    max           5520.
   }      
   
   ; Time 
@@ -183,7 +183,7 @@ Observables {
     }
   }
   tag_OS {
-    name          "obsTagOSis"
+    name          "obsTagOS"
     desc          "d_{OS}"
     type          Integer
     range {
@@ -215,14 +215,14 @@ Observables {
     max           0.5    
   }
   tag_class {
-    name          "catTaggedOSSSPion"
+    name          "catTaggedNominalCombo"
     desc          "catTag"
     type          Integer
     range         {
-      "" 0
-      "" 1
-      "" 10 
-      "" 100
+      "untagged" 0
+      "OS" 1
+      "SS" 2 
+      "OSSSoverlap" 2
     } 
   }
 }
