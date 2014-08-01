@@ -53,11 +53,18 @@ bool GenerateEtaFlat(TRandom& rndm, double& obs_eta);
 bool GenerateEtaFlat(TRandom& rndm, double obs_eta_min, double obs_eta_max, double& obs_eta);
 
 bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
+                 const int par_tag_true_B, const int par_tag_true_Bb,
+                 const int par_tag_B,      const int par_tag_Bb,
+                 int obs_tag_true, int& obs_tag_meas);
+  
+bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
                  int obs_tag_true, int& obs_tag_meas);
 
 bool GenerateTag(TRandom& rndm,
                  std::function<double(double)>& func_omega,
                  std::function<double(double)>& func_domega,
+                 const int par_tag_true_B, const int par_tag_true_Bb,
+                 const int par_tag_B,      const int par_tag_Bb,
                  int obs_tag_true, double obs_eta, int& obs_tag_meas);
   
 bool GenerateRandomTag(TRandom& rndm, int& obs_tag_meas);

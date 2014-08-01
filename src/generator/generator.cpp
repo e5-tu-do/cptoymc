@@ -94,24 +94,52 @@ bool GenerateEtaFlat(TRandom& rndm, double obs_eta_min, double obs_eta_max, doub
   obs_eta = rndm.Uniform(obs_eta_min,obs_eta_max);
   return true;
 }
-  
-bool GenerateTag(TRandom& rndm, double par_omega, double par_domega, int obs_tag_true, int& obs_tag_meas) {
+
+bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
+                 const int par_tag_true_B, const int par_tag_true_Bb,
+                 const int par_tag_B,      const int par_tag_Bb,
+                 int obs_tag_true, int& obs_tag_meas) {
   if (par_omega > 0.5) par_omega = 0.5;
   if (par_omega < 0.0) par_omega = 0.;
   
-  if (rndm.Uniform() < ( par_omega+(double)obs_tag_true*par_domega/2. )) {
-    obs_tag_meas = -1*obs_tag_true;
+  int correct_tag = 0;
+  
+  // always assume that omega_B  = omega + dOmega/2 for true B mesons
+  // and that           omega_Bb = omega - dOmega/2 for true Bb mesons
+  if (obs_tag_true == par_tag_true_B) {
+    par_omega += par_domega/2.; // B meson case
+    correct_tag = par_tag_B;
+  }
+  else if (obs_tag_true == par_tag_true_Bb) {
+    par_omega -= par_domega/2.; // Bb meson case
+    correct_tag = par_tag_Bb;
   } else {
-    obs_tag_meas = obs_tag_true;
+    std::cout << "Cannot interpret true tag of " << obs_tag_true << ". Failed." << std::endl;
+    return false;
+  }
+  
+  if (rndm.Uniform() < par_omega) {
+    obs_tag_meas = -1*correct_tag;
+  } else {
+    obs_tag_meas = correct_tag;
   }
   return true;
+}
+
+  
+bool GenerateTag(TRandom& rndm, double par_omega, double par_domega, int obs_tag_true, int& obs_tag_meas) {
+  return GenerateTag(rndm, par_omega, par_domega, +1, -1, +1, -1, obs_tag_true, obs_tag_meas);
 }
 
 bool GenerateTag(TRandom& rndm,
                  std::function<double(double)>& func_omega,
                  std::function<double(double)>& func_domega,
+                 const int par_tag_true_B, const int par_tag_true_Bb,
+                 const int par_tag_B,      const int par_tag_Bb,
                  int obs_tag_true, double obs_eta, int& obs_tag_meas) {
-  return GenerateTag(rndm, func_omega(obs_eta), func_domega(obs_eta), obs_tag_true, obs_tag_meas);
+  return GenerateTag(rndm, func_omega(obs_eta), func_domega(obs_eta),
+                     par_tag_true_B, par_tag_true_Bb, par_tag_B, par_tag_Bb,
+                     obs_tag_true, obs_tag_meas);
 }
   
 bool GenerateRandomTag(TRandom& rndm, int& obs_tag_meas) {
