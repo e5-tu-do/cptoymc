@@ -44,8 +44,8 @@ Components
         dp1_OS     0.
         dp0_OS     0.
         p1_SS      1.
-        p0_SS      0.25
-        etabar_SS  0.25
+        p0_SS      0.22
+        etabar_SS  0.22
         dp1_SS     0.
         dp0_SS     0.
       }
@@ -89,8 +89,8 @@ Components
         dp1_OS    0.
         dp0_OS    0.
         p1_SS     1.
-        p0_SS     0.25
-        etabar_SS 0.25
+        p0_SS     0.22
+        etabar_SS 0.22
         dp1_SS    0.
         dp0_SS    0.
       }
@@ -120,7 +120,7 @@ Components
         eff_SSOS  0.0436
         omega_OS  0.4
         domega_OS 0.
-        omega_SS  0.4
+        omega_SS  0.35
         domega_SS 0.
       }
     }
@@ -135,9 +135,9 @@ Observables {
     desc          "catBkg"
     type          Integer
     range         {
-      "" 1 
-      "" 10 
-      "" 100
+      "Sig_Bd" 1 
+      "Sig_Bs" 10 
+      "Bkg"    100
     }
   }      
   
@@ -178,17 +178,18 @@ Observables {
     desc          "d'"
     type          Integer
     range {
-      "" -1
-      "" +1
+      "Bb" -1
+      "B"  +1
     }
   }
   tag_OS {
-    name          "obsTagOSis"
+    name          "obsTagOS"
     desc          "d_{OS}"
     type          Integer
     range {
-      "" -1
-      "" +1
+      "Bb"   -1
+      "B"    +1
+      "None"  0
     }
   }
   eta_OS {
@@ -203,8 +204,9 @@ Observables {
     desc          "d_{SS}"
     type          Integer
     range {
-     "" -1 
-     "" +1
+     "Bb"   -1 
+     "B"    +1
+     "None" 0
     }
   }
   eta_SS {
@@ -212,17 +214,17 @@ Observables {
     desc          "#eta_{SS}"
     type          Real
     min           0.
-    max           0.5    
+    max           0.44    
   }
   tag_class {
     name          "catTaggedOSSSPion"
     desc          "catTag"
     type          Integer
     range         {
-      "" 0
-      "" 1
-      "" 10 
-      "" 100
+      "untagged" 0
+      "OSonly"   1
+      "SSonly"   10 
+      "OSandSS"  100
     } 
   }
 }

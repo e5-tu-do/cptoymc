@@ -18,7 +18,7 @@ ObsConfig::ObsConfig(const boost::property_tree::ptree& obs_ptree) :
   double min, max = -10000.;
   
   // for int vars
-  std::set<int> allowed_vals;
+  std::map<std::string,int> allowed_type_vals;
   
   for (auto pt_obs_it : obs_ptree) {
     obs_internal_name = pt_obs_it.first;
@@ -29,14 +29,14 @@ ObsConfig::ObsConfig(const boost::property_tree::ptree& obs_ptree) :
     std::cout << "   Preparing observable " << obs_internal_name
     << " with name " << obs_name;
     if ( obs_type == "Integer") {
-      allowed_vals.clear();
+      allowed_type_vals.clear();
       for (auto val : pt_obs_it.second.get_child("range")) {
-        allowed_vals.insert(val.second.get<int>(""));
+        allowed_type_vals.emplace(val.first, val.second.get<int>(""));
       }
-      obs_configs_int_.emplace(obs_internal_name,ObsConfInt(obs_name,obs_title,allowed_vals));
-      std::cout << " and allowed values { ";
-      for (auto allowed_val : allowed_vals) {
-        std::cout << allowed_val << " ";
+      obs_configs_int_.emplace(obs_internal_name,ObsConfInt(obs_name,obs_title,allowed_type_vals));
+      std::cout << " and allowed type/value pairs { ";
+      for (auto allowed_type_val : allowed_type_vals) {
+        std::cout << "{" << allowed_type_val.first << " : " << allowed_type_val.second << "} ";
       }
       std::cout << "}."<< std::endl;;
     }
