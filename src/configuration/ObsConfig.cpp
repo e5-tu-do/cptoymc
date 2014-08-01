@@ -31,7 +31,7 @@ ObsConfig::ObsConfig(const boost::property_tree::ptree& obs_ptree) :
     if ( obs_type == "Integer") {
       allowed_type_vals.clear();
       for (auto val : pt_obs_it.second.get_child("range")) {
-        allowed_type_vals.emplace(val.first, val.second.get<int>(val.first));
+        allowed_type_vals.emplace(val.first, val.second.get<int>(""));
       }
       obs_configs_int_.emplace(obs_internal_name,ObsConfInt(obs_name,obs_title,allowed_type_vals));
       std::cout << " and allowed type/value pairs { ";
