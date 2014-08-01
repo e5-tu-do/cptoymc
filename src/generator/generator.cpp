@@ -87,12 +87,19 @@ bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, 
 }
 
 bool GenerateEtaFlat(TRandom& rndm, double& obs_eta) {
-  obs_eta = rndm.Uniform(0.0,0.5);
-  return true;
+  return GenerateEtaFlat(rndm,0.0,0.5,obs_eta);
 }
 
+bool GenerateEtaFlat(TRandom& rndm, double obs_eta_min, double obs_eta_max, double& obs_eta) {
+  obs_eta = rndm.Uniform(obs_eta_min,obs_eta_max);
+  return true;
+}
+  
 bool GenerateTag(TRandom& rndm, double par_omega, double par_domega, int obs_tag_true, int& obs_tag_meas) {
-  if (rndm.Uniform() < (par_omega+(double)obs_tag_true*par_domega/2.) ) {
+  if (par_omega > 0.5) par_omega = 0.5;
+  if (par_omega < 0.0) par_omega = 0.;
+  
+  if (rndm.Uniform() < ( par_omega+(double)obs_tag_true*par_domega/2. )) {
     obs_tag_meas = -1*obs_tag_true;
   } else {
     obs_tag_meas = obs_tag_true;

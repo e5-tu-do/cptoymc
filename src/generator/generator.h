@@ -50,6 +50,7 @@ bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma,
 // Tagging generators
 
 bool GenerateEtaFlat(TRandom& rndm, double& obs_eta);
+bool GenerateEtaFlat(TRandom& rndm, double obs_eta_min, double obs_eta_max, double& obs_eta);
 
 bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
                  int obs_tag_true, int& obs_tag_meas);
