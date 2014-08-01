@@ -23,26 +23,34 @@ ObservableReal::ObservableReal(const std::string& dim_name, const std::string& v
   var_type_("D")
 { }
 
-ObservableInt::ObservableInt(const std::string& dim_name, const std::string& var_name, const std::string& var_title, int value, const std::set<int>& valid_values) :
+ObservableInt::ObservableInt(const std::string& dim_name, const std::string& var_name,
+                             const std::string& var_title, int value,
+                             const std::map<std::string,int>& types) :
   Observable(dim_name, var_name, var_title),
   value_(value),
-  valid_values_(valid_values),
+  types_(types),
+  valid_values_(),
   var_type_("I")
-  {}
+{
+//  for (auto type_value_pair : types_) {
+//    types_.emplace(type_value_pair.second);
+//  }
+}
   
 
 Observables::Observables() :
   mass_true("mass_true","obsMassTrue","m'",-1000.,5000.,5500.),
   time_true("time_true","obsTimeTrue","t'",-1000.,0.,18.),
-  tag_true("tag_true","obsTagTrue","d'",0,{-1,+1}),
+  tag_true("tag_true","obsTagTrue","d'",0,{{"Bb",-1},{"B",+1}}),
   mass_meas("mass_meas","obsMass","m",-1000.,5000.,5500.),
   time_meas("time_meas","obsTime","t",-1000.,-2.,18.),
-  tag_class("tag_class","catTag","catTag",-10000,{-1,0,+1,+10}),
-  tag_OS("tag_OS","obsTagOS","d_{\\text{OS}}",0,{-1,0,+1}),
+  tag_class("tag_class","catTag","catTag",-10000,
+            {{"untagged",0},{"SSonly",-1},{"OSonly",+1},{"OSandSS",+10}}),
+  tag_OS("tag_OS","obsTagOS","d_{\\text{OS}}",0,{{"Bb",-1},{"None",0},{"B",+1}}),
   eta_OS("eta_OS","obsEtaOS","\\eta_{\\text{OS}}",0.5,0.0,0.5),
-  tag_SS("tag_SS","obsTagSS","d_{\\text{SS}}",0,{-1,0,+1}),
+  tag_SS("tag_SS","obsTagSS","d_{\\text{SS}}",0,{{"Bb",-1},{"None",0},{"B",+1}}),
   eta_SS("eta_SS","obsEtaSS","\\eta_{\\text{SS}}",0.5,0.0,0.5),
-  comp_cat("comp_cat","catBkg","catBkg",-10000,{0,1,10,100}),
+  comp_cat("comp_cat","catBkg","catBkg",-10000,{{"Sig_Bd",1},{"Sig_Bs",10},{"Bkg",100}}),
   observables_real_(),
   observables_int_()
 {
@@ -82,7 +90,7 @@ void Observables::Configure(const std::shared_ptr<configuration::ObsConfig> obs_
       auto obs_int_config = obs_int_config_entry.second;
       obs_int->set_var_name(std::get<0>(obs_int_config));
       obs_int->set_var_title(std::get<1>(obs_int_config));
-      obs_int->set_valid_values(std::get<2>(obs_int_config));
+      obs_int->set_valid_types_values(std::get<2>(obs_int_config));
     } else {
       std::cout << "No observable called " << obs_int_config_entry.first << " known to generator." << std::endl;
     }

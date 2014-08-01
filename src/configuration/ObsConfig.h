@@ -14,7 +14,7 @@ namespace cptoymc {
 namespace configuration {
 
 typedef std::tuple<std::string,std::string,double,double> ObsConfReal;
-typedef std::tuple<std::string,std::string,std::set<int>> ObsConfInt;
+typedef std::tuple<std::string,std::string,std::map<std::string,int>> ObsConfInt;
 
   
 class ObsConfig {

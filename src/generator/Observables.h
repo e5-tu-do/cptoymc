@@ -78,19 +78,39 @@ private:
 
 class ObservableInt : public Observable {
 public:
-  ObservableInt(const std::string& dim_name, const std::string& var_name, const std::string& var_title, int value, const std::set<int>& valid_values);
+  ObservableInt(const std::string& dim_name, const std::string& var_name,
+                const std::string& var_title, int value, const std::map<std::string, int>& types);
+  
   virtual ~ObservableInt() { };
   
   void set_value(int value) { value_ = value; }
   int value() const { return value_; }
-  void set_valid_values(const std::set<int> valid_values) {valid_values_ = valid_values;}
+  
+  //void set_valid_values(const std::set<int> valid_values) {valid_values_ = valid_values;}
+  
+  void set_valid_types_values(const std::map<std::string,int>& types) { types_ = types; }
   
   virtual bool HasValidValue() {return IsValidValue(value_);}
   
   bool IsValidValue(int value) {
     return (valid_values_.find(value) != valid_values_.end());
   }
-
+  
+  bool IsValidKey(const std::string& type_name) {
+    return (types_.find(type_name) != types_.end());
+  }
+  
+  int GetValueForType(const std::string& type_name) {
+    auto type_value_pair = types_.find(type_name);
+    if (type_value_pair != types_.end()) {
+      return type_value_pair->second;
+    }
+    else {
+      std::cout << "Cannot find category type " << type_name << " in Category " << dim_name_ << "." << std::endl;
+      return -10000;
+    }
+  }
+  
   virtual const std::string& var_type() {
     return var_type_;
   }
@@ -98,6 +118,7 @@ public:
   int value_;
   
 private:
+  std::map<std::string,int> types_;
   std::set<int> valid_values_;
   const std::string var_type_;
 };
