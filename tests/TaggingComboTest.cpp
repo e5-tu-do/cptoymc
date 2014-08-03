@@ -107,8 +107,7 @@ int main(int argc, char * argv[]){
   
   RooCategory       catTaggedOSSSPion("catTaggedOSSSPion","OS or SSPion tagged");
   catTaggedOSSSPion.defineType("OS",1);
-  catTaggedOSSSPion.defineType("SS",-1);
-  catTaggedOSSSPion.defineType("OSSS",10);
+  catTaggedOSSSPion.defineType("OSSS",-1);
   
   RooArgSet         observables(obsTime,obsMass,obsEtaOS,obsTagOS,obsEtaSS,obsTagSS,catTaggedOSSSPion,"observables");
   
@@ -136,16 +135,16 @@ int main(int argc, char * argv[]){
   RooConstVar       parSigTimeDelta("parSigTimeDelta","asymmetry",0.);
   
   // Tagging calibration
-  RooConstVar                             parSigEtaP0_OS("parSigEtaP0_OS","parSigEtaP0_OS",0.25);
-  RooConstVar                             parSigEtaP1_OS("parSigEtaP1_OS","parSigEtaP1_OS",1.);
-  RooConstVar                             parSigEtaDeltaP0_OS("parSigEtaDeltaP0_OS","parSigEtaDeltaP0_OS",0.);
-  RooConstVar                             parSigEtaDeltaP1_OS("parSigEtaDeltaP1_OS","parSigEtaDeltaP1_OS",0.);
-  RooConstVar                             parSigEtaMean_OS("parSigEtaMean_OS","parSigEtaMean_OS",0.25);
-  RooConstVar                             parSigEtaP0_SS("parSigEtaP0_SS","parSigEtaP0_SS",0.25);
-  RooConstVar                             parSigEtaP1_SS("parSigEtaP1_SS","parSigEtaP1_SS",1.);
-  RooConstVar                             parSigEtaMean_SS("parSigEtaMean_SS","parSigEtaMean_SS",0.25);
-  RooConstVar                             parSigEtaDeltaP0_SS("parSigEtaDeltaP0_SS","parSigEtaDeltaP0_SS",0.);
-  RooConstVar                             parSigEtaDeltaP1_SS("parSigEtaDeltaP1_SS","parSigEtaDeltaP1_SS",0.);
+  RooRealVar        parSigEtaP0_OS("parSigEtaP0_OS","parSigEtaP0_OS",0.38);
+  RooRealVar        parSigEtaP1_OS("parSigEtaP1_OS","parSigEtaP1_OS",0.98);
+  RooRealVar        parSigEtaDeltaP0_OS("parSigEtaDeltaP0_OS","parSigEtaDeltaP0_OS",0.07);
+  RooRealVar        parSigEtaDeltaP1_OS("parSigEtaDeltaP1_OS","parSigEtaDeltaP1_OS",0.015);
+  RooRealVar        parSigEtaMean_OS("parSigEtaMean_OS","parSigEtaMean_OS",0.38);
+  RooRealVar        parSigEtaP0_SS("parSigEtaP0_SS","parSigEtaP0_SS",0.42);
+  RooRealVar        parSigEtaP1_SS("parSigEtaP1_SS","parSigEtaP1_SS",1.);
+  RooRealVar        parSigEtaMean_SS("parSigEtaMean_SS","parSigEtaMean_SS",0.42);
+  RooRealVar        parSigEtaDeltaP0_SS("parSigEtaDeltaP0_SS","parSigEtaDeltaP0_SS",-0.003);
+  RooRealVar        parSigEtaDeltaP1_SS("parSigEtaDeltaP1_SS","parSigEtaDeltaP1_SS",-0.19);
 
   // Decay Time PDF
   // RooBDecay params
@@ -153,14 +152,6 @@ int main(int argc, char * argv[]){
   CPCoefficient     parSigTimeCosh_OS("parSigTimeCosh_OS",RooConst(1.0),obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaDeltaProd,CPCoefficient::kCosh);
   CPCoefficient     parSigTimeSin_OS("parSigTimeSin_OS",parSigTimeSin2b,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaDeltaProd,CPCoefficient::kSin);
   CPCoefficient     parSigTimeCos_OS("parSigTimeCos_OS",parSigTimeCjpsiKS,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,parSigEtaDeltaProd,CPCoefficient::kCos);
-
-  // RooFormulaVar           parSigTimeCosh_OS("parSigTimeCosh_OS","cosh coefficient OS","1.0 - @0*@1*(1.0 - 2.0*@2)",RooArgList(parSigEtaDeltaProd,obsTagOS,obsEtaOS));
-  // RooFormulaVar           parSigTimeSin_OS("parSigTimeSin_OS","sin coefficient OS","-@0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeSin2b,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
-  // RooFormulaVar           parSigTimeCos_OS("parSigTimeCos_OS","cos coefficient OS"," @0*(@1*(1.0 - @2 - @3) - @4*(1.0 - @1*(@2 - @3)))",RooArgList(parSigTimeCjpsiKS,obsTagOS,parSigTimeOmega_OS_Bd,parSigTimeOmega_OS_Bdb,parSigEtaDeltaProd));
-
-  CPCoefficient     parSigTimeCosh_SS("parSigTimeCosh_SS",RooConst(1.0),obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kCosh);
-  CPCoefficient     parSigTimeSin_SS("parSigTimeSin_SS",parSigTimeSin2b,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kSin);
-  CPCoefficient     parSigTimeCos_SS("parSigTimeCos_SS",parSigTimeCjpsiKS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kCos);  
   
   CPCoefficient     parSigTimeCosh_Combo("parSigTimeCosh_Combo",RooConst(1.0),obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kCosh);
   CPCoefficient     parSigTimeSin_Combo("parSigTimeSin_Combo",parSigTimeSin2b,obsTagOS,parSigEtaP0_OS,parSigEtaP1_OS,parSigEtaMean_OS,obsEtaOS,parSigEtaDeltaP0_OS,parSigEtaDeltaP1_OS,obsTagSS,parSigEtaP0_SS,parSigEtaP1_SS,parSigEtaMean_SS,obsEtaSS,parSigEtaDeltaP0_SS,parSigEtaDeltaP1_SS,parSigEtaDeltaProd,CPCoefficient::kSin);
@@ -187,18 +178,14 @@ int main(int argc, char * argv[]){
   BiasDelta               pdfSigEta_OS_ut("pdfSigEta_OS_ut","untagged signal eta distribution",obsEtaOS,untaggedvalue);
   
   RooDecay                pdfSigTimeDecay_OS("pdfSigTimeDecay_OS","P_{S}^{OS}(t)",obsTime,parSigTimeTau,resGauss,RooDecay::SingleSided);
-  // RooBCPGenDecay          pdfSigTime_OS("pdfSigTime_OS","P_{S}^{l}(t,d|#eta)",obsTime,obsTagOS,parSigTimeTau,parSigTimeDeltaM,obsEtaOS,parSigTimeCjpsiKS,parSigTimeSin2b,parSigTimeDelta,parSigEtaDeltaProd,resGauss,RooBCPGenDecay::SingleSided);
   RooBDecay               pdfSigTime_OS("pdfSigTime_OS","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_OS,parSigTimeSinh,parSigTimeCos_OS,parSigTimeSin_OS,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
   RooProdPdf              pdfSigTimeCond_OS("pdfSigTimeCond_OS","pdfSigTimeCond_OS",RooArgList(pdfSigEta_OS),Conditional(pdfSigTime_OS,RooArgSet(obsTime,obsTagOS)));
-  RooBDecay               pdfSigTime_SS("pdfSigTime_SS","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_SS,parSigTimeSinh,parSigTimeCos_SS,parSigTimeSin_SS,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
-  RooProdPdf              pdfSigTimeCond_SS("pdfSigTimeCond_SS","pdfSigTimeCond_OS",RooArgList(pdfSigEta_SS),Conditional(pdfSigTime_SS,RooArgSet(obsTime,obsTagSS)));
   RooBDecay               pdfSigTime_Combo("pdfSigTime_Combo","P_{S}^{l}(t,d|#eta)",obsTime,parSigTimeTau,parSigTimeDeltaG,parSigTimeCosh_Combo,parSigTimeSinh,parSigTimeCos_Combo,parSigTimeSin_Combo,parSigTimeDeltaM,resGauss,RooBDecay::SingleSided);
   RooProdPdf              pdfSigTimeCond_Combo("pdfSigTimeCond_Combo","P_{S}^{l}(t,d|#eta)",RooArgList(pdfSigEta_OS,pdfSigEta_SS),Conditional(pdfSigTime_Combo,RooArgSet(obsTime,obsTagOS,obsTagSS)));
   
   // Combination of observables
-  RooProdPdf              pdfSig_OS("pdfSig_OS","pdfSig_OS",RooArgList(pdfSigTimeCond_OS,pdfSigMass));
-  RooProdPdf              pdfSig_SS("pdfSig_SS","pdfSig_SS",RooArgList(pdfSigTimeCond_SS,pdfSigMass));
-  RooProdPdf              pdfSig_Combo("pdfSig_Combo","pdfSig_Combo",RooArgList(pdfSigTimeCond_Combo,pdfSigMass));
+  RooProdPdf              pdfSig_OS("pdfSig_OS","pdfSig_OS",RooArgList(pdfSigTime_OS,pdfSigMass));
+  RooProdPdf              pdfSig_Combo("pdfSig_Combo","pdfSig_Combo",RooArgList(pdfSigTime_Combo,pdfSigMass));
 
   // Background
   // Mass model
@@ -228,27 +215,24 @@ int main(int argc, char * argv[]){
 
   
   // Combination of observables
-  RooProdPdf              pdfBkg_OS("pdfBkg_OS","pdfBkg_OS",RooArgList(pdfBkgTime,pdfBkgMass,pdfBkgEta_OS));
-  RooProdPdf              pdfBkg_SS("pdfBkg_SS","pdfBkg_SS",RooArgList(pdfBkgTime,pdfBkgMass,pdfBkgEta_SS));
-  RooProdPdf              pdfBkg_Combo("pdfBkg_Combo","pdfBkg_Combo",RooArgList(pdfBkgTime,pdfBkgMass,pdfBkgEta_OS,pdfBkgEta_SS));
+  RooProdPdf              pdfBkg_OS("pdfBkg_OS","pdfBkg_OS",RooArgList(pdfBkgTime,pdfBkgMass));//,pdfBkgEta_OS));
+  RooProdPdf              pdfBkg_Combo("pdfBkg_Combo","pdfBkg_Combo",RooArgList(pdfBkgTime,pdfBkgMass));//,pdfBkgEta_OS,pdfBkgEta_SS));
 
   // Combining signal and background
   RooRealVar              parSigYield_OS("parSigYield_OS","parSigYield_OS",100000,0,200000);
-  RooRealVar              parSigYield_SS("parSigYield_SS","parSigYield_SS",100000,0,200000);
+  RooExtendPdf            pdfExtendSig_OS("pdfExtendSig_OS","pdfExtendSig_OS",pdfSig_OS,parSigYield_OS);
   RooRealVar              parSigYield_Combo("parSigYield_Combo","parSigYield_Combo",100000,0,200000);
+  RooExtendPdf            pdfExtendSig_Combo("pdfExtendSig_Combo","pdfExtendSig_Combo",pdfSig_Combo,parSigYield_Combo);
 
   RooRealVar              parBkgYield_OS("parBkgYield_OS","parBkgYield_OS",100000,0,200000);
-  RooRealVar              parBkgYield_SS("parBkgYield_SS","parBkgYield_SS",100000,0,200000);
   RooRealVar              parBkgYield_Combo("parBkgYield_Combo","parBkgYield_Combo",100000,0,200000);
 
   RooAddPdf               pdf_OS("pdf_OS","pdf_OS",RooArgList(pdfSig_OS,pdfBkg_OS),RooArgList(parSigYield_OS,parBkgYield_OS));
-  RooAddPdf               pdf_SS("pdf_SS","pdf_SS",RooArgList(pdfSig_SS,pdfBkg_SS),RooArgList(parSigYield_SS,parBkgYield_SS));
   RooAddPdf               pdf_Combo("pdf_Combo","pdf_Combo",RooArgList(pdfSig_Combo,pdfBkg_Combo),RooArgList(parSigYield_Combo,parBkgYield_Combo));
 
   RooSimultaneous         simpdf("simpdf","simpdf",catTaggedOSSSPion);
   simpdf.addPdf(pdf_OS,"OS");
   simpdf.addPdf(pdf_Combo,"OSSS");
-  simpdf.addPdf(pdf_SS,"SS");
 
   if (method.EqualTo("g") || method.EqualTo("e")) {
             
@@ -270,7 +254,7 @@ int main(int argc, char * argv[]){
     RooLinkedList fitting_args;
     fitting_args.Add((TObject*)(new RooCmdArg(NumCPU(num_cpu))));
     RooArgSet minosargset(parSigTimeSin2b,parSigTimeCjpsiKS);
-    fitting_args.Add((TObject*)(new RooCmdArg(Minos(minosargset))));
+    fitting_args.Add((TObject*)(new RooCmdArg(Minos(false))));
     fitting_args.Add((TObject*)(new RooCmdArg(Strategy(2))));
     fitting_args.Add((TObject*)(new RooCmdArg(Save(true))));
     fitting_args.Add((TObject*)(new RooCmdArg(Timer(true))));
@@ -278,7 +262,7 @@ int main(int argc, char * argv[]){
     fitting_args.Add((TObject*)(new RooCmdArg(SumW2Error(false))));
     fitting_args.Add((TObject*)(new RooCmdArg(Extended(true))));
     fitting_args.Add((TObject*)(new RooCmdArg(Optimize(1))));
-    // fitting_args.Add((TObject*)(new RooCmdArg(ConditionalObservables(obsEtaOS))));
+    fitting_args.Add((TObject*)(new RooCmdArg(ConditionalObservables(RooArgSet(obsEtaOS,obsEtaSS)))));
 
     ToyConfig     cfg_cptoymc;
     cfg_cptoymc.load(argv[5]);
@@ -299,7 +283,8 @@ int main(int argc, char * argv[]){
           // data->Print("v");
           simpdf.getParameters(*data)->readFromFile(argv[6]);
           RooFitResult* fit_result = simpdf.fitTo(*data,fitting_args);
-          // fit_result->Print("v");
+          // simpdf.getParameters(*data)->writeToFile("taggingcombocptoyfitresults.txt");
+          fit_result->Print("v");
           tstudy.StoreFitResult(fit_result);
           delete data;
         } catch (...) {
