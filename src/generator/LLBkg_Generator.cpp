@@ -21,8 +21,8 @@ LLBkg_Generator::LLBkg_Generator() :
   params_timeandcp_{1.,0.},
   params_timeresol_{0.,0.05},
   params_taggingeffs_{0.30,0.06,0.04},
-  params_taggingOS_{0.4,0.},
-  params_taggingSS_{0.4,0.},
+  params_taggingOS_{0.5,0.},
+  params_taggingSS_{0.5,0.},
   comp_cat_(-1001)
 {
   
@@ -110,39 +110,55 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
   double random_val = rndm.Uniform();
   
   if (random_val < params_taggingeffs_.eff_OS) { // generate OS tags and mistags
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.value_);
+    gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
-                obs_tag_true.value(), obs_tag_OS.value_);
-    obs_tag_SS.value_ = 1;
+                               obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
+                               obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
+                               obs_tag_true.value(), obs_tag_SS.value_);
+    
+    obs_tag_SS.value_ = obs_tag_SS.GetValueForType("None");
     obs_eta_SS.value_ = 0.5;
-    obs_tag_class.value_ = 1;
+    obs_tag_class.value_ = obs_tag_class.GetValueForType("OSonly");
   }
   else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) { // generate SS tags and mistags
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.value_);
+    gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
-                obs_tag_true.value(), obs_tag_SS.value_);
-    obs_tag_OS.value_ = 1;
+                               obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
+                               obs_tag_SS.GetValueForType("B"), obs_tag_SS.GetValueForType("Bb"),
+                               obs_tag_true.value(), obs_tag_SS.value_);
+    obs_tag_OS.value_ = obs_tag_OS.GetValueForType("None");
     obs_eta_OS.value_ = 0.5;
-    obs_tag_class.value_ = 2;
+    obs_tag_class.value_ = obs_tag_class.GetValueForType("SSonly");
   }
   else if (random_val < (  params_taggingeffs_.eff_OS
                          + params_taggingeffs_.eff_SS
                          + params_taggingeffs_.eff_SSOS) ) { // generate overlap tags and mistags
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.value_);
+    gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
-                               obs_tag_true.value(), obs_tag_OS.value_);
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.value_);
-    gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
+                               obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
+                               obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_tag_SS.value_);
-    obs_tag_class.value_ = 2;
+    
+    
+    gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
+    gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
+                               obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
+                               obs_tag_SS.GetValueForType("B"), obs_tag_SS.GetValueForType("Bb"),
+                               obs_tag_true.value(), obs_tag_SS.value_);
+    obs_tag_class.value_ = obs_tag_class.GetValueForType("OSandSS");
   }
+  
+  
+  
   else { // untagged
-    obs_tag_SS.value_ = 1;
+    obs_tag_SS.value_ = obs_tag_SS.GetValueForType("None");
     obs_eta_SS.value_ = 0.5;
-    obs_tag_OS.value_ = 1;
+    obs_tag_OS.value_ = obs_tag_OS.GetValueForType("None");
     obs_eta_OS.value_ = 0.5;
-    obs_tag_class.value_ = 0;
+    obs_tag_class.value_ = obs_tag_class.GetValueForType("untagged");
   }
+  
+
   
   return gen_success;
 }

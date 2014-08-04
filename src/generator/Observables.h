@@ -24,7 +24,7 @@ public:
   Observable(const std::string& dim_name, const std::string& var_name, const std::string& var_title);
   virtual ~Observable() { };
   
-  virtual bool HasValidValue() = 0;
+  virtual bool HasValidValue() const = 0;
 
   const std::string& dim_name() const {return dim_name_;}
   const std::string& var_name() const {return var_name_;}
@@ -54,11 +54,11 @@ public:
     max_value_ = max_value;
   }
   
-  virtual bool HasValidValue() {
+  virtual bool HasValidValue() const{
     return IsValidValue(value_);
   }
   
-  bool IsValidValue(double value) {
+  bool IsValidValue(double value) const {
     return (value < max_value_) && (value >= min_value_);
   }
   double value_;
@@ -78,19 +78,45 @@ private:
 
 class ObservableInt : public Observable {
 public:
-  ObservableInt(const std::string& dim_name, const std::string& var_name, const std::string& var_title, int value, const std::set<int>& valid_values);
+  ObservableInt(const std::string& dim_name, const std::string& var_name,
+                const std::string& var_title, int value, const std::map<std::string, int>& types);
+  
   virtual ~ObservableInt() { };
   
   void set_value(int value) { value_ = value; }
   int value() const { return value_; }
-  void set_valid_values(const std::set<int> valid_values) {valid_values_ = valid_values;}
   
-  virtual bool HasValidValue() {return IsValidValue(value_);}
+  //void set_valid_values(const std::set<int> valid_values) {valid_values_ = valid_values;}
   
-  bool IsValidValue(int value) {
+  void set_valid_types_values(const std::map<std::string,int>& types) {
+    types_ = types;
+    valid_values_.clear();
+    for (auto type_value_pair : types_) {
+      valid_values_.emplace(type_value_pair.second);
+    }
+  }
+  
+  virtual bool HasValidValue() const {return IsValidValue(value_);}
+  
+  bool IsValidValue(int value) const {
     return (valid_values_.find(value) != valid_values_.end());
   }
-
+  
+  bool IsValidKey(const std::string& type_name) {
+    return (types_.find(type_name) != types_.end());
+  }
+  
+  int GetValueForType(const std::string& type_name) const {
+    auto type_value_pair = types_.find(type_name);
+    if (type_value_pair != types_.end()) {
+      return type_value_pair->second;
+    }
+    else {
+      std::cout << "Cannot find category type " << type_name << " in Category " << dim_name_ << "." << std::endl;
+      return -10000;
+    }
+  }
+  
   virtual const std::string& var_type() {
     return var_type_;
   }
@@ -98,6 +124,7 @@ public:
   int value_;
   
 private:
+  std::map<std::string,int> types_;
   std::set<int> valid_values_;
   const std::string var_type_;
 };
