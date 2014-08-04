@@ -169,7 +169,7 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
     gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
-                               obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
+                               obs_tag_OS.GetValueForType("B")  , obs_tag_OS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_eta_OS.value_, obs_tag_OS.value_);
     obs_tag_SS.value_ = obs_tag_SS.GetValueForType("None");
     obs_eta_SS.value_ = 0.5;
@@ -202,11 +202,11 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
     obs_tag_class.value_ = obs_tag_class.GetValueForType("OSandSS");
   }
   else { // untagged
-    obs_tag_SS.value_ = 1;
+    obs_tag_SS.value_ = obs_tag_SS.GetValueForType("None");
     obs_eta_SS.value_ = 0.5;
-    obs_tag_OS.value_ = 1;
+    obs_tag_OS.value_ = obs_tag_OS.GetValueForType("None");
     obs_eta_OS.value_ = 0.5;
-    obs_tag_class.value_ = 0;
+    obs_tag_class.value_ = obs_tag_class.GetValueForType("untagged");;
   }
   return gen_success;
 }
