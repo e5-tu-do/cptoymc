@@ -171,7 +171,7 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
                                obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_eta_OS.value_, obs_tag_OS.value_);
-    obs_tag_SS.value_ = obs_tag_SS.GetValueForType("untagged");
+    obs_tag_SS.value_ = obs_tag_SS.GetValueForType("None");
     obs_eta_SS.value_ = 0.5;
     obs_tag_class.value_ = obs_tag_class.GetValueForType("OSonly");
   }
@@ -181,7 +181,7 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
                                obs_tag_SS.GetValueForType("B"), obs_tag_SS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_eta_SS.value_, obs_tag_SS.value_);
-    obs_tag_OS.value_ = obs_tag_OS.GetValueForType("untagged");
+    obs_tag_OS.value_ = obs_tag_OS.GetValueForType("None");
     obs_eta_OS.value_ = 0.5;
     obs_tag_class.value_ = obs_tag_class.GetValueForType("SSonly");
   }
