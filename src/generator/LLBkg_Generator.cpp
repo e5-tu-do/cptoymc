@@ -114,7 +114,7 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
                                obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
-                               obs_tag_true.value(), obs_tag_SS.value_);
+                               obs_tag_true.value(), obs_tag_OS.value_);
     
     obs_tag_SS.value_ = obs_tag_SS.GetValueForType("None");
     obs_eta_SS.value_ = 0.5;
@@ -137,7 +137,7 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
                                obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
-                               obs_tag_true.value(), obs_tag_SS.value_);
+                               obs_tag_true.value(), obs_tag_OS.value_);
     
     
     gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);

@@ -193,6 +193,7 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
                                obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_eta_OS.value_, obs_tag_OS.value_);
+    
     gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
