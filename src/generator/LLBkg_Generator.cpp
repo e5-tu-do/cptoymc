@@ -86,16 +86,38 @@ bool LLBkg_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true,
   return gen_success;
 }
 
-bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas) {
+bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableInt&
+                                             obs_tag_true, ObservableReal& obs_time_meas) {
+  
+  unsigned int trials = 0;
   bool gen_success = true;
   
-  // true "tag" according to prodasym
-  obs_tag_true.value_ = (rndm.Uniform() < (1. - params_timeandcp_.prod_asym)/2.) ? +1 : -1;
-  
-  // decay time
-  gen_success &= GenerateExpo(rndm,1./params_timeandcp_.tau,obs_time_true.value_,obs_time_true.min_value(),obs_time_true.max_value());
-  
-  gen_success &= GenerateResolSingleGauss(rndm, params_timeresol_.bias, params_timeresol_.sigma, obs_time_true.value(), obs_time_meas.value_);
+  while (trials < max_trials_) {
+    gen_success = true;
+    
+    // true "tag" according to prodasym
+    obs_tag_true.value_ = (rndm.Uniform() < (1. - params_timeandcp_.prod_asym)/2.) ? +1 : -1;
+    
+    // decay time
+    gen_success &= GenerateExpo(rndm,1./params_timeandcp_.tau,obs_time_true.value_,obs_time_true.min_value(),obs_time_true.max_value());
+    
+    gen_success &= GenerateResolSingleGauss(rndm, params_timeresol_.bias, params_timeresol_.sigma, obs_time_true.value(), obs_time_meas.value_);
+    
+    
+    if (gen_success && obs_time_true.HasValidValue() && obs_time_meas.HasValidValue() && obs_tag_true.HasValidValue()) {
+      break;
+    } else {
+      ++trials;
+    }
+    std::cout
+    << "Problem in LLBkg generation for component " << comp_cat_
+    << ": Maximum trials reached without generating valid values for "
+    << obs_tag_true.dim_name()  << ","
+    << obs_time_true.dim_name() << " and " << obs_time_meas.dim_name() << " !!!"
+    << std::endl;
+    gen_success = false;
+  }
+
   
   return gen_success;
 }
@@ -112,8 +134,8 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
   if (random_val < params_taggingeffs_.eff_OS) { // generate OS tags and mistags
     gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
-                               obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
-                               obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
+                               obs_tag_true.GetValueForType("B") , obs_tag_true.GetValueForType("Bb"),
+                               obs_tag_OS.GetValueForType("B")   , obs_tag_OS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_tag_OS.value_);
     
     obs_tag_SS.value_ = obs_tag_SS.GetValueForType("None");
@@ -123,8 +145,8 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
   else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) { // generate SS tags and mistags
     gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
-                               obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
-                               obs_tag_SS.GetValueForType("B"), obs_tag_SS.GetValueForType("Bb"),
+                               obs_tag_true.GetValueForType("B") , obs_tag_true.GetValueForType("Bb"),
+                               obs_tag_SS.GetValueForType("B")   , obs_tag_SS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_tag_SS.value_);
     obs_tag_OS.value_ = obs_tag_OS.GetValueForType("None");
     obs_eta_OS.value_ = 0.5;
@@ -135,15 +157,15 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
                          + params_taggingeffs_.eff_SSOS) ) { // generate overlap tags and mistags
     gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
-                               obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
-                               obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
+                               obs_tag_true.GetValueForType("B") , obs_tag_true.GetValueForType("Bb"),
+                               obs_tag_OS.GetValueForType("B")   , obs_tag_OS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_tag_OS.value_);
     
     
     gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
-                               obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
-                               obs_tag_SS.GetValueForType("B"), obs_tag_SS.GetValueForType("Bb"),
+                               obs_tag_true.GetValueForType("B") , obs_tag_true.GetValueForType("Bb"),
+                               obs_tag_SS.GetValueForType("B")   , obs_tag_SS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_tag_SS.value_);
     obs_tag_class.value_ = obs_tag_class.GetValueForType("OSandSS");
   }

@@ -147,7 +147,8 @@ bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableRe
       ++trials;
     }
     std::cout
-    << "Problem in generation: Maximum trials reached without generating valid values for "
+    << "Problem in BSig_CPV generation for component " << comp_cat_
+    << ": Maximum trials reached without generating valid values for "
     << obs_tag_true.dim_name()  << ","
     << obs_time_true.dim_name() << " and " << obs_time_meas.dim_name() << " !!!"
     << std::endl;
