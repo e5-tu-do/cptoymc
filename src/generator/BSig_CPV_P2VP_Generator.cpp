@@ -118,11 +118,15 @@ bool BSig_CPV_P2VP_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_ma
     } else {
       ++trials;
     }
+
+    gen_success = false;
+  }
+
+  if (!gen_success && trials >= max_trials_) {
     std::cout
-    << "Problem in generation: Maximum trials reached without generating valid values for "
+    << "Problem in BSig_CPV generation for component " << comp_cat_ <<": Maximum trials reached without generating valid values for "
     << obs_mass_true.dim_name() << " and " << obs_mass_meas.dim_name() << " !!!"
     << std::endl;
-    gen_success = false;
   }
   return gen_success;
 }
@@ -145,14 +149,16 @@ bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableRe
       break;
     } else {
       ++trials;
+      gen_success = false;
     }
+  }
+  if (!gen_success && trials >= max_trials_) {
     std::cout
     << "Problem in BSig_CPV generation for component " << comp_cat_
     << ": Maximum trials reached without generating valid values for "
     << obs_tag_true.dim_name()  << ","
     << obs_time_true.dim_name() << " and " << obs_time_meas.dim_name() << " !!!"
     << std::endl;
-    gen_success = false;
   }
   return gen_success;
 }
