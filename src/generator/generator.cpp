@@ -99,7 +99,7 @@ bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
                  const int par_tag_true_B, const int par_tag_true_Bb,
                  const int par_tag_B,      const int par_tag_Bb,
                  int obs_tag_true, int& obs_tag_meas) {
-  if (par_omega > 0.5) par_omega = 0.5;
+  //if (par_omega > 0.5) par_omega = 0.5;
   if (par_omega < 0.0) par_omega = 0.;
   
   int correct_tag = 0;
