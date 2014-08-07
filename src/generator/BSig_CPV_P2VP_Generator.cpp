@@ -149,7 +149,6 @@ bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableRe
       break;
     } else {
       ++trials;
-      gen_success = false;
     }
   }
   if (!gen_success && trials >= max_trials_) {

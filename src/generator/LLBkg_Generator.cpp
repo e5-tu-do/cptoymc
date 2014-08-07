@@ -108,7 +108,6 @@ bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_
       break;
     } else {
       ++trials;
-      gen_success = false;
     }
   }
   if (!gen_success && trials >= max_trials_) {
