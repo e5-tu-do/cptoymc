@@ -65,6 +65,7 @@ void ToyGenerator::GenerateToy(TTree& out_tree) {
     comp_cat  = comp_config.second.comp_cat();
     exp_events_of_comp = comp_config.second.exp_yield();
     
+    //num_events_of_comp = exp_events_of_comp;
     num_events_of_comp = generator::yieldToGenerate(*rndm_, exp_events_of_comp);
     num_events_total += num_events_of_comp;
     std::cout << "Generating " << num_events_of_comp << " events for component "
