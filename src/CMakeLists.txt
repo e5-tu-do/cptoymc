@@ -1,7 +1,7 @@
 # Executables
 
 # Aliases for module libs
-add_library( CPToyMC
+add_library( CPToyMC SHARED
   configuration/configuration.h 	configuration/configuration.cpp 
   configuration/ToyConfig.h     	configuration/ToyConfig.cpp
   configuration/CompConfig.h    	configuration/CompConfig.cpp
