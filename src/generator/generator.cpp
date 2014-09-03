@@ -29,6 +29,12 @@ bool GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, d
   return true;
 }
 
+bool GenerateLognormal(TRandom& rndm, double m, double k,
+                       double& obs_sigma_t) {
+  obs_sigma_t = std::exp(std::log(m) + std::log(k)*rndm.Gaus(0,1));
+  return true;
+}
+
  
 bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
                       double par_tau, double par_dGamma, double par_dm,
