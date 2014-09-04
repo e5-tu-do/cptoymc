@@ -29,9 +29,14 @@ bool GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, d
   return true;
 }
 
-bool GenerateLognormal(TRandom& rndm, double m, double k,
+bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max,
                        double& obs_sigma_t) {
   obs_sigma_t = std::exp(std::log(m) + std::log(k)*rndm.Gaus(0,1));
+
+  while (obs_sigma_t > max || obs_sigma_t < min) {
+    obs_sigma_t = std::exp(std::log(m) + std::log(k)*rndm.Gaus(0,1));
+  }
+
   return true;
 }
 
@@ -107,6 +112,22 @@ bool GenerateEtaFlat(TRandom& rndm, double& obs_eta) {
 bool GenerateEtaFlat(TRandom& rndm, double obs_eta_min, double obs_eta_max, double& obs_eta) {
   obs_eta = rndm.Uniform(obs_eta_min,obs_eta_max);
   return true;
+}
+
+bool GenerateEtaGauss(TRandom& rndm, double m, double s, double obs_eta_min, double obs_eta_max, double& obs_eta) {
+  // s is set to -1.0 on default; a negative Gaussian width does not make sense, thus generate a uniform distribution
+  if (s < 0.0) {
+    obs_eta = rndm.Uniform(obs_eta_min,obs_eta_max);
+    return true;
+  } else {
+    obs_eta = rndm.Gaus(m,s);
+
+    while (obs_eta > obs_eta_max || obs_eta < obs_eta_min) {
+      obs_eta = rndm.Gaus(m,s);
+    }
+
+    return true;
+  }
 }
 
 bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,

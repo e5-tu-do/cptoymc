@@ -43,7 +43,7 @@ double BCPV_PDF(double t, double d, double tau, double dGamma, double dm,
 double BCPV_PDF_Envelope(double t, double gamma_min,
                        double Sf, double Cf, double Df);
 
-bool GenerateLognormal(TRandom& rndm, double m, double k,
+bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max,
                        double& obs_sigma_t);
   
 // Resolution generators
@@ -57,6 +57,7 @@ bool GenerateResolSingleGaussPerEvent(TRandom& rndm, double par_bias, double par
 
 bool GenerateEtaFlat(TRandom& rndm, double& obs_eta);
 bool GenerateEtaFlat(TRandom& rndm, double obs_eta_min, double obs_eta_max, double& obs_eta);
+bool GenerateEtaGauss(TRandom& rndm, double m, double s, double obs_eta_min, double obs_eta_max, double& obs_eta);
 
 bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
                  const int par_tag_true_B, const int par_tag_true_Bb,
