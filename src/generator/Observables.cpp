@@ -44,6 +44,7 @@ Observables::Observables() :
   tag_true("tag_true","obsTagTrue","d'",0,{{"Bb",-1},{"B",+1}}),
   mass_meas("mass_meas","obsMass","m",-1000.,5000.,5500.),
   time_meas("time_meas","obsTime","t",-1000.,-2.,18.),
+  timeerror("timeerror", "obsTimeErr", "s_t", -1000., 0.0, 1.0),
   tag_class("tag_class","catTag","catTag",-10000,
             {{"untagged",0},{"SSonly",-1},{"OSonly",+1},{"OSandSS",+10}}),
   tag_OS("tag_OS","obsTagOS","d_{\\text{OS}}",0,{{"Bb",-1},{"None",0},{"B",+1}}),
@@ -58,6 +59,7 @@ Observables::Observables() :
   observables_real_.emplace(time_true.dim_name() , &time_true );
   observables_real_.emplace(mass_meas.dim_name() , &mass_meas );
   observables_real_.emplace(time_meas.dim_name() , &time_meas );
+  observables_real_.emplace(timeerror.dim_name() , &timeerror );
   observables_real_.emplace(eta_OS.dim_name()    , &eta_OS    );
   observables_real_.emplace(eta_SS.dim_name()    , &eta_SS    );
 
@@ -103,6 +105,7 @@ void Observables::Reset() {
   tag_true.set_value(0);
   mass_meas.set_value(-1000.);
   time_meas.set_value(-1000.);
+  timeerror.set_value(-1000.);
   tag_class.set_value(-10000);
   tag_OS.set_value(0);
   eta_OS.set_value(0.5);

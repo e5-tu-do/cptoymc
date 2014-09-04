@@ -49,7 +49,10 @@ bool GenerateLognormal(TRandom& rndm, double m, double k,
 // Resolution generators
 bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma,
                               double obs_true, double& obs_meas);
+bool GenerateResolSingleGaussPerEvent(TRandom& rndm, double par_bias, double par_scale,
+                              double obs_per_event_error, double obs_true, double& obs_meas);
   
+
 // Tagging generators
 
 bool GenerateEtaFlat(TRandom& rndm, double& obs_eta);

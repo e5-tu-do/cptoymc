@@ -92,6 +92,14 @@ bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, 
   return true;
 }
 
+bool GenerateResolSingleGaussPerEvent(TRandom& rndm, double par_bias, double par_scale, double obs_per_event_error, double obs_true, double& obs_meas) {
+  obs_meas = obs_true;
+  obs_meas += rndm.Gaus(par_bias, par_scale*obs_timeerror);
+  
+  return true;
+}
+
+
 bool GenerateEtaFlat(TRandom& rndm, double& obs_eta) {
   return GenerateEtaFlat(rndm,0.0,0.5,obs_eta);
 }
