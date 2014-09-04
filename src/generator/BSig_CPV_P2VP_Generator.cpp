@@ -25,8 +25,8 @@ BSig_CPV_P2VP_Generator::BSig_CPV_P2VP_Generator() :
   params_timeandcp_{1.5,0.,0.5,0.7,0.,0.7,0.},
   params_timeresol_{0.033,0.72,0.,1.0},
   params_taggingeffs_{0.30,0.06,0.04},
-  params_taggingOS_{1.0,0.25,0.25,0.0,0.0},
-  params_taggingSS_{1.0,0.25,0.25,0.0,0.0},
+  params_taggingOS_{1.0,0.25,0.25,0.0,0.0,0.0,-1.0},
+  params_taggingSS_{1.0,0.25,0.25,0.0,0.0,0.0,-1.0},
   comp_cat_(-1000),
   tag_calib_func_omegaOS_(
     [&](double eta) -> double { return params_taggingOS_.p1*(eta-params_taggingOS_.etabar)+params_taggingOS_.p0; } ),
@@ -80,17 +80,21 @@ void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_co
   params_taggingeffs_.eff_SS    = sub_config_ptree.get("eff_SS"   ,params_taggingeffs_.eff_SS   );
   params_taggingeffs_.eff_SSOS  = sub_config_ptree.get("eff_SSOS" ,params_taggingeffs_.eff_SSOS );
   
-  params_taggingOS_.p1      = sub_config_ptree.get("p1_OS"    , params_taggingOS_.p1    );
-  params_taggingOS_.p0      = sub_config_ptree.get("p0_OS"    , params_taggingOS_.p0    );
-  params_taggingOS_.etabar  = sub_config_ptree.get("etabar_OS", params_taggingOS_.etabar);
-  params_taggingOS_.dp1     = sub_config_ptree.get("dp1_OS"   , params_taggingOS_.dp1   );
-  params_taggingOS_.dp0     = sub_config_ptree.get("dp0_OS"   , params_taggingOS_.dp0   );
+  params_taggingOS_.p1             = sub_config_ptree.get("p1_OS"         , params_taggingOS_.p1            );
+  params_taggingOS_.p0             = sub_config_ptree.get("p0_OS"         , params_taggingOS_.p0            );
+  params_taggingOS_.etabar         = sub_config_ptree.get("etabar_OS"     , params_taggingOS_.etabar        );
+  params_taggingOS_.dp1            = sub_config_ptree.get("dp1_OS"        , params_taggingOS_.dp1           );
+  params_taggingOS_.dp0            = sub_config_ptree.get("dp0_OS"        , params_taggingOS_.dp0           );
+  params_taggingOS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean" , params_taggingOS_.eta_dist_mean );
+  params_taggingOS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma", params_taggingOS_.eta_dist_sigma);
   
-  params_taggingSS_.p1      = sub_config_ptree.get("p1_SS"    , params_taggingSS_.p1    );
-  params_taggingSS_.p0      = sub_config_ptree.get("p0_SS"    , params_taggingSS_.p0    );
-  params_taggingSS_.etabar  = sub_config_ptree.get("etabar_SS", params_taggingSS_.etabar);
-  params_taggingSS_.dp1     = sub_config_ptree.get("dp1_SS"   , params_taggingSS_.dp1   );
-  params_taggingSS_.dp0     = sub_config_ptree.get("dp0_SS"   , params_taggingSS_.dp0   );
+  params_taggingSS_.p1             = sub_config_ptree.get("p1_SS"         , params_taggingSS_.p1            );
+  params_taggingSS_.p0             = sub_config_ptree.get("p0_SS"         , params_taggingSS_.p0            );
+  params_taggingSS_.etabar         = sub_config_ptree.get("etabar_SS"     , params_taggingSS_.etabar        );
+  params_taggingSS_.dp1            = sub_config_ptree.get("dp1_SS"        , params_taggingSS_.dp1           );
+  params_taggingSS_.dp0            = sub_config_ptree.get("dp0_SS"        , params_taggingSS_.dp0           );
+  params_taggingSS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean" , params_taggingSS_.eta_dist_mean );
+  params_taggingSS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma", params_taggingSS_.eta_dist_sigma);
 }
 
 bool BSig_CPV_P2VP_Generator::TryGenerateEvent(TRandom& rndm, Observables& observables) {
@@ -175,7 +179,8 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
   double random_val = rndm.Uniform();
   
   if (random_val < params_taggingeffs_.eff_OS) { // generate OS tags and mistags
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
+    // gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
+    gen_success &= GenerateEtaGauss(rndm, params_taggingOS_.eta_dist_mean, params_taggingOS_.eta_dist_sigma, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
                                obs_tag_OS.GetValueForType("B")  , obs_tag_OS.GetValueForType("Bb"),
@@ -185,7 +190,8 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
     obs_tag_class.value_ = obs_tag_class.GetValueForType("OSonly");
   }
   else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) { // generate SS tags and mistags
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
+    // gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
+    gen_success &= GenerateEtaGauss(rndm, params_taggingSS_.eta_dist_mean, params_taggingSS_.eta_dist_sigma, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
                                obs_tag_SS.GetValueForType("B"), obs_tag_SS.GetValueForType("Bb"),
@@ -197,13 +203,15 @@ bool BSig_CPV_P2VP_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableI
   else if (random_val < (  params_taggingeffs_.eff_OS
                          + params_taggingeffs_.eff_SS
                          + params_taggingeffs_.eff_SSOS) ) { // generate overlap tags and mistags
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
+    // gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
+    gen_success &= GenerateEtaGauss(rndm, params_taggingOS_.eta_dist_mean, params_taggingOS_.eta_dist_sigma, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaOS_,tag_calib_func_domegaOS_,
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
                                obs_tag_OS.GetValueForType("B"), obs_tag_OS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_eta_OS.value_, obs_tag_OS.value_);
     
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
+    // gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
+    gen_success &= GenerateEtaGauss(rndm, params_taggingSS_.eta_dist_mean, params_taggingSS_.eta_dist_sigma, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm,tag_calib_func_omegaSS_,tag_calib_func_domegaSS_,
                                obs_tag_true.GetValueForType("B"), obs_tag_true.GetValueForType("Bb"),
                                obs_tag_SS.GetValueForType("B"), obs_tag_SS.GetValueForType("Bb"),

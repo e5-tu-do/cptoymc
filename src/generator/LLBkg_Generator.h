@@ -59,6 +59,8 @@ private:
   struct ParamsTagging {
     double omega;
     double domega;
+    double eta_dist_mean;
+    double eta_dist_sigma;
   } params_taggingOS_, params_taggingSS_;
 
   int comp_cat_;
