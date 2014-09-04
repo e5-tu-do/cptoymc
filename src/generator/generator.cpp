@@ -122,7 +122,7 @@ bool GenerateEtaGauss(TRandom& rndm, double m, double s, double obs_eta_min, dou
   } else {
     obs_eta = rndm.Gaus(m,s);
 
-    while (obs_eta > max || obs_eta < min) {
+    while (obs_eta > obs_eta_max || obs_eta < obs_eta_min) {
       obs_eta = rndm.Gaus(m,s);
     }
 

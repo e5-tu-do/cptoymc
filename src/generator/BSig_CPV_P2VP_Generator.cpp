@@ -80,21 +80,21 @@ void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_co
   params_taggingeffs_.eff_SS    = sub_config_ptree.get("eff_SS"   ,params_taggingeffs_.eff_SS   );
   params_taggingeffs_.eff_SSOS  = sub_config_ptree.get("eff_SSOS" ,params_taggingeffs_.eff_SSOS );
   
-  params_taggingOS_.p1             = sub_config_ptree.get("p1_OS"         , params_taggingOS_.p1            );
-  params_taggingOS_.p0             = sub_config_ptree.get("p0_OS"         , params_taggingOS_.p0            );
-  params_taggingOS_.etabar         = sub_config_ptree.get("etabar_OS"     , params_taggingOS_.etabar        );
-  params_taggingOS_.dp1            = sub_config_ptree.get("dp1_OS"        , params_taggingOS_.dp1           );
-  params_taggingOS_.dp0            = sub_config_ptree.get("dp0_OS"        , params_taggingOS_.dp0           );
-  params_taggingOS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean" , params_taggingOS_.eta_dist_mean );
-  params_taggingOS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma", params_taggingOS_.eta_dist_sigma);
+  params_taggingOS_.p1             = sub_config_ptree.get("p1_OS"            , params_taggingOS_.p1            );
+  params_taggingOS_.p0             = sub_config_ptree.get("p0_OS"            , params_taggingOS_.p0            );
+  params_taggingOS_.etabar         = sub_config_ptree.get("etabar_OS"        , params_taggingOS_.etabar        );
+  params_taggingOS_.dp1            = sub_config_ptree.get("dp1_OS"           , params_taggingOS_.dp1           );
+  params_taggingOS_.dp0            = sub_config_ptree.get("dp0_OS"           , params_taggingOS_.dp0           );
+  params_taggingOS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean_OS" , params_taggingOS_.eta_dist_mean );
+  params_taggingOS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma_OS", params_taggingOS_.eta_dist_sigma);
   
-  params_taggingSS_.p1             = sub_config_ptree.get("p1_SS"         , params_taggingSS_.p1            );
-  params_taggingSS_.p0             = sub_config_ptree.get("p0_SS"         , params_taggingSS_.p0            );
-  params_taggingSS_.etabar         = sub_config_ptree.get("etabar_SS"     , params_taggingSS_.etabar        );
-  params_taggingSS_.dp1            = sub_config_ptree.get("dp1_SS"        , params_taggingSS_.dp1           );
-  params_taggingSS_.dp0            = sub_config_ptree.get("dp0_SS"        , params_taggingSS_.dp0           );
-  params_taggingSS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean" , params_taggingSS_.eta_dist_mean );
-  params_taggingSS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma", params_taggingSS_.eta_dist_sigma);
+  params_taggingSS_.p1             = sub_config_ptree.get("p1_SS"            , params_taggingSS_.p1            );
+  params_taggingSS_.p0             = sub_config_ptree.get("p0_SS"            , params_taggingSS_.p0            );
+  params_taggingSS_.etabar         = sub_config_ptree.get("etabar_SS"        , params_taggingSS_.etabar        );
+  params_taggingSS_.dp1            = sub_config_ptree.get("dp1_SS"           , params_taggingSS_.dp1           );
+  params_taggingSS_.dp0            = sub_config_ptree.get("dp0_SS"           , params_taggingSS_.dp0           );
+  params_taggingSS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean_SS" , params_taggingSS_.eta_dist_mean );
+  params_taggingSS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma_SS", params_taggingSS_.eta_dist_sigma);
 }
 
 bool BSig_CPV_P2VP_Generator::TryGenerateEvent(TRandom& rndm, Observables& observables) {

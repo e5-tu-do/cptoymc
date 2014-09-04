@@ -25,7 +25,8 @@ LLBkg_Generator::LLBkg_Generator() :
   params_taggingSS_{0.5,0.,0.0,-1.0},
   comp_cat_(-1001)
 {
-  
+  std::cout << params_taggingOS_.eta_dist_mean << " - " << params_taggingOS_.eta_dist_sigma << std::endl;
+  std::cout << params_taggingSS_.eta_dist_mean << " - " << params_taggingSS_.eta_dist_sigma << std::endl;
 }
 
 LLBkg_Generator::~LLBkg_Generator() {
@@ -58,15 +59,18 @@ void LLBkg_Generator::Configure(const configuration::CompConfig& comp_config) {
   params_taggingeffs_.eff_SS    = sub_config_ptree.get("eff_SS"   ,params_taggingeffs_.eff_SS   );
   params_taggingeffs_.eff_SSOS  = sub_config_ptree.get("eff_SSOS" ,params_taggingeffs_.eff_SSOS );
   
-  params_taggingOS_.omega          = sub_config_ptree.get("omega_OS"      , params_taggingOS_.omega         );
-  params_taggingOS_.domega         = sub_config_ptree.get("domega_OS"     , params_taggingOS_.domega        );
-  params_taggingOS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean" , params_taggingOS_.eta_dist_mean );
-  params_taggingOS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma", params_taggingOS_.eta_dist_sigma);
+  params_taggingOS_.omega          = sub_config_ptree.get("omega_OS"         , params_taggingOS_.omega         );
+  params_taggingOS_.domega         = sub_config_ptree.get("domega_OS"        , params_taggingOS_.domega        );
+  params_taggingOS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean_OS" , params_taggingOS_.eta_dist_mean );
+  params_taggingOS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma_OS", params_taggingOS_.eta_dist_sigma);
 
-  params_taggingSS_.omega          = sub_config_ptree.get("omega_SS"      , params_taggingSS_.omega         );
-  params_taggingSS_.domega         = sub_config_ptree.get("domega_SS"     , params_taggingSS_.domega        );
-  params_taggingSS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean" , params_taggingSS_.eta_dist_mean );
-  params_taggingSS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma", params_taggingSS_.eta_dist_sigma);
+  params_taggingSS_.omega          = sub_config_ptree.get("omega_SS"         , params_taggingSS_.omega         );
+  params_taggingSS_.domega         = sub_config_ptree.get("domega_SS"        , params_taggingSS_.domega        );
+  params_taggingSS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean_SS" , params_taggingSS_.eta_dist_mean );
+  params_taggingSS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma_SS", params_taggingSS_.eta_dist_sigma);
+
+  std::cout << params_taggingOS_.eta_dist_mean << " - " << params_taggingOS_.eta_dist_sigma << std::endl;
+  std::cout << params_taggingSS_.eta_dist_mean << " - " << params_taggingSS_.eta_dist_sigma << std::endl;
 }
 
 bool LLBkg_Generator::TryGenerateEvent(TRandom& rndm, Observables& observables) {
