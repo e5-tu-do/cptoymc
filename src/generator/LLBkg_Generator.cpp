@@ -103,7 +103,7 @@ bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_
     // decay time
     gen_success &= GenerateExpo(rndm,1./params_timeandcp_.tau,obs_time_true.value_,obs_time_true.min_value(),obs_time_true.max_value());
     
-    gen_success &= GenerateLognormal(rndm, params_timeresol_.lognormal_m, params_timeresol_.lognormal_k, obs_timeerror.value_);
+    gen_success &= GenerateLognormal(rndm, params_timeresol_.lognormal_m, params_timeresol_.lognormal_k, obs_timeerror.min_value(), obs_timeerror.max_value(), obs_timeerror.value_);
     gen_success &= GenerateResolSingleGaussPerEvent(rndm, params_timeresol_.bias, params_timeresol_.scale, obs_timeerror.value_, obs_time_true.value(), obs_time_meas.value_);
     
     if (gen_success && obs_time_true.HasValidValue() && obs_time_meas.HasValidValue() && obs_tag_true.HasValidValue()) {

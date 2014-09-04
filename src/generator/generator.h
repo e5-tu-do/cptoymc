@@ -43,7 +43,7 @@ double BCPV_PDF(double t, double d, double tau, double dGamma, double dm,
 double BCPV_PDF_Envelope(double t, double gamma_min,
                        double Sf, double Cf, double Df);
 
-bool GenerateLognormal(TRandom& rndm, double m, double k,
+bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max,
                        double& obs_sigma_t);
   
 // Resolution generators

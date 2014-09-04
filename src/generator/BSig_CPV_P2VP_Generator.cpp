@@ -144,7 +144,7 @@ bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableRe
                      params_timeandcp_.Sf, params_timeandcp_.Cf, params_timeandcp_.Df,
                      obs_time_true.value_, obs_tag_true.value_);
     
-    gen_success &= GenerateLognormal(rndm, params_timeresol_.lognormal_m, params_timeresol_.lognormal_k, obs_timeerror.value_);
+    gen_success &= GenerateLognormal(rndm, params_timeresol_.lognormal_m, params_timeresol_.lognormal_k, obs_timeerror.min_value(), obs_timeerror.max_value(), obs_timeerror.value_);
     gen_success &= GenerateResolSingleGaussPerEvent(rndm, params_timeresol_.bias, params_timeresol_.scale, obs_timeerror.value_,
                              obs_time_true.value_, obs_time_meas.value_);
     
