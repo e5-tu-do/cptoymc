@@ -143,6 +143,7 @@ public:
   ObservableInt  tag_true;
   ObservableReal mass_meas;
   ObservableReal time_meas;
+  ObservableReal timeerror;
   ObservableInt  tag_class; // -1: SS&&!OS, 0: !OS&&!SS, 1: OS&&!SS, 10: OS&&SS
   ObservableInt  tag_OS;
   ObservableReal eta_OS;

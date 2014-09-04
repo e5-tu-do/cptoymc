@@ -23,7 +23,7 @@ BSig_CPV_P2VP_Generator::BSig_CPV_P2VP_Generator() :
   params_mass_{5279.15, 0.},
   params_massresol_{0.,8.},
   params_timeandcp_{1.5,0.,0.5,0.7,0.,0.7,0.},
-  params_timeresol_{0.,0.05},
+  params_timeresol_{0.033,0.72,0.,1.0},
   params_taggingeffs_{0.30,0.06,0.04},
   params_taggingOS_{1.0,0.25,0.25,0.0,0.0},
   params_taggingSS_{1.0,0.25,0.25,0.0,0.0},
@@ -34,7 +34,7 @@ BSig_CPV_P2VP_Generator::BSig_CPV_P2VP_Generator() :
     [&](double eta) -> double { return params_taggingOS_.dp1*(eta-params_taggingOS_.etabar)+params_taggingOS_.dp0; } ),
   tag_calib_func_omegaSS_(
     [&](double eta) -> double { return params_taggingSS_.p1*(eta-params_taggingSS_.etabar)+params_taggingSS_.p0; } ),
-tag_calib_func_domegaSS_(
+  tag_calib_func_domegaSS_(
     [&](double eta) -> double { return params_taggingSS_.dp1*(eta-params_taggingSS_.etabar)+params_taggingSS_.dp0; } )
 {
   
@@ -69,8 +69,10 @@ void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_co
   params_timeandcp_.prod_asym = sub_config_ptree.get("AP",      params_timeandcp_.prod_asym);
   
   sub_config_ptree = config_ptree.get_child("TimeResol");
-  params_timeresol_.bias  = sub_config_ptree.get("bias" , params_timeresol_.bias  );
-  params_timeresol_.sigma = sub_config_ptree.get("sigma", params_timeresol_.sigma );
+  params_timeresol_.lognormal_m  = sub_config_ptree.get("lognormal_m", params_timeresol_.lognormal_m);
+  params_timeresol_.lognormal_k  = sub_config_ptree.get("lognormal_k", params_timeresol_.lognormal_k);
+  params_timeresol_.bias         = sub_config_ptree.get("bias"       , params_timeresol_.bias       );
+  params_timeresol_.scale        = sub_config_ptree.get("scale"      , params_timeresol_.scale      );
   
   // Tagging
   sub_config_ptree = config_ptree.get_child("Tagging");
@@ -95,7 +97,8 @@ bool BSig_CPV_P2VP_Generator::TryGenerateEvent(TRandom& rndm, Observables& obser
   observables.comp_cat.set_value(comp_cat_);
   bool gen_success = true;
   gen_success &= GenerateMass(rndm, observables.mass_true, observables.mass_meas);
-  gen_success &= GenerateTimeAndTrueTag(rndm, observables.time_true, observables.tag_true, observables.time_meas);
+  //gen_success &= GenerateLognormal(rndm, m, k, observables.timeerror);
+  gen_success &= GenerateTimeAndTrueTag(rndm, observables.time_true, observables.timeerror, observables.tag_true, observables.time_meas);
   gen_success &= GenerateTagAndEta(rndm, observables.tag_true,
                     observables.tag_OS, observables.eta_OS,
                     observables.tag_SS, observables.eta_SS,
@@ -111,7 +114,7 @@ bool BSig_CPV_P2VP_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_ma
     gen_success = true;
     gen_success &= GenerateMassBreitWigner(rndm, params_mass_.mean, params_mass_.width, obs_mass_true.value_);
     
-    gen_success&= GenerateResolSingleGauss(rndm, params_massresol_.bias, params_massresol_.sigma, obs_mass_true.value(), obs_mass_meas.value_);
+    gen_success &= GenerateResolSingleGauss(rndm, params_massresol_.bias, params_massresol_.sigma, obs_mass_true.value(), obs_mass_meas.value_);
     
     if (gen_success && obs_mass_true.HasValidValue() && obs_mass_meas.HasValidValue()) {
       break;
@@ -131,7 +134,7 @@ bool BSig_CPV_P2VP_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_ma
   return gen_success;
 }
   
-bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas) {
+bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas) {
   unsigned int trials = 0;
   bool gen_success = true;
   while (trials < max_trials_) {
@@ -141,9 +144,9 @@ bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableRe
                      params_timeandcp_.Sf, params_timeandcp_.Cf, params_timeandcp_.Df,
                      obs_time_true.value_, obs_tag_true.value_);
     
-    gen_success &= GenerateResolSingleGauss(rndm, params_timeresol_.bias, params_timeresol_.sigma,
+    gen_success &= GenerateLognormal(rndm, params_timeresol_.lognormal_m, params_timeresol_.lognormal_k, obs_timeerror.value_);
+    gen_success &= GenerateResolSingleGaussPerEvent(rndm, params_timeresol_.bias, params_timeresol_.scale, obs_timeerror.value_,
                              obs_time_true.value_, obs_time_meas.value_);
-    
     
     if (gen_success && obs_time_true.HasValidValue() && obs_time_meas.HasValidValue() && obs_tag_true.HasValidValue()) {
       break;
