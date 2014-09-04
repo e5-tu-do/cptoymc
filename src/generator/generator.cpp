@@ -94,7 +94,7 @@ bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, 
 
 bool GenerateResolSingleGaussPerEvent(TRandom& rndm, double par_bias, double par_scale, double obs_per_event_error, double obs_true, double& obs_meas) {
   obs_meas = obs_true;
-  obs_meas += rndm.Gaus(par_bias, par_scale*obs_timeerror);
+  obs_meas += rndm.Gaus(par_bias, par_scale*obs_per_event_error);
   
   return true;
 }
