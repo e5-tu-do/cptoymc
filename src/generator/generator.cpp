@@ -115,15 +115,23 @@ bool GenerateEtaFlat(TRandom& rndm, double obs_eta_min, double obs_eta_max, doub
 }
 
 bool GenerateEtaGauss(TRandom& rndm, double m, double s, double obs_eta_min, double obs_eta_max, double& obs_eta) {
+  unsigned int num_samples(0);
+
   // s is set to -1.0 on default; a negative Gaussian width does not make sense, thus generate a uniform distribution
   if (s < 0.0) {
     obs_eta = rndm.Uniform(obs_eta_min,obs_eta_max);
     return true;
   } else {
     obs_eta = rndm.Gaus(m,s);
+    ++num_samples;
 
     while (obs_eta > obs_eta_max || obs_eta < obs_eta_min) {
       obs_eta = rndm.Gaus(m,s);
+      ++num_samples;
+
+      if (num_samples % 1000 == 0) {
+        std::cout << "WARNING in cptoymc::generator::GenerateEtaGauss(rndm, m=" << m << ", s=" << s << ", obs_eta_min=" << obs_eta_min << ", obs_eta_max=" << obs_eta_max << "): Generated " << num_samples << " sample values without one candidate passing. You probably want to check your parameters." << std::endl;
+      }
     }
 
     return true;
