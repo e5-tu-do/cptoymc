@@ -129,7 +129,7 @@ bool GenerateEtaGauss(TRandom& rndm, double m, double s, double obs_eta_min, dou
       obs_eta = rndm.Gaus(m,s);
       ++num_samples;
 
-      if (num_samples % 1000 == 0) {
+      if (num_samples % 10000000 == 0) {
         std::cout << "WARNING in cptoymc::generator::GenerateEtaGauss(rndm, m=" << m << ", s=" << s << ", obs_eta_min=" << obs_eta_min << ", obs_eta_max=" << obs_eta_max << "): Generated " << num_samples << " sample values without one candidate passing. You probably want to check your parameters." << std::endl;
       }
     }
