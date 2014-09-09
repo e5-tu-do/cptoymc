@@ -28,7 +28,7 @@ public:
   
 private:
   bool GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas);
-  bool GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas);
+  bool GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas);
   bool GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_tag_true,
                          ObservableInt& obs_tag_OS, ObservableReal& obs_eta_OS,
                          ObservableInt& obs_tag_SS, ObservableReal& obs_eta_SS,
@@ -55,8 +55,10 @@ private:
   } params_timeandcp_;
   
   struct ParamsTimeResol {
+    double lognormal_m;
+    double lognormal_k;
     double bias;
-    double sigma;
+    double scale;
   } params_timeresol_;
   
   struct ParamsTaggingEffs {
@@ -71,6 +73,8 @@ private:
     double etabar;
     double dp1;
     double dp0;
+    double eta_dist_mean;
+    double eta_dist_sigma;
   } params_taggingOS_, params_taggingSS_;
   
   int comp_cat_;

@@ -1,5 +1,7 @@
 #include "configuration/ObsConfig.h"
 
+#include <iostream>
+
 namespace cptoymc {
 namespace configuration {
 

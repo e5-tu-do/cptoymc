@@ -19,13 +19,12 @@ LLBkg_Generator::LLBkg_Generator() :
   CompGenerator(),
   params_mass_{0.},
   params_timeandcp_{1.,0.},
-  params_timeresol_{0.,0.05},
+  params_timeresol_{0.033,0.72,0.,1.0},
   params_taggingeffs_{0.30,0.06,0.04},
-  params_taggingOS_{0.5,0.},
-  params_taggingSS_{0.5,0.},
+  params_taggingOS_{0.5,0.,0.0,-1.0},
+  params_taggingSS_{0.5,0.,0.0,-1.0},
   comp_cat_(-1001)
 {
-  
 }
 
 LLBkg_Generator::~LLBkg_Generator() {
@@ -47,8 +46,10 @@ void LLBkg_Generator::Configure(const configuration::CompConfig& comp_config) {
   params_timeandcp_.prod_asym = sub_config_ptree.get("AP" , params_timeandcp_.prod_asym);
   
   sub_config_ptree = config_ptree.get_child("TimeResol");
-  params_timeresol_.bias  = sub_config_ptree.get("bias" , params_timeresol_.bias  );
-  params_timeresol_.sigma = sub_config_ptree.get("sigma", params_timeresol_.sigma );
+  params_timeresol_.lognormal_m  = sub_config_ptree.get("lognormal_m", params_timeresol_.lognormal_m);
+  params_timeresol_.lognormal_k  = sub_config_ptree.get("lognormal_k", params_timeresol_.lognormal_k);
+  params_timeresol_.bias         = sub_config_ptree.get("bias"       , params_timeresol_.bias       );
+  params_timeresol_.scale        = sub_config_ptree.get("scale"      , params_timeresol_.scale      );
   
   // Tagging
   sub_config_ptree = config_ptree.get_child("Tagging");
@@ -56,10 +57,15 @@ void LLBkg_Generator::Configure(const configuration::CompConfig& comp_config) {
   params_taggingeffs_.eff_SS    = sub_config_ptree.get("eff_SS"   ,params_taggingeffs_.eff_SS   );
   params_taggingeffs_.eff_SSOS  = sub_config_ptree.get("eff_SSOS" ,params_taggingeffs_.eff_SSOS );
   
-  params_taggingOS_.omega   = sub_config_ptree.get("omega_OS"  , params_taggingOS_.omega  );
-  params_taggingOS_.domega  = sub_config_ptree.get("domega_OS" , params_taggingOS_.domega );
-  params_taggingSS_.omega   = sub_config_ptree.get("omega_SS"  , params_taggingSS_.omega );
-  params_taggingSS_.domega  = sub_config_ptree.get("domega_SS" , params_taggingSS_.domega );
+  params_taggingOS_.omega          = sub_config_ptree.get("omega_OS"         , params_taggingOS_.omega         );
+  params_taggingOS_.domega         = sub_config_ptree.get("domega_OS"        , params_taggingOS_.domega        );
+  params_taggingOS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean_OS" , params_taggingOS_.eta_dist_mean );
+  params_taggingOS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma_OS", params_taggingOS_.eta_dist_sigma);
+
+  params_taggingSS_.omega          = sub_config_ptree.get("omega_SS"         , params_taggingSS_.omega         );
+  params_taggingSS_.domega         = sub_config_ptree.get("domega_SS"        , params_taggingSS_.domega        );
+  params_taggingSS_.eta_dist_mean  = sub_config_ptree.get("eta_dist_mean_SS" , params_taggingSS_.eta_dist_mean );
+  params_taggingSS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma_SS", params_taggingSS_.eta_dist_sigma);
 }
 
 bool LLBkg_Generator::TryGenerateEvent(TRandom& rndm, Observables& observables) {
@@ -68,7 +74,7 @@ bool LLBkg_Generator::TryGenerateEvent(TRandom& rndm, Observables& observables) 
   observables.comp_cat.set_value(comp_cat_);
   
   gen_success &= GenerateMass(rndm, observables.mass_true, observables.mass_meas);
-  gen_success &= GenerateTimeAndTrueTag(rndm, observables.time_true, observables.tag_true, observables.time_meas);
+  gen_success &= GenerateTimeAndTrueTag(rndm, observables.time_true, observables.timeerror, observables.tag_true, observables.time_meas);
   gen_success &= GenerateTagAndEta(rndm, observables.tag_true,
                                    observables.tag_OS, observables.eta_OS,
                                    observables.tag_SS, observables.eta_SS,
@@ -86,7 +92,7 @@ bool LLBkg_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true,
   return gen_success;
 }
 
-bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableInt&
+bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt&
                                              obs_tag_true, ObservableReal& obs_time_meas) {
   
   unsigned int trials = 0;
@@ -101,8 +107,8 @@ bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_
     // decay time
     gen_success &= GenerateExpo(rndm,1./params_timeandcp_.tau,obs_time_true.value_,obs_time_true.min_value(),obs_time_true.max_value());
     
-    gen_success &= GenerateResolSingleGauss(rndm, params_timeresol_.bias, params_timeresol_.sigma, obs_time_true.value(), obs_time_meas.value_);
-    
+    gen_success &= GenerateLognormal(rndm, params_timeresol_.lognormal_m, params_timeresol_.lognormal_k, obs_timeerror.min_value(), obs_timeerror.max_value(), obs_timeerror.value_);
+    gen_success &= GenerateResolSingleGaussPerEvent(rndm, params_timeresol_.bias, params_timeresol_.scale, obs_timeerror.value_, obs_time_true.value(), obs_time_meas.value_);
     
     if (gen_success && obs_time_true.HasValidValue() && obs_time_meas.HasValidValue() && obs_tag_true.HasValidValue()) {
       break;
@@ -132,7 +138,8 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
   double random_val = rndm.Uniform();
   
   if (random_val < params_taggingeffs_.eff_OS) { // generate OS tags and mistags
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
+    // gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
+    gen_success &= GenerateEtaGauss(rndm, params_taggingOS_.eta_dist_mean, params_taggingOS_.eta_dist_sigma, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
                                obs_tag_true.GetValueForType("B") , obs_tag_true.GetValueForType("Bb"),
                                obs_tag_OS.GetValueForType("B")   , obs_tag_OS.GetValueForType("Bb"),
@@ -143,7 +150,8 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
     obs_tag_class.value_ = obs_tag_class.GetValueForType("OSonly");
   }
   else if (random_val < (params_taggingeffs_.eff_OS + params_taggingeffs_.eff_SS)) { // generate SS tags and mistags
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
+    // gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
+    gen_success &= GenerateEtaGauss(rndm, params_taggingSS_.eta_dist_mean, params_taggingSS_.eta_dist_sigma, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
                                obs_tag_true.GetValueForType("B") , obs_tag_true.GetValueForType("Bb"),
                                obs_tag_SS.GetValueForType("B")   , obs_tag_SS.GetValueForType("Bb"),
@@ -155,14 +163,16 @@ bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_
   else if (random_val < (  params_taggingeffs_.eff_OS
                          + params_taggingeffs_.eff_SS
                          + params_taggingeffs_.eff_SSOS) ) { // generate overlap tags and mistags
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
+    // gen_success &= GenerateEtaFlat(rndm, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
+    gen_success &= GenerateEtaGauss(rndm, params_taggingOS_.eta_dist_mean, params_taggingOS_.eta_dist_sigma, obs_eta_OS.min_value(), obs_eta_OS.max_value(), obs_eta_OS.value_);
     gen_success &= GenerateTag(rndm, params_taggingOS_.omega, params_taggingOS_.domega,
                                obs_tag_true.GetValueForType("B") , obs_tag_true.GetValueForType("Bb"),
                                obs_tag_OS.GetValueForType("B")   , obs_tag_OS.GetValueForType("Bb"),
                                obs_tag_true.value(), obs_tag_OS.value_);
     
     
-    gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
+    // gen_success &= GenerateEtaFlat(rndm, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
+    gen_success &= GenerateEtaGauss(rndm, params_taggingSS_.eta_dist_mean, params_taggingSS_.eta_dist_sigma, obs_eta_SS.min_value(), obs_eta_SS.max_value(), obs_eta_SS.value_);
     gen_success &= GenerateTag(rndm, params_taggingSS_.omega, params_taggingSS_.domega,
                                obs_tag_true.GetValueForType("B") , obs_tag_true.GetValueForType("Bb"),
                                obs_tag_SS.GetValueForType("B")   , obs_tag_SS.GetValueForType("Bb"),

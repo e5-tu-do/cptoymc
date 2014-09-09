@@ -29,6 +29,29 @@ bool GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, d
   return true;
 }
 
+bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max,
+                       double& obs_sigma_t) {
+  unsigned int num_samples(0);
+
+  if (min == max) {
+    obs_sigma_t = min;
+    return true;
+  } else {
+    obs_sigma_t = std::exp(std::log(m) + std::log(k)*rndm.Gaus(0,1));
+    ++num_samples;
+
+    while (obs_sigma_t > max || obs_sigma_t < min) {
+      obs_sigma_t = std::exp(std::log(m) + std::log(k)*rndm.Gaus(0,1));
+      ++num_samples;
+
+      if (num_samples % 10000000 == 0) {
+        std::cout << "WARNING in GenerateLognormal(rndm, m=" << m << ", k=" << k << ", min=" << min << ", max=" << max << "): Generated " << num_samples << " sample values without one candidate passing. You probably want to check your parameters." << std::endl;
+      }
+    }
+
+    return true;
+  }
+}
  
 bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
                       double par_tau, double par_dGamma, double par_dm,
@@ -86,6 +109,14 @@ bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, 
   return true;
 }
 
+bool GenerateResolSingleGaussPerEvent(TRandom& rndm, double par_bias, double par_scale, double obs_per_event_error, double obs_true, double& obs_meas) {
+  obs_meas = obs_true;
+  obs_meas += rndm.Gaus(par_bias, par_scale*obs_per_event_error);
+  
+  return true;
+}
+
+
 bool GenerateEtaFlat(TRandom& rndm, double& obs_eta) {
   return GenerateEtaFlat(rndm,0.0,0.5,obs_eta);
 }
@@ -93,6 +124,30 @@ bool GenerateEtaFlat(TRandom& rndm, double& obs_eta) {
 bool GenerateEtaFlat(TRandom& rndm, double obs_eta_min, double obs_eta_max, double& obs_eta) {
   obs_eta = rndm.Uniform(obs_eta_min,obs_eta_max);
   return true;
+}
+
+bool GenerateEtaGauss(TRandom& rndm, double m, double s, double obs_eta_min, double obs_eta_max, double& obs_eta) {
+  unsigned int num_samples(0);
+
+  // s is set to -1.0 on default; a negative Gaussian width does not make sense, thus generate a uniform distribution
+  if (s < 0.0) {
+    obs_eta = rndm.Uniform(obs_eta_min,obs_eta_max);
+    return true;
+  } else {
+    obs_eta = rndm.Gaus(m,s);
+    ++num_samples;
+
+    while (obs_eta > obs_eta_max || obs_eta < obs_eta_min) {
+      obs_eta = rndm.Gaus(m,s);
+      ++num_samples;
+
+      if (num_samples % 10000000 == 0) {
+        std::cout << "WARNING in cptoymc::generator::GenerateEtaGauss(rndm, m=" << m << ", s=" << s << ", obs_eta_min=" << obs_eta_min << ", obs_eta_max=" << obs_eta_max << "): Generated " << num_samples << " sample values without one candidate passing. You probably want to check your parameters." << std::endl;
+      }
+    }
+
+    return true;
+  }
 }
 
 bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
