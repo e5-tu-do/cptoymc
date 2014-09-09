@@ -73,6 +73,8 @@ private:
     double etabar;
     double dp1;
     double dp0;
+    double eta_dist_mean;
+    double eta_dist_sigma;
   } params_taggingOS_, params_taggingSS_;
   
   int comp_cat_;
