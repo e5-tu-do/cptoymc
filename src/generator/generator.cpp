@@ -9,7 +9,7 @@
 
 // from project
 #include "configuration/configuration.h"
-
+#include "generator/masspdf.h"
 
 namespace cptoymc {
 namespace generator {
@@ -106,6 +106,50 @@ bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, 
   obs_meas = obs_true;
   obs_meas += rndm.Gaus(par_bias, par_sigma);
   
+  return true;
+}
+
+bool GenerateResolIpatia(TRandom& rndm,
+                         double par_bias,
+                         double par_lambda,
+                         double par_zeta,
+                         double par_beta,
+                         double par_sigma,
+                         double par_a1,
+                         double par_n1,
+                         double par_a2,
+                         double par_n2,
+                         double obs_true,
+                         double& obs_meas,
+                         double massrange) {
+
+  //std::cout << "GenerateResolIpatia(): par_bias    " << par_bias << std::endl;
+  //std::cout << "GenerateResolIpatia(): par_lambda  " << par_lambda << std::endl;
+  //std::cout << "GenerateResolIpatia(): par_zeta    " << par_zeta << std::endl;
+  //std::cout << "GenerateResolIpatia(): par_beta    " << par_beta << std::endl;
+  //std::cout << "GenerateResolIpatia(): par_sigma   " << par_sigma << std::endl;
+  //std::cout << "GenerateResolIpatia(): par_a1      " << par_a1 << std::endl;
+  //std::cout << "GenerateResolIpatia(): par_n1      " << par_n1 << std::endl;
+  //std::cout << "GenerateResolIpatia(): par_a2      " << par_a2 << std::endl;
+  //std::cout << "GenerateResolIpatia(): par_n2      " << par_n2 << std::endl;
+
+  obs_meas = obs_true;
+  //Replace by appropriate range
+  double x_lo = - massrange;
+  double x;
+  double rnumber;
+  double ipaval;
+  do{
+    x = x_lo + 2 * massrange * rndm.Uniform(0.0,1.0); //sample uniformly over interval
+    //std::cout << "GenerateResolIpatia(): try x:  " << x << std::endl;
+    ipaval = masspdf::EvalIpatia(x, par_lambda, par_zeta, par_beta, par_sigma, par_bias, par_a1, par_n1, par_a2, par_n2);
+    //std::cout << "GenerateResolIpatia(): ipaval: " << ipaval << std::endl;
+    rnumber = rndm.Uniform(0.0,1.0);
+  } while(rnumber >= ipaval);
+  
+  //std::cout << "GenerateResolIpatia(): SamplingResult: " << x << std::endl;
+  obs_meas += x;
+
   return true;
 }
 
@@ -208,7 +252,6 @@ bool GenerateRandomTag(TRandom& rndm, int& obs_tag_meas) {
 int yieldToGenerate(TRandom& rndm, double yield_exp) {
   return rndm.Poisson(yield_exp);
 }
-
 
 } // namespace cptoymc
 } // namespace generator

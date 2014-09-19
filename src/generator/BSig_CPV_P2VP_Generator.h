@@ -42,6 +42,13 @@ private:
   struct ParamsMassResol {
     double bias;
     double sigma;
+    double lambda;
+    double zeta;
+    double beta;
+    double a1;
+    double n1;
+    double a2;
+    double n2;
   } params_massresol_;
   
   struct ParamsTimeAndCP {

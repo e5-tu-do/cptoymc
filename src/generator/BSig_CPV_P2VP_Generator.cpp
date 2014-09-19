@@ -21,7 +21,7 @@ namespace generator {
 BSig_CPV_P2VP_Generator::BSig_CPV_P2VP_Generator() :
   CompGenerator(),
   params_mass_{5279.15, 0.},
-  params_massresol_{0.,8.},
+  params_massresol_{0.,8.,0.0,0.0,0.0,0.0,0.0,0.0,0.0},
   params_timeandcp_{1.5,0.,0.5,0.7,0.,0.7,0.},
   params_timeresol_{0.033,0.72,0.,1.0},
   params_taggingeffs_{0.30,0.06,0.04},
@@ -57,7 +57,14 @@ void BSig_CPV_P2VP_Generator::Configure(const configuration::CompConfig& comp_co
   sub_config_ptree = config_ptree.get_child("MassResol");
   params_massresol_.bias  = sub_config_ptree.get("bias",params_massresol_.bias);
   params_massresol_.sigma = sub_config_ptree.get("sigma",params_massresol_.sigma);
-  
+  params_massresol_.lambda = sub_config_ptree.get("lambda",params_massresol_.lambda);
+  params_massresol_.zeta = sub_config_ptree.get("zeta",params_massresol_.zeta);
+  params_massresol_.beta  = sub_config_ptree.get("beta",params_massresol_.beta);
+  params_massresol_.a1 = sub_config_ptree.get("a1",params_massresol_.a1);
+  params_massresol_.n1 = sub_config_ptree.get("n1",params_massresol_.n1);
+  params_massresol_.a2 = sub_config_ptree.get("a2",params_massresol_.a2);
+  params_massresol_.n2 = sub_config_ptree.get("n2",params_massresol_.n2);
+
   // TimeAndCP
   sub_config_ptree = config_ptree.get_child("TimeAndCP");
   params_timeandcp_.tau       = sub_config_ptree.get("tau",     params_timeandcp_.tau);
@@ -118,8 +125,24 @@ bool BSig_CPV_P2VP_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_ma
     gen_success = true;
     gen_success &= GenerateMassBreitWigner(rndm, params_mass_.mean, params_mass_.width, obs_mass_true.value_);
     
-    gen_success &= GenerateResolSingleGauss(rndm, params_massresol_.bias, params_massresol_.sigma, obs_mass_true.value(), obs_mass_meas.value_);
-    
+    if (params_massresol_.lambda == 0 && params_massresol_.zeta == 0) // test gaussian like parameters)
+      gen_success &= GenerateResolSingleGauss(rndm, params_massresol_.bias, params_massresol_.sigma, obs_mass_true.value(), obs_mass_meas.value_);
+    else{
+      gen_success &= GenerateResolIpatia(rndm,
+                                         params_massresol_.bias,
+                                         params_massresol_.lambda,
+                                         params_massresol_.zeta,
+                                         params_massresol_.beta,
+                                         params_massresol_.sigma,
+                                         params_massresol_.a1,
+                                         params_massresol_.n1,
+                                         params_massresol_.a2,
+                                         params_massresol_.n2,
+                                         obs_mass_true.value(),
+                                         obs_mass_meas.value_,
+                                         (obs_mass_meas.max_value()-obs_mass_meas.min_value())/2); //needs full information about massrange
+    }
+
     if (gen_success && obs_mass_true.HasValidValue() && obs_mass_meas.HasValidValue()) {
       break;
     } else {

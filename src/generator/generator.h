@@ -49,6 +49,21 @@ bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max
 // Resolution generators
 bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma,
                               double obs_true, double& obs_meas);
+
+bool GenerateResolIpatia(TRandom& rndm,
+                         double par_bias,
+                         double par_lambda,
+                         double par_zeta,
+                         double par_beta,
+                         double par_sigma,
+                         double par_a1,
+                         double par_n1,
+                         double par_a2,
+                         double par_n2,
+                         double obs_true,
+                         double& obs_meas,
+                         double massrange);
+
 bool GenerateResolSingleGaussPerEvent(TRandom& rndm, double par_bias, double par_scale,
                               double obs_per_event_error, double obs_true, double& obs_meas);
   

@@ -10,7 +10,7 @@ Components
   {    
     name     "Sig_Bd"
     comp_cat 1
-    yield    10000
+    yield    100000
     model    "BSig_CPV_P2VP" 
     {
       Mass {
@@ -19,7 +19,14 @@ Components
       }
       MassResol {
         bias   0.
-        sigma  8.
+        sigma  9.4
+        lambda -2.83
+        zeta   0.0
+        beta   0.0
+        a1     2.22
+        n1     3.89
+        a2     3.28
+        n2     3.41
       }
       TimeAndCP {
         tau       1.519     ; lifetime in ps
@@ -100,7 +107,7 @@ Components
   {
     name     "Bkg"
     comp_cat 100
-    yield    10000
+    yield    0
     model    "LLBkg" 
     {
       Mass {
