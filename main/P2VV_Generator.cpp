@@ -181,7 +181,7 @@ int main()
 {
 	auto start_time = std::chrono::high_resolution_clock::now();
 
-		unsigned long seed =1234567; 
+		unsigned long seed =123; 
 		double Daten = 1e6;
 		double DatenTime = 1;
 		TRandom3 Random(seed);
@@ -221,22 +221,22 @@ int main()
 		double Value_1 = 4 * Amplitude_0 * Amplitude_0;
 		double Value_2 = 2 * Amplitude_Parallel * Amplitude_Parallel;
 		double Value_3 = 2 * Amplitude_Vertical * Amplitude_Vertical;
-		double Value_4 = Amplitude_Parallel * Amplitude_Vertical;
-		double Value_5 = Amplitude_Parallel * Amplitude_0;
-		double Value_6 = Amplitude_0 * Amplitude_Vertical;
+		double Value_4 = 2*Amplitude_Parallel * Amplitude_Vertical;
+		double Value_5 = TMath::Sqrt(2) * Amplitude_Parallel * Amplitude_0;
+		double Value_6 = TMath::Sqrt(2) * Amplitude_0 * Amplitude_Vertical;
 
 		double Sum = Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6;
 
 	//Creation of the Tree
 
    		TFile *root_file= new TFile("P2VV.root", "RECREATE");
-   		TTree *tree = new TTree("P2VV" , "");
+   		TTree *tree = new TTree("P2VV" , "P2VV");
    		//double Test;
    		//tree->Branch("Test" , &Test , "Test/D" );
    		double Time;
    		tree->Branch("Time" , &Time , "Time/D" );
-   		double TimeCut;
-   		tree->Branch("TimeCut" , &TimeCut , "TimeCut/D" );
+   		int TimeCut;
+   		tree->Branch("TimeCut" , &TimeCut , "TimeCut/I" );
 		double theta1;
    		tree->Branch("theta1",&theta1,"theta1/D");
    		double theta2;
@@ -253,9 +253,9 @@ int main()
 
 		if(( Sum * RndmValue < Value_1)){
 			for(int j = 0 ; j < DatenTime ; ++j){
-				CosSquare(Random , theta1 ,  0  , PI , 1 , 1 );
-				CosSquare(Random , theta2 ,  0  , PI , 1 , 1 );
-				ConstTrafo(Random , Phi   , -PI , PI , 1 , 1 );
+				CosSquare(Random , theta1 ,  0  , PI );
+				CosSquare(Random , theta2 ,  0  , PI );
+				ConstTrafo(Random , Phi   , -PI , PI );
 				TimeCut = Time_Trafo(Random , Time ,
 								1 , CPV_D , CPV_C , -CPV_S ,
 								Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 18);
@@ -264,9 +264,9 @@ int main()
 			}
 		}else if( Sum * RndmValue < Value_1 + Value_2){
 			for(int j = 0 ; j < DatenTime ; ++j){
-				SinSquare(Random , theta1 ,  0  , PI , 2 , 1);
-				SinSquare(Random , theta2 ,  0  , PI , 2 , 1);
-				CosSquare(Random , Phi    , -PI , PI , 4 , 1);
+				SinSquare(Random , theta1 ,  0  , PI );
+				SinSquare(Random , theta2 ,  0  , PI );
+				CosSquare(Random , Phi    , -PI , PI );
 				TimeCut = Time_Trafo(Random , Time ,
 									 1 , CPV_D , CPV_C , -CPV_S ,
 									 Gamma_s , Delta_Gamma_s , Delta_Mass_s,  0 , 18);
@@ -275,9 +275,9 @@ int main()
 			}
 		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3){
 			for(int j = 0 ; j < DatenTime ; ++j){
-				SinSquare(Random , theta1 ,  0  , PI , 1 , 1);
-				SinSquare(Random , theta2 ,  0  , PI , 1 , 1);
-				SinSquare(Random , Phi    , -PI , PI , 1 , 1);
+				SinSquare(Random , theta1 ,  0  , PI );
+				SinSquare(Random , theta2 ,  0  , PI );
+				SinSquare(Random , Phi    , -PI , PI );
 				TimeCut = Time_Trafo(Random , Time ,
 									 1 , -CPV_D , CPV_C , CPV_S ,
 									 Gamma_s    , Delta_Gamma_s , Delta_Mass_s,  0 , 18);
@@ -286,8 +286,8 @@ int main()
 			}
 		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4){
 			for(int j = 0 ; j < DatenTime ; ++j){
-				SinSquare(Random , theta1 ,  0  , PI ,  1 , 1);
-				SinSquare(Random , theta2 ,  0  , PI ,  1 , 1);
+				SinSquare(Random , theta1 ,  0  , PI );
+				SinSquare(Random , theta2 ,  0  , PI );
 				Sin_Trafo(Random , Phi    , -PI , PI , -1 , 2);
 				TimeCut = Time_Trafo(Random , Time ,
 								CPV_C * TMath::Sin(Phase_1) , CPV_S * TMath::Sin(Phase_1), TMath::Sin(Phase_1) , CPV_D*TMath::Sin(Phase_1) ,
