@@ -13,7 +13,8 @@ add_library( CPToyMC SHARED
   generator/CompGeneratorFactory.h 	generator/CompGeneratorFactory.cpp
   generator/BSig_CPV_P2VP_Generator.h   generator/BSig_CPV_P2VP_Generator.cpp
   generator/LLBkg_Generator.h           generator/LLBkg_Generator.cpp
- )
+  generator/P2VV_Generator.h            generator/P2VV_Generator.cpp
+)
 
 install(TARGETS CPToyMC DESTINATION lib)
 install(FILES 
@@ -30,4 +31,5 @@ generator/CompGenerator.h
 generator/CompGeneratorFactory.h
 generator/BSig_CPV_P2VP_Generator.h
 generator/LLBkg_Generator.h
+generator/P2VV_Generator.h 
 DESTINATION include/generator)
