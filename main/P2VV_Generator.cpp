@@ -11,7 +11,11 @@
 #include <TMath.h>
 
 bool CosSquare(TRandom& Random, double& obs , double min , double max , double sign = 1,double Omega = 1){ //accept and reject of cos^2
-	while( true ){
+	for( int i = 0 ; i < 1000 ; ++i){
+		if((i+1)%100 == 0 ){
+			std::cout << std::endl;
+			std::cout << "CosSquare.Warning:" <<'\t'<< (i + 1) <<  " times missed" << std::endl;
+		}
 		double RandomY =  sign * Random.Rndm();
 		double RandomX= max - (max - min) * Random.Rndm();
 		if(RandomY <= sign * TMath::Cos(Omega * RandomX) * TMath::Cos(Omega * RandomX)){
@@ -19,10 +23,16 @@ bool CosSquare(TRandom& Random, double& obs , double min , double max , double s
 			return true;
 		}
 	}
+	std::cout << std::endl;
+	std::cerr << "CosSquare: Fatal Error" << std::endl;
 	return false;
 }
 bool SinSquare(TRandom3& Random ,double& obs,  double min , double max , double sign = 1 , double Omega = 1){	//accept and reject of sin^2
-	while( true ){
+	for( int i = 0 ; i < 1000 ; ++i){
+		if((i+1)%20 == 0 ){
+			std::cout << std::endl;
+			std::cout <<"SinSquare.Warning:" << '\t' << (i + 1) <<  " times missed" << std::endl;
+		}
 		double RandomY = sign * Random.Rndm();
 		double RandomX = max - (max - min) * Random.Rndm();
 		if(RandomY <= sign * TMath::Sin(Omega * RandomX) * TMath::Sin(Omega * RandomX)){
@@ -30,44 +40,75 @@ bool SinSquare(TRandom3& Random ,double& obs,  double min , double max , double 
 			return true;
 		}
 	}
+	std::cout << std::endl;
+	std::cerr << "SinSquare: Fatal Error" << std::endl;
 	return false;
 }
 bool Sin_Trafo(TRandom3& Random , double& obs, double min , double max , double sign = 1, double Omega = 1){
-	if (TMath::Abs(Omega *( min - max ) ) < 2*TMath::Pi() && sign != 1 ){
+	double Alpha = TMath::Cos(Omega * min);
+	double Beta = TMath::Cos(Omega * max);
+	if (TMath::Abs(Omega *( min - max ) ) < 2*TMath::Pi() && sign > 0 ){
 		double Alpha = TMath::Cos(Omega * min);
 		double Beta = TMath::Cos(Omega * max);
-		obs = 1/Omega * TMath::ACos((Beta - Alpha )*Random.Rndm()-Alpha);
+		obs = 1/Omega * TMath::ACos((Beta - Alpha )*Random.Rndm()+Alpha);
 		return true;
-	}else {
-		while( true ){
-			double RandomY = sign * (1 - 2*Random.Rndm());
-			//double RandomY = sign * Random.Rndm();
+	}else /*if (TMath::Abs(Omega*( min - max )) == 2*TMath::Pi() && sign > 0){
+		double Alpha = TMath::Cos(Omega * min);
+		double Mu = TMath::Cos(Omega * (min + max)/2);
+		double Beta = TMath::Cos( Omega * max);
+		if(2 * Random.Rndm() < 1 ){
+			obs = 1/Omega * TMath::ACos((Mu - Alpha) * Random.Rndm() + Alpha);
+			return true;
+		}else{
+			obs = 1/Omega * TMath::ACos((Beta - Mu )* Random.Rndm() + Mu)+1/Omega*(min + max)/2;
+			return true;
+		}
+	}else*/{
+		//if(min == 0 && max == TMath::Pi() && Omega == 1){
+	//		obs = 1/Omega*TMath::ACos( ( Beta - Alpha ) *Random.Rndm()+Alpha );
+	//}
+		for( int i = 0 ; i < 1000 ; ++i){
+			if((i+1)%20 == 0 ){
+				std::cout << std::endl;
+				std::cout <<"Sin.Warning:" << '\t' << (i + 1) <<  " times missed" << std::endl;
+			}
+			//double RandomY = sign * (1 - 2*Random.Rndm());
+			double RandomY = sign * Random.Rndm();
 			double RandomX = max - (max - min) * Random.Rndm();
-			if( RandomY <= sign * TMath::Sin(  RandomX * Omega)){
+			if( RandomY <= sign * TMath::Abs(TMath::Sin(  RandomX * Omega))){
 				obs = RandomX;
 				return true;
 			}
 		}
 	}
+	std::cout << std::endl;
+	std::cerr << "Sin: Fatal Error"<< obs << std::endl;
 	return false;
 }
 bool Cos_Trafo(TRandom3& Random , double& obs, double min , double max , double sign = 1 , double Omega = 1){
-	if (TMath::Abs(Omega *( min - max ) ) < 2*TMath::Pi() && sign != 1 ){
+	if (TMath::Abs(Omega *( min - max ) ) < 2*TMath::Pi() && sign == 1 ){
 		double Alpha = TMath::Sin(Omega * min);
 		double Beta = TMath::Sin(Omega * max);
-		obs = 1/Omega * TMath::ASin((Beta - Alpha )*Random.Rndm()-Alpha);
+		obs = 1/Omega * TMath::ASin( -(Beta - Alpha )*Random.Rndm() - Alpha);
 		return true;
-	}else {
-		while( true ){
-			double RandomY = sign * (1 - 2 * Random.Rndm());
-			//double RandomY = sign *Random.Rndm();
+	}else
+	{
+		for( int i = 0 ; i < 1000 ; ++i){
+			if(( i + 1 ) % 20 == 0 ){
+				std::cout << std::endl;
+				std::cout <<"Cos.Warning:" << '\t' << (i + 1) <<  " times missed" << std::endl;
+			}
+			double RandomY = sign * Random.Rndm();
+			//double RandomY = sign *(1-2*Random.Rndm());
 			double RandomX = max - (max - min) * Random.Rndm();
-			if(  RandomY <=   sign *TMath::Cos(RandomX * Omega)){
+			if(  RandomY <=   sign * TMath::Abs( TMath::Cos( RandomX * Omega ) ) ){
 				obs = RandomX;
 				return true;
 			}
 		}
 	}
+	std::cout << std::endl;
+	std::cerr << "Cos: Fatal Error" << std::endl;
 	return false;
 }
 bool ConstTrafo(TRandom3& Random , double& obs , double min , double max){
@@ -77,7 +118,11 @@ bool ConstTrafo(TRandom3& Random , double& obs , double min , double max){
 bool ExpCos(TRandom3& Random , double& obs , double Lambda  , double Omega , int sign , double min = 0  , double max = 18 ){
 	double Alpha = TMath::Exp(-min * Lambda );
 	double Beta = TMath::Exp(-max * Lambda);
-	while( true ){
+	for( int i = 0 ; i < 1000 ; ++i){
+		if(( i + 1 )%600 == 0){
+			std::cout << std::endl;
+			std::cout << "ExpCos.Warning:" << '\t' << (i + 1) <<  " times missed" << std::endl;
+		}
 		double RandomX = -1/Lambda*TMath::Log(Alpha - (Alpha - Beta) *  Random.Rndm());
 		double RandomY = 1 - 2 * Random.Rndm();
 		if(RandomY <= sign * TMath::Cos(Omega * RandomX) ){
@@ -85,19 +130,27 @@ bool ExpCos(TRandom3& Random , double& obs , double Lambda  , double Omega , int
 			return true;
 		}
 	}
+	std::cout << std::endl;
+	std::cerr << "ExpCos: Fatal Error" << std::endl;
 	return false;
 }
 bool ExpSin(TRandom3& Random , double& obs , double Lambda  , double Omega  , int sign , double min = 0  , double max = 18 ){
 	double Alpha = TMath::Exp(-min * (Lambda));
 	double Beta = TMath::Exp(-max * (Lambda));
-	while( true ){
+	for( int i = 0 ; i < 1000 ; ++i){
+		if((i + 1)%600 == 0 ){
+			std::cout << std::endl;
+			std::cout << "ExpSin.Warning:" << '\t' << (i + 1) <<  " times missed" << std::endl;
+		}
 		double RandomX = -1/Lambda*TMath::Log( Alpha - (Alpha - Beta) * Random.Rndm());
-		double RandomY = 1 - 2 * Random.Rndm() ;
+		double RandomY =  Random.Rndm() ;
 		if(RandomY <= TMath::Sin(sign * Omega * RandomX) ){
 			obs = RandomX;
 			return true;
 		}
 	}
+	std::cout << std::endl;
+	std::cerr << "ExpSin: Fatal Error" << std::endl;
 	return false;
 }
 bool ExpCosH(TRandom3& Random , double& obs , double Lambda  , double Omega , int sign = 1 , double min = 0  , double max = 18 ){
@@ -105,7 +158,11 @@ bool ExpCosH(TRandom3& Random , double& obs , double Lambda  , double Omega , in
 	double Beta = TMath::Exp(-max * (Lambda + Omega ));
 	double RandomX;
 	double RandomY;
-	while( true ){
+	for( int i = 0 ; i < 1000 ; ++i){
+		if((i + 1 )%600 == 0 ){
+			std::cout << std::endl;
+			std::cout << "ExpCosH.Warning:" << '\t' << (i + 1) <<  " times missed" << std::endl;
+		}
 		RandomX = -1/(Lambda + Omega)*TMath::Log(Alpha - (Alpha - Beta) *  Random.Rndm());
 		RandomY = sign * Random.Rndm() * TMath::Exp( ( Lambda + Omega ) * RandomX);
 		if(RandomY <= sign * TMath::Cos(Omega * RandomX) * TMath::Exp(Lambda * RandomX) ){
@@ -113,21 +170,36 @@ bool ExpCosH(TRandom3& Random , double& obs , double Lambda  , double Omega , in
 			return true;
 		}
 	}
+	std::cout << std::endl;
+	std::cerr << "ExpCosH: Fatal Error" << std::endl;
 	return false;
 }
 bool ExpSinH(TRandom3& Random , double& obs , double Lambda  , double Omega  , int sign = 1 , double min = 0  , double max = 18 ){
-	double Alpha = TMath::Exp(-min * (Lambda + Omega));
-	double Beta = TMath::Exp(-max * (Lambda + Omega));	
+	//double Alpha = TMath::Exp(-min * (Lambda + Omega));
+	//double Beta = TMath::Exp(-max * (Lambda + Omega));	
+	double Alpha = TMath::Exp(-min * (Lambda ));
+	double Beta = TMath::Exp(-max * (Lambda ));	
 	double RandomX;
 	double RandomY;
-	while( true ){
-		RandomX = -1/(Lambda + Omega)*TMath::Log( Alpha - (Alpha - Beta) * Random.Rndm());
-		RandomY = sign *Random.Rndm() * TMath::Exp( ( Lambda + Omega ) * RandomX);
+	bool Warning =false;
+	for( int i = 0 ; i < 2000 ; ++i){
+		if((i + 1 )%1600 == 0 && Warning == false){
+			Warning = true;
+		}
+		RandomX = -1/(Lambda)*TMath::Log( Alpha - (Alpha - Beta) * Random.Rndm());
+		RandomY = sign *Random.Rndm() * TMath::Exp( ( Lambda ) * RandomX);
 		if(RandomY <=  sign*TMath::SinH( Omega * RandomX) * TMath::Exp(-Lambda * RandomX) ){
+			if (Warning == true)
+			{
+				std::cout << std::endl;
+				std::cout << "ExpSinH.Warning:" << '\t'<< (i + 1) <<  " times missed" << std::endl;
+			}
 			obs = RandomX;
 			return true;
 		}
 	}
+	std::cout << std::endl;
+	std::cerr << "ExpSinH: Fatal Error" << std::endl;
 	return false;
 }
 int Time_Trafo(TRandom3& Random, double& obs,
@@ -175,7 +247,7 @@ int main()
 	auto start_time = std::chrono::high_resolution_clock::now();
 
 		unsigned long seed =123; 
-		double Daten = 1e6;
+		unsigned int Daten = 1e6;
 		TRandom3 Random(seed);
 
 	//Const	
@@ -188,19 +260,14 @@ int main()
 		double Amplitude_0 = TMath::Sqrt(0.348);
 		double Amplitude_Parallel = TMath::Sqrt(0.287);
 		double Amplitude_Vertical = TMath::Sqrt(0.365);
-		//double Amplitude_S = 0;
-		//double Amplitude_SS = 0;
-		/*double Amplitude_0 = 0.701;
-		double Amplitude_Parallel = 0.506;
-		double Amplitude_Vertical = 0.502;*/
+		double Amplitude_S = 0;
+		double Amplitude_SS = 0;
 
 		double Phase_0 = 0 ;
 		double Phase_Parallel = 2.71;
 		double Phase_Vertical = 2.39;
-		//double Phase_S = 0;
-		//double Phase_SS = 0;
-		/*double Phase_Parallel = 2.40;
-		double Phase_Vertical = 2.39;*/
+		double Phase_S = 0;
+		double Phase_SS = 0;
 
 		double CP_Lambda = 1;
 		double CP_Phi_sss = 0; // = 0.17
@@ -214,46 +281,67 @@ int main()
 		double Phase_1 = Phase_Vertical - Phase_Parallel;
 		double Phase_2 = Phase_Vertical - Phase_0;
 		double Phase_21 = Phase_2 - Phase_1 ;
+		double Time_Begin = 0;
+		double Time_End = 20;
+		double theta_Begin = 0;
+		double theta_End = TMath::Pi();
+		double Phi_Begin = -TMath::Pi();
+		double Phi_End = TMath::Pi();
 
-		/*double Value_1 = 4  			* Amplitude_0 		 * Amplitude_0 			*PI*PI*PI/2;
-		double Value_2 = 2   			* Amplitude_Parallel * Amplitude_Parallel 	*PI*PI*PI/4;
-		double Value_3 = 2   			* Amplitude_Vertical * Amplitude_Vertical 	*PI*PI*PI/4;
-		double Value_4 = 2  			* Amplitude_Parallel * Amplitude_Vertical 	*PI*PI;
-		double Value_5 = TMath::Sqrt(2) * Amplitude_Parallel * Amplitude_0			*16;
-		double Value_6 = TMath::Sqrt(2) * Amplitude_0 		 * Amplitude_Vertical 	*16;*/
+		double Value_1 = 1/(Amplitude_0  		* Amplitude_0 			*4)										;
+		double Value_2 = 1/(Amplitude_Parallel * Amplitude_Parallel 	*2)										;
+		double Value_3 = 1/(Amplitude_Vertical * Amplitude_Vertical 	*2)										;
+		double Value_4 = 1/(Amplitude_Parallel * Amplitude_Vertical 	*2)										;
+		double Value_5 = 1/(Amplitude_Parallel * Amplitude_0			*TMath::Sqrt(2))						;
+		double Value_6 = 1/(Amplitude_0 		* Amplitude_Vertical 	*TMath::Sqrt(2))						;
 
-		/*double Value_1 = 4 * 			  Amplitude_0 		 * Amplitude_0 			;
-		double Value_2 = 2 * 			  Amplitude_Parallel * Amplitude_Parallel 	;
-		double Value_3 = 2 * 			  Amplitude_Vertical * Amplitude_Vertical 	;
-		double Value_4 = 2 *			  Amplitude_Parallel * Amplitude_Vertical 	;
-		double Value_5 = TMath::Sqrt(2) * Amplitude_Parallel * Amplitude_0			;
-		double Value_6 = TMath::Sqrt(2) * Amplitude_0 		 * Amplitude_Vertical 	;*/
+		double Value_7 = Amplitude_SS		* Amplitude_SS			*4/9 														;
+		double Value_8 = Amplitude_S 		* Amplitude_SS 			*4/3 									  					;
+		double Value_9 = Amplitude_SS 		* Amplitude_SS			*8/(3*TMath::Sqrt(3))										;
+		double Value_10= Amplitude_0 		* Amplitude_SS			*8/3 					* TMath::Cos(Phase_SS)				;
+		double Value_11= Amplitude_Parallel * Amplitude_SS			*4* TMath::Sqrt(2)/3 	* TMath::Cos(Phase_21 - Phase_SS)	;
+		double Value_12= Amplitude_Vertical * Amplitude_SS			*4* TMath::Sqrt(2)/3 										;
+		double Value_13= Amplitude_0 		* Amplitude_S 			*8/TMath::Sqrt(3) 											;
+		double Value_14= Amplitude_Parallel * Amplitude_S 			*4*TMath::Sqrt(2/3)											;
+		double Value_15= Amplitude_Vertical * Amplitude_S 			*4*TMath::Sqrt(2/3)		* TMath::Sin(Phase_2 - Phase_S)		;//*/
 
-		double Value_1 = 	 			  Amplitude_0 		 * Amplitude_0 			;
-		double Value_2 = 	 			  Amplitude_Parallel * Amplitude_Parallel 	;
-		double Value_3 = 	 			  Amplitude_Vertical * Amplitude_Vertical 	;
-		double Value_4 = 				  Amplitude_Parallel * Amplitude_Vertical 	;
-		double Value_5 = 				  Amplitude_Parallel * Amplitude_0			;
-		double Value_6 = 				  Amplitude_0 		 * Amplitude_Vertical 	;
+		/*double Value_1 = Amplitude_0  		* Amplitude_0 			;
+		double Value_2 = Amplitude_Parallel * Amplitude_Parallel 	;
+		double Value_3 = Amplitude_Vertical * Amplitude_Vertical 	;
+		double Value_4 = Amplitude_Parallel * Amplitude_Vertical 	;
+		double Value_5 = Amplitude_Parallel * Amplitude_0			* TMath::Cos(Phase_21);
+		double Value_6 = Amplitude_0 		* Amplitude_Vertical 	;
 
-		/*double Value_7 = 4/9 * Amplitude_SS*Amplitude_SS;
-		double Value_8 = 4/3 * Amplitude_S *Amplitude_S;
-		double Value_9 = 8/(3*TMath::Sqrt(3))* Amplitude_S*Amplitude_SS;
-		double Value_10= 8/3 * Amplitude_0 * Amplitude_SS;
-		double Value_11= 4* TMath::Sqrt(2)/3 * Amplitude_Parallel * Amplitude_SS;
-		double Value_12= 4* TMath::Sqrt(2)/3 * Amplitude_Vertical * Amplitude_SS;*/
+		double Value_7 = Amplitude_SS		* Amplitude_SS			;
+		double Value_8 = Amplitude_S 		* Amplitude_SS 			;
+		double Value_9 = Amplitude_SS 		* Amplitude_SS			;
+		double Value_10= Amplitude_0 		* Amplitude_SS			;
+		double Value_11= Amplitude_Parallel * Amplitude_SS			;
+		double Value_12= Amplitude_Vertical * Amplitude_SS			;
+		double Value_13= Amplitude_0 		* Amplitude_S 			;
+		double Value_14= Amplitude_Parallel * Amplitude_S 			;
+		double Value_15= Amplitude_Vertical * Amplitude_S 			;//*/
 
-
-		double Sum = Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6;
+		double Sum = Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6 + Value_7 + Value_8 + Value_9 + Value_10 + Value_11 + Value_12 + Value_13 + Value_14 + Value_15;
 
 	//Creation of the Tree
 
    		TFile *root_file= new TFile("P2VV.root", "RECREATE");
    		TTree *tree = new TTree("P2VV" , "P2VV");
-   		double Test1;
-   		tree->Branch("Test1" , &Test1 , "Test1/D");
-   		double Test2;
-   		tree->Branch("Test2" , &Test2 , "Test2/D");
+
+   		double Test_Cos;
+   		tree->Branch("Test_Cos" , &Test_Cos , "Test_Cos/D");
+   		double Test_Sin;
+   		tree->Branch("Test_Sin" , &Test_Sin , "Test_Sin/D");
+   		double Test_CosSquare;
+   		tree->Branch("Test_CosSquare" , &Test_CosSquare , "Test_CosSquare/D");
+   		double Test_SinSquare;
+   		tree->Branch("Test_SinSquare" , &Test_SinSquare , "Test_SinSquare/D");
+   		double Test_ExpSin;
+   		tree->Branch("Test_ExpSin" , &Test_ExpSin , "Test_ExpSin/D");
+   		double Test_ExpCos;
+   		tree->Branch("Test_ExpCos" , &Test_ExpCos , "Test_ExpCos/D");
+
    		double Time;
    		tree->Branch("Time" , &Time , "Time/D" );
 		double theta1;
@@ -306,67 +394,139 @@ int main()
    		double B_s0_f15;
    		tree->Branch("B_s0_f15" , &B_s0_f15 , "B_s0_f15/D");*/
 
-	for (int i = 0 ; i < Daten ; ++i)
+	for (unsigned int i = 0 ; i < Daten ; ++i)
 	{
+		if ((i+1)%10000 == 0)
+		{
+			std::cout << (double)(i+1)*100 / (Daten)<< '%' << '\t' << std::flush;
+			if ((i+1)%100000 == 0)
+			{
+				//std::cout << '\r' << std::flush;
+				std::cout << std::endl;
+			}
+		}
 		double RndmValue = Random.Rndm();
 
 		if(( Sum * RndmValue < Value_1)){
-			CosSquare(Random , theta1 ,  0  , PI );
-			CosSquare(Random , theta2 ,  0  , PI );
-			ConstTrafo(Random , Phi   , -PI , PI );
+			CosSquare(Random , theta1 ,  theta_Begin  , theta_End );
+			CosSquare(Random , theta2 ,  theta_Begin  , theta_End );
+			ConstTrafo(Random , Phi   , Phi_Begin , Phi_End );
 			TimeCut = Time_Trafo(Random , Time ,
 								 1 , CPV_D , CPV_C , -CPV_S ,
-								 Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 18);
+								 Gamma_s, Delta_Gamma_s , Delta_Mass_s,  Time_Begin , Time_End );
 			cut = 1;
 		}else if( Sum * RndmValue < Value_1 + Value_2){
-			SinSquare(Random , theta1 ,  0  , PI );
-			SinSquare(Random , theta2 ,  0  , PI );
-			CosSquare(Random , Phi    , -PI , PI );
+			SinSquare(Random , theta1 , theta_Begin  , theta_End );
+			SinSquare(Random , theta2 , theta_Begin  , theta_End );
+			CosSquare(Random , Phi    , Phi_Begin , Phi_End );
 			TimeCut = Time_Trafo(Random , Time ,
 								 1 , CPV_D , CPV_C , -CPV_S ,
-								 Gamma_s , Delta_Gamma_s , Delta_Mass_s,  0 , 18);
+								 Gamma_s , Delta_Gamma_s , Delta_Mass_s,  Time_Begin , Time_End );
 			cut = 2;
 		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3){
-			SinSquare(Random , theta1 ,  0  , PI );
-			SinSquare(Random , theta2 ,  0  , PI );
-			SinSquare(Random , Phi    , -PI , PI );
+			SinSquare(Random , theta1 , theta_Begin  , theta_End );
+			SinSquare(Random , theta2 , theta_Begin  , theta_End );
+			SinSquare(Random , Phi    , Phi_Begin , Phi_End );
 			TimeCut = Time_Trafo(Random , Time ,
 								 1 , -CPV_D , CPV_C , CPV_S ,
-								 Gamma_s    , Delta_Gamma_s , Delta_Mass_s,  0 , 18);
+								 Gamma_s    , Delta_Gamma_s , Delta_Mass_s,  Time_Begin , Time_End );
 			cut = 3;
 		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4){
-			SinSquare(Random , theta1 ,  0  , PI );
-			SinSquare(Random , theta2 ,  0  , PI );
-			Sin_Trafo(Random , Phi    , -PI , PI , -1 , 2);
-			//Sin_Trafo(Random , Phi    , -PI , PI , 1 , 2);
+			SinSquare(Random , theta1 ,  theta_Begin  , theta_End );
+			SinSquare(Random , theta2 ,  theta_Begin  , theta_End );
+			Sin_Trafo(Random , Phi    , Phi_Begin , Phi_End , 1 , -2);
 			TimeCut = Time_Trafo(Random , Time ,
 								 CPV_C * TMath::Sin(Phase_1) , CPV_S * TMath::Sin(Phase_1), TMath::Sin(Phase_1) , CPV_D*TMath::Sin(Phase_1) ,
-								 Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 18);
+								 Gamma_s, Delta_Gamma_s , Delta_Mass_s,  Time_Begin , Time_End );
 			cut = 4;
 		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4 + Value_5){
-			/*Sin_Trafo(Random , theta1 ,  0  , PI , 1 , 2);
-			Sin_Trafo(Random , theta2 ,  0  , PI , 1 , 2);*/
-			Sin_Trafo(Random , theta1 ,  0  , PI , -1 , 2);
-			Sin_Trafo(Random , theta2 ,  0  , PI , -1 , 2);
-			Cos_Trafo(Random , Phi    , -PI , PI , 1 , 1);
+			Sin_Trafo(Random , theta1 , theta_Begin  , theta_End , 1 , 1);
+			Sin_Trafo(Random , theta2 , theta_Begin  , theta_End , 1 , 1);
+			Cos_Trafo(Random , Phi    , Phi_Begin , Phi_End , 1 , 1);
 			TimeCut = Time_Trafo(Random , Time ,
-							 	 1,CPV_D , 1 , -CPV_S  ,
-						   		 Gamma_s, Delta_Gamma_s , Delta_Mass_s ,  0 , 18);
+							 	  1,CPV_D , 1 , -CPV_S  ,
+						   		  Gamma_s, Delta_Gamma_s , Delta_Mass_s ,  Time_Begin , Time_End );
 			cut = 5;
 		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6){
-			/*Sin_Trafo(Random , theta1 , 0   , PI ,  -1 , 2);
-			Sin_Trafo(Random , theta2 , 0   , PI ,  -1 , 2);
-			Sin_Trafo(Random , Phi    , -PI , PI ,  -1 , 1);*/
-			Sin_Trafo(Random , theta1 , 0   , PI ,  1 , 2);
-			Sin_Trafo(Random , theta2 , 0   , PI ,  1 , 2);
-			Sin_Trafo(Random , Phi    , -PI , PI ,  1 , 1);
+			Sin_Trafo(Random , theta1 , theta_Begin  , theta_End ,  1 , 1);
+			Sin_Trafo(Random , theta2 , theta_Begin  , theta_End ,  1 , 1);
+			Sin_Trafo(Random , Phi    , Phi_Begin , Phi_End ,  1 , -1);
 			TimeCut = Time_Trafo(Random , Time ,
 					   CPV_C * TMath::Sin(Phase_2) , CPV_S * TMath::Cos(Phase_2) , TMath::Sin(Phase_2) , CPV_D * TMath::Cos(Phase_2) ,
-					   Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 18);
+					   Gamma_s, Delta_Gamma_s , Delta_Mass_s,  Time_Begin , Time_End );
 			cut = 6;
+		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6 + Value_7){
+			ConstTrafo(Random , theta1 , theta_Begin  , theta_End );
+			ConstTrafo(Random , theta2 , theta_Begin  , theta_End );
+			ConstTrafo(Random , Phi ,  Phi_Begin , Phi_End );
+			TimeCut = Time_Trafo(Random , Time ,
+					   1 , CPV_D , CPV_C , -CPV_S ,
+					   Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 16);
+			cut = 7;
+		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6 + Value_7 + Value_8){
+			double RandomValue = 4*Random.Rndm();
+			if(RandomValue < 1){
+				CosSquare(Random , theta1 , theta_Begin  , theta_End);
+				ConstTrafo(Random , theta2 , theta_Begin  , theta_End);
+			}else if(RandomValue < 2){
+				CosSquare(Random , theta2 , theta_Begin  , theta_End );
+				ConstTrafo(Random , theta1 , theta_Begin  , theta_End );
+			} else {
+				Cos_Trafo(Random , theta1 , theta_Begin  , theta_End );
+				Cos_Trafo(Random , theta2 , theta_Begin  , theta_End );
+			}
+			ConstTrafo(Random , Phi ,  Phi_Begin , Phi_End );
+			TimeCut = Time_Trafo(Random , Time ,
+					   1 , -CPV_D , CPV_C , CPV_S ,
+					   Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 16);
+			cut = 8;
+		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6 + Value_7 + Value_8 + Value_9){
+			if (Random.Rndm() < 0.5)
+			{
+				Cos_Trafo(Random , theta1 , theta_Begin  , theta_End );
+				ConstTrafo(Random , theta2 , theta_Begin  , theta_End );
+			}else{
+				Cos_Trafo(Random , theta2 , theta_Begin  , theta_End );
+				ConstTrafo(Random , theta1 , theta_Begin  , theta_End );
+			}
+			ConstTrafo(Random , Phi ,  Phi_Begin , Phi_End );
+			TimeCut = Time_Trafo(Random , Time ,
+					   CPV_C*TMath::Cos(Phase_S - Phase_SS) , CPV_S*TMath::Sin(Phase_S - Phase_SS), TMath::Cos(Phase_S - Phase_SS) , TMath::Sin(Phase_S - Phase_SS) ,
+					   Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 16);
+			cut = 9;
+		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6 + Value_7 + Value_8 + Value_9 + Value_10){
+			Cos_Trafo(Random , theta1 , theta_Begin  , theta_End );
+			Cos_Trafo(Random , theta2 , theta_Begin  , theta_End );
+			ConstTrafo(Random , Phi ,  Phi_Begin , Phi_End );
+			TimeCut = Time_Trafo(Random , Time ,
+					   1 , CPV_D , CPV_C , -CPV_S ,
+					   Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 16);
+			cut = 10;
+		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6 + Value_7 + Value_8 + Value_9 + Value_10 + Value_11){
+			Sin_Trafo(Random , theta1 , theta_Begin  , theta_End );
+			Sin_Trafo(Random , theta2 , theta_Begin  , theta_End );
+			Cos_Trafo(Random , Phi ,  Phi_Begin , Phi_End );
+			TimeCut = Time_Trafo(Random , Time ,
+					   1 , CPV_D , CPV_C , -CPV_S ,
+					   Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 16);
+			cut = 11;
+		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6 + Value_7 + Value_8 + Value_9 + Value_10 + Value_11 + Value_12){
+			Sin_Trafo(Random , theta1 , theta_Begin  , theta_End );
+			Sin_Trafo(Random , theta2 , theta_Begin  , theta_End );
+			Cos_Trafo(Random , Phi ,  Phi_Begin , Phi_End );
+			TimeCut = Time_Trafo(Random , Time ,
+					   1 , CPV_D , CPV_C , -CPV_S ,
+					   Gamma_s, Delta_Gamma_s , Delta_Mass_s,  0 , 16);
+			cut = 12;
+		}else if(Sum * RndmValue < Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6 + Value_7 + Value_8 + Value_9 + Value_10 + Value_11 + Value_12 + Value_13){
+
 		}
-		SinSquare(Random , Test1 , 0 , PI , 2 , 2);
-		SinSquare(Random , Test2 , 0 , PI , 1 , 2);
+		Cos_Trafo(Random , Test_Cos , 0, 2*PI , 1 , 1);
+		Sin_Trafo(Random , Test_Sin , 0  , 2*PI , 1 , 1);
+		SinSquare(Random , Test_SinSquare , -PI , PI , 1 , 1);
+		CosSquare(Random , Test_CosSquare , -PI , PI , 1 , 1);
+		ExpSin(Random , Test_ExpSin , 1 , 1 , 1 , 0 , 5 );
+		ExpCos(Random , Test_ExpCos , 1 , 1 , 1 , 0 , 5 );
 
 		cos_theta1 = TMath::Cos(theta1);
 		cos_theta2 = TMath::Cos(theta2);
@@ -393,13 +553,6 @@ int main()
 		tree->Fill();
 	}
    	root_file->Write("P2VV");
-   	std::cout << "Value_1/sum:" << Value_1 / Sum << std::endl;
-   	std::cout << "Value_2/sum:" << Value_2 / Sum << std::endl;
-   	std::cout << "Value_3/sum:" << Value_3 / Sum << std::endl;
-   	std::cout << "Value_4/sum:" << Value_4 / Sum << std::endl;
-   	std::cout << "Value_5/sum:" << Value_5 / Sum << std::endl;
-   	std::cout << "Value_6/sum:" << Value_6 / Sum << std::endl;
-   	std::cout << (Value_1 + Value_2 + Value_3 + Value_4 + Value_5 + Value_6)/Sum << std::endl;
 
    	auto end_time  = std::chrono::high_resolution_clock::now();
  	
