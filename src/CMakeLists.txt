@@ -29,5 +29,9 @@ generator/Observables.h
 generator/CompGenerator.h
 generator/CompGeneratorFactory.h
 generator/BSig_CPV_P2VP_Generator.h
+<<<<<<< HEAD
 generator/LLBkg_Generator.h 
+=======
+generator/LLBkg_Generator.h
+>>>>>>> d78e86ceff63ee236bd1e0c9a18560b7823d35d5
 DESTINATION include/generator)
