@@ -2,6 +2,7 @@
 add_executable(DoToyGen DoToyGenMain.cpp)
 add_executable(P2VV_Generator P2VV_Generator.cpp)
 add_executable(P2VV_Validation P2VV_Validation.cpp)
+add_executable(P2VV_Fit P2VV_Fit.cpp)
 
 # Aliases for module libs
 
@@ -9,3 +10,4 @@ add_executable(P2VV_Validation P2VV_Validation.cpp)
 target_link_libraries(DoToyGen CPToyMC ${ALL_LIBRARIES})
 target_link_libraries(P2VV_Generator CPToyMC ${ALL_LIBRARIES})
 target_link_libraries(P2VV_Validation CPToyMC ${ALL_LIBRARIES})
+target_link_libraries(P2VV_Fit CPToyMC ${ALL_LIBRARIES})
