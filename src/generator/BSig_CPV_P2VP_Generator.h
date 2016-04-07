@@ -29,7 +29,7 @@ public:
 private:
   bool GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas);
   bool GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas);
-  bool GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_tag_true,
+  bool GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_tag_true, const ObservableReal& obs_time_meas,
                          ObservableInt& obs_tag_OS, ObservableReal& obs_eta_OS,
                          ObservableInt& obs_tag_SS, ObservableReal& obs_eta_SS,
                          ObservableInt& obs_tag_class);
@@ -76,6 +76,11 @@ private:
     double eta_dist_mean;
     double eta_dist_sigma;
   } params_taggingOS_, params_taggingSS_;
+
+  struct ParamsTaggingCorrelation {
+    double slope;
+    double offset;
+  } params_etatimecorrOS_, params_etatimecorrSS_;
   
   int comp_cat_;
   

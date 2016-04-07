@@ -29,8 +29,7 @@ bool GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma, d
   return true;
 }
 
-bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max,
-                       double& obs_sigma_t) {
+bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max, double& obs_sigma_t) {
   unsigned int num_samples(0);
 
   if (min == max) {
@@ -126,6 +125,16 @@ bool GenerateEtaFlat(TRandom& rndm, double obs_eta_min, double obs_eta_max, doub
   return true;
 }
 
+bool GenerateEtaTimeCorrelated(double obs_eta_min, double obs_eta_max, double& obs_eta, const double obs_time_meas, double par_corr_eta_time_slope, double par_corr_eta_time_offset) {
+  obs_eta = par_corr_eta_time_offset + par_corr_eta_time_slope*obs_time_meas;
+  if (obs_eta > obs_eta_max || obs_eta < obs_eta_min) {
+    std::cout << "The correlation parameters par_corr_eta_time_slope = " << par_corr_eta_time_slope << " and par_corr_eta_time_offset = " << par_corr_eta_time_offset << " and the limits for eta = (" << obs_eta_min << "," << obs_eta_max << ") do not fit. You run out of the domain of definition." << std::endl;
+    std::cout << "Failed to generate mistag! The measured decay time is t = " <<  obs_time_meas <<  " and you tried to generate a mistag of eta = " <<  obs_eta   << std::endl;
+    return false;
+  }
+  else return true;
+}
+
 bool GenerateEtaGauss(TRandom& rndm, double m, double s, double obs_eta_min, double obs_eta_max, double& obs_eta) {
   unsigned int num_samples(0);
 
@@ -134,6 +143,29 @@ bool GenerateEtaGauss(TRandom& rndm, double m, double s, double obs_eta_min, dou
     obs_eta = rndm.Uniform(obs_eta_min,obs_eta_max);
     return true;
   } else {
+    obs_eta = rndm.Gaus(m,s);
+    ++num_samples;
+
+    while (obs_eta > obs_eta_max || obs_eta < obs_eta_min) {
+      obs_eta = rndm.Gaus(m,s);
+      ++num_samples;
+
+      if (num_samples % 10000000 == 0) {
+        std::cout << "WARNING in cptoymc::generator::GenerateEtaGauss(rndm, m=" << m << ", s=" << s << ", obs_eta_min=" << obs_eta_min << ", obs_eta_max=" << obs_eta_max << "): Generated " << num_samples << " sample values without one candidate passing. You probably want to check your parameters." << std::endl;
+      }
+    }
+
+    return true;
+  }
+}
+
+bool GenerateEtaGaussTimeCorrelated(TRandom& rndm, double s, double obs_eta_min, double obs_eta_max, double& obs_eta, const double obs_time_meas, double par_corr_eta_time_slope, double par_corr_eta_time_offset) {
+  unsigned int num_samples(0);
+
+  // s is set to -1.0 on default; a negative Gaussian width does not make sense, thus generate a linear distribution
+  if (s < 0.0) return GenerateEtaTimeCorrelated(obs_eta_min, obs_eta_max, obs_eta, obs_time_meas, par_corr_eta_time_slope, par_corr_eta_time_offset);
+  else {
+    double m = par_corr_eta_time_offset + par_corr_eta_time_slope*obs_time_meas;
     obs_eta = rndm.Gaus(m,s);
     ++num_samples;
 
