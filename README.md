@@ -1,6 +1,8 @@
 # CPToyGen
 
-A ToyMC generator for CP studies with P2VP decays (like Bd2JpsiKS and Bs2JpsiKS).
+A generator of pseudo-datasets of decays with time-dependent CP violation.
+
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.20356.svg)](http://dx.doi.org/10.5281/zenodo.20356)
 
 ## Remarks for developers
 - The `master` branch should always correspond to a tagged version.
