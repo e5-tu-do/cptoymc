@@ -2,8 +2,8 @@
 
 A generator of pseudo-datasets of decays with time-dependent CP violation.
 
-Pre-release: [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.20356.svg)](http://dx.doi.org/10.5281/zenodo.20356)
-Release: [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.51201.svg)](http://dx.doi.org/10.5281/zenodo.51201)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.20356.svg)](http://dx.doi.org/10.5281/zenodo.20356)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.51201.svg)](http://dx.doi.org/10.5281/zenodo.51201)
 
 ## Remarks for developers
 - The `master` branch should always correspond to a tagged version.
