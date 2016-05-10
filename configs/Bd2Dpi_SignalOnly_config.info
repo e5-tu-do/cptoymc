@@ -25,11 +25,11 @@ Components
         tau       1.519     ; lifetime in ps
         dGamma    0.     ;
         dm        0.517  ; Deltam in hbar ps^{-1}
-        Sf        0.7    ; 2*Im(lambda_f)/1+|lambda_f|^2
-        Cf        0.0    ; 1-|lambda_f|/1+|lambda_f|^2
+        Sf        0.0303 ; 2*Im(lambda_f)/1+|lambda_f|^2
+        Cf        0.999  ; 1-|lambda_f|/1+|lambda_f|^2
         Df        0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
-        Sfbar     0.7    ; 2*Im(lambda_f)/1+|lambda_f|^2
-        Cfbar     0.0    ; 1-|lambda_f|/1+|lambda_f|^2
+        Sfbar     -0.0285; 2*Im(lambda_f)/1+|lambda_f|^2
+        Cfbar     0.999  ; 1-|lambda_f|/1+|lambda_f|^2
         Dfbar     0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
         AP        0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
       }

@@ -79,7 +79,7 @@ bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
     val_t = -log(rndm.Uniform())/gamma_min;
 
     // get pdf value and envelope value
-    // the bar CPV params are on -2.0 on default; this makes noe sense for both finalstates, thus generate for one finalstate
+    // the bar CPV params are on -2.0 on default; this makes noe sense for both finalstates, thus generate only for one finalstate
     if(par_Sfbar == -2 || par_Cfbar == -2 || par_Dfbar == -2){
       val_pdf      = BCPV_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sf, par_Cf, par_Df);
       val_envelope = BCPV_PDF_Envelope(val_t, gamma_min, par_Sf, par_Cf, par_Df);
