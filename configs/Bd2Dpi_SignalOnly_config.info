@@ -97,7 +97,7 @@ Observables {
     max           20.
   }
   finalstate {
-    name             "finalstate"
+    name             "catFinalstate"
     desc             "f"
     type             Integer
     range {

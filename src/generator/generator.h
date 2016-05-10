@@ -25,33 +25,40 @@ class Observables;
 
 bool GenerateExpo(TRandom& rndm, double par_expo, double& obs, double min, double max);
 
-  
+
 // True value generators and helper functions
-  
+
 bool GenerateMassBreitWigner(TRandom& rndm, double par_mean, double par_gamma,
                              double& obs_mass_true);
 
-  
+
 bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
                       double par_tau, double par_dGamma, double par_dm,
                       double par_Sf, double par_Cf, double par_Df,
-                      double& obs_time_true, int& obs_tag_true);
+                      double par_Sfbar, double par_Cfbar, double par_Dfbar,
+                      double& obs_time_true, int& obs_tag_true, int& finalstate);
 
 double BCPV_PDF(double t, double d, double tau, double dGamma, double dm,
                 double Sf, double Cf, double Df);
 
+double BCPV_bar_PDF(double t, double d, double tau, double dGamma, double dm,
+                    double Sfbar, double Cfbar, double Dfbar);
+
 double BCPV_PDF_Envelope(double t, double gamma_min,
                        double Sf, double Cf, double Df);
 
+double BCPV_bar_PDF_Envelope(double t, double gamma_min,
+                            double Sfbar, double Cfbar, double Dfbar);
+
 bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max,
                        double& obs_sigma_t);
-  
+
 // Resolution generators
 bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma,
                               double obs_true, double& obs_meas);
 bool GenerateResolSingleGaussPerEvent(TRandom& rndm, double par_bias, double par_scale,
                               double obs_per_event_error, double obs_true, double& obs_meas);
-  
+
 
 // Tagging generators
 
@@ -63,7 +70,7 @@ bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
                  const int par_tag_true_B, const int par_tag_true_Bb,
                  const int par_tag_B,      const int par_tag_Bb,
                  int obs_tag_true, int& obs_tag_meas);
-  
+
 bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
                  int obs_tag_true, int& obs_tag_meas);
 
@@ -73,7 +80,7 @@ bool GenerateTag(TRandom& rndm,
                  const int par_tag_true_B, const int par_tag_true_Bb,
                  const int par_tag_B,      const int par_tag_Bb,
                  int obs_tag_true, double obs_eta, int& obs_tag_meas);
-  
+
 bool GenerateRandomTag(TRandom& rndm, int& obs_tag_meas);
 
 

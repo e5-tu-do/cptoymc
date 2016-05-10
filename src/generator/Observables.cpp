@@ -14,7 +14,7 @@ Observable::Observable(const std::string& dim_name, const std::string& var_name,
   var_name_(var_name),
   var_title_(var_title)
   { }
-  
+
 ObservableReal::ObservableReal(const std::string& dim_name, const std::string& var_name, const std::string& var_title, double value, double min_value, double max_value) :
   Observable(dim_name, var_name, var_title),
   value_(value),
@@ -36,7 +36,7 @@ ObservableInt::ObservableInt(const std::string& dim_name, const std::string& var
     valid_values_.emplace(type_value_pair.second);
   }
 }
-  
+
 
 Observables::Observables() :
   mass_true("mass_true","obsMassTrue","m'",-1000.,5000.,5500.),
@@ -52,6 +52,7 @@ Observables::Observables() :
   tag_SS("tag_SS","obsTagSS","d_{\\text{SS}}",0,{{"Bb",-1},{"None",0},{"B",+1}}),
   eta_SS("eta_SS","obsEtaSS","\\eta_{\\text{SS}}",0.5,0.0,0.5),
   comp_cat("comp_cat","catBkg","catBkg",-10000,{{"Sig_Bd",1},{"Sig_Bs",10},{"Bkg",100}}),
+  finalstate("finalstate","catFinalstate","catFinalstate",1,{{"f",1},{"fbar",-1}}),
   observables_real_(),
   observables_int_()
 {
@@ -68,6 +69,7 @@ Observables::Observables() :
   observables_int_.emplace(tag_OS.dim_name()    , &tag_OS    );
   observables_int_.emplace(tag_SS.dim_name()    , &tag_SS    );
   observables_int_.emplace(comp_cat.dim_name()  , &comp_cat  );
+  observables_int_.emplace(finalstate.dim_name(), &finalstate);
 }
 
 void Observables::Configure(const std::shared_ptr<configuration::ObsConfig> obs_config) {
@@ -112,6 +114,7 @@ void Observables::Reset() {
   tag_SS.set_value(0);
   eta_SS.set_value(0.5);
   comp_cat.set_value(-10000);
+  finalstate.set_value(1);
 }
 
 void Observables::RegisterObservableBranches(TTree& out_tree) {
@@ -129,8 +132,8 @@ void Observables::RegisterObservableBranches(TTree& out_tree) {
   }
 
 }
-  
-  
+
+
 } // namespace generator
 } // namespace cptoymc
 

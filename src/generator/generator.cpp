@@ -52,44 +52,53 @@ bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max
     return true;
   }
 }
- 
+
 bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
                       double par_tau, double par_dGamma, double par_dm,
                       double par_Sf, double par_Cf, double par_Df,
-                      double& obs_time_true, int& obs_tag_true) {
+                      double par_Sfbar, double par_Cfbar, double par_Dfbar,
+                      double& obs_time_true, int& obs_tag_true, int& finalstate) {
   // helper quantities
   double prob_B = (1. - par_prod_asym)/2.;
   double gamma_min = 1./par_tau - std::abs(par_dGamma)/2.;
-  
+
   // local values of tag and time
   int    val_d = 0;
+  int    val_final = 1;
   double val_t = 0.;
-  
+
   // now hit and miss, stolen from BDecay!!!
   double val_envelope = 0.;
   double val_pdf      = 0.;
   while(true) {
     // get initial flavour while taking production asymmetry into account
     val_d = (rndm.Uniform() < prob_B) ? +1 : -1;
-    
+
     // get time
     val_t = -log(rndm.Uniform())/gamma_min;
-    
+
     // get pdf value and envelope value
-    val_pdf      = BCPV_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sf, par_Cf, par_Df);
-    val_envelope = BCPV_PDF_Envelope(val_t, gamma_min, par_Sf, par_Cf, par_Df);
-    
-    if (val_envelope < val_pdf) {
-      std::cout << "WARNING: Envelope smaller than PDF!" << std::endl;
+    // the bar CPV params are on -2.0 on default; this makes noe sense for both finalstates, thus generate for one finalstate
+    if(par_Sfbar == -2 || par_Cfbar == -2 || par_Dfbar == -2){
+      val_pdf      = BCPV_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sf, par_Cf, par_Df);
+      val_envelope = BCPV_PDF_Envelope(val_t, gamma_min, par_Sf, par_Cf, par_Df);
+
+      if (val_envelope < val_pdf) {
+        std::cout << "WARNING: Envelope smaller than PDF!" << std::endl;
+      }
+
+      if(val_envelope*rndm.Uniform() > val_pdf) continue;
+      else break;
     }
-    
-    if(val_envelope*rndm.Uniform() > val_pdf) continue;
-    else break;
+    else{
+
+    }
   }
-  
+
   obs_tag_true  = val_d;
   obs_time_true = val_t;
-  
+  finalstate    = val_final;
+
   return true;
 }
 
@@ -97,22 +106,31 @@ double BCPV_PDF(double t, double d, double tau, double dGamma, double dm,
                 double Sf, double Cf, double Df) {
   return exp(-t/tau)*(cosh(dGamma*t/2.)+Df*sinh(dGamma*t/2.)+d*Cf*cos(dm*t)-d*Sf*sin(dm*t));
 }
-  
+
+double BCPV_bar_PDF(double t, double d, double tau, double dGamma, double dm,
+                    double Sfbar, double Cfbar, double Dfbar) {
+  return exp(-t/tau)*(cosh(dGamma*t/2.)+Dfbar*sinh(dGamma*t/2.)-d*Cfbar*cos(dm*t)+d*Sfbar*sin(dm*t));
+}
+
 double BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, double Df) {
   return exp(-t*gamma_min)*(1.+std::abs(Df)+sqrt(Sf*Sf+Cf*Cf));
+}
+
+double BCPV_bar_PDF_Envelope(double t, double gamma_min, double Sfbar, double Cfbar, double Dfbar) {
+  return exp(-t*gamma_min)*(1.+std::abs(Dfbar)+sqrt(Sfbar*Sfbar+Cfbar*Cfbar));
 }
 
 bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, double obs_true, double& obs_meas) {
   obs_meas = obs_true;
   obs_meas += rndm.Gaus(par_bias, par_sigma);
-  
+
   return true;
 }
 
 bool GenerateResolSingleGaussPerEvent(TRandom& rndm, double par_bias, double par_scale, double obs_per_event_error, double obs_true, double& obs_meas) {
   obs_meas = obs_true;
   obs_meas += rndm.Gaus(par_bias, par_scale*obs_per_event_error);
-  
+
   return true;
 }
 
@@ -156,9 +174,9 @@ bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
                  int obs_tag_true, int& obs_tag_meas) {
   //if (par_omega > 0.5) par_omega = 0.5;
   if (par_omega < 0.0) par_omega = 0.;
-  
+
   int correct_tag = 0;
-  
+
   // always assume that omega_B  = omega + dOmega/2 for true B mesons
   // and that           omega_Bb = omega - dOmega/2 for true Bb mesons
   if (obs_tag_true == par_tag_true_B) {
@@ -172,7 +190,7 @@ bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
     std::cout << "Cannot interpret true tag of " << obs_tag_true << ". Failed." << std::endl;
     return false;
   }
-  
+
   if (rndm.Uniform() < par_omega) {
     obs_tag_meas = -1*correct_tag;
   } else {
@@ -181,7 +199,7 @@ bool GenerateTag(TRandom& rndm, double par_omega, double par_domega,
   return true;
 }
 
-  
+
 bool GenerateTag(TRandom& rndm, double par_omega, double par_domega, int obs_tag_true, int& obs_tag_meas) {
   return GenerateTag(rndm, par_omega, par_domega, +1, -1, +1, -1, obs_tag_true, obs_tag_meas);
 }
@@ -196,7 +214,7 @@ bool GenerateTag(TRandom& rndm,
                      par_tag_true_B, par_tag_true_Bb, par_tag_B, par_tag_Bb,
                      obs_tag_true, obs_tag_meas);
 }
-  
+
 bool GenerateRandomTag(TRandom& rndm, int& obs_tag_meas) {
   obs_tag_meas = (rndm.Uniform() < 0.5) ? +1 : -1;
   return true;

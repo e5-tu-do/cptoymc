@@ -28,7 +28,7 @@ public:
 
 private:
   bool GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas);
-  bool GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas);
+  bool GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas, ObservableInt& finalstate);
   bool GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_tag_true,
                          ObservableInt& obs_tag_OS, ObservableReal& obs_eta_OS,
                          ObservableInt& obs_tag_SS, ObservableReal& obs_eta_SS,
