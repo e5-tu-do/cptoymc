@@ -45,10 +45,7 @@ double BCPV_bar_PDF(double t, double d, double tau, double dGamma, double dm,
                     double Sfbar, double Cfbar, double Dfbar);
 
 double BCPV_PDF_Envelope(double t, double gamma_min,
-                       double Sf, double Cf, double Df);
-
-double BCPV_bar_PDF_Envelope(double t, double gamma_min,
-                            double Sfbar, double Cfbar, double Dfbar);
+                       double S, double C, double D);
 
 bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max,
                        double& obs_sigma_t);

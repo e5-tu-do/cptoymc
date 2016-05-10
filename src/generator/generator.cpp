@@ -70,6 +70,7 @@ bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
   // now hit and miss, stolen from BDecay!!!
   double val_envelope = 0.;
   double val_pdf      = 0.;
+  double val_bar_pdf  = 0.;
   while(true) {
     // get initial flavour while taking production asymmetry into account
     val_d = (rndm.Uniform() < prob_B) ? +1 : -1;
@@ -91,7 +92,23 @@ bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
       else break;
     }
     else{
+      val_pdf = BCPV_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sf, par_Cf, par_Df);
+      val_bar_pdf = BCPV_bar_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sfbar, par_Cfbar, par_Dfbar);
 
+      val_final = (rndm.Uniform() < val_pdf/(val_pdf + val_bar_pdf)) ? +1 : -1;
+
+      if(val_final  == 1) {
+        val_envelope = BCPV_PDF_Envelope(val_t, gamma_min, par_Sf, par_Cf, par_Df);
+        if (val_envelope < val_pdf) std::cout << "WARNING: Envelope smaller than PDF!" << std::endl;
+        if(val_envelope*rndm.Uniform() > val_pdf) continue;
+        else break;
+      }
+      else {
+        val_envelope = BCPV_PDF_Envelope(val_t, gamma_min, par_Sfbar, par_Cfbar, par_Dfbar);
+        if (val_envelope < val_bar_pdf) std::cout << "WARNING: Envelope smaller than PDF!" << std::endl;
+        if(val_envelope*rndm.Uniform() > val_bar_pdf) continue;
+        else break;
+      }
     }
   }
 
@@ -112,12 +129,8 @@ double BCPV_bar_PDF(double t, double d, double tau, double dGamma, double dm,
   return exp(-t/tau)*(cosh(dGamma*t/2.)+Dfbar*sinh(dGamma*t/2.)-d*Cfbar*cos(dm*t)+d*Sfbar*sin(dm*t));
 }
 
-double BCPV_PDF_Envelope(double t, double gamma_min, double Sf, double Cf, double Df) {
-  return exp(-t*gamma_min)*(1.+std::abs(Df)+sqrt(Sf*Sf+Cf*Cf));
-}
-
-double BCPV_bar_PDF_Envelope(double t, double gamma_min, double Sfbar, double Cfbar, double Dfbar) {
-  return exp(-t*gamma_min)*(1.+std::abs(Dfbar)+sqrt(Sfbar*Sfbar+Cfbar*Cfbar));
+double BCPV_PDF_Envelope(double t, double gamma_min, double S, double C, double D) {
+  return exp(-t*gamma_min)*(1.+std::abs(D)+sqrt(S*S+C*C));
 }
 
 bool GenerateResolSingleGauss(TRandom& rndm, double par_bias, double par_sigma, double obs_true, double& obs_meas) {
