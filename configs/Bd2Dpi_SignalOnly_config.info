@@ -32,6 +32,7 @@ Components
         Cfbar     0.999  ; 1-|lambda_f|/1+|lambda_f|^2
         Dfbar     0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
         AP        0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
+        AD        0.     ; detection asymmetry
       }
       TimeResol {
         bias  0.

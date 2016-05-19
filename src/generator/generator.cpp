@@ -53,7 +53,7 @@ bool GenerateLognormal(TRandom& rndm, double m, double k, double min, double max
   }
 }
 
-bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
+bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym, double par_det_asym,
                       double par_tau, double par_dGamma, double par_dm,
                       double par_Sf, double par_Cf, double par_Df,
                       double par_Sfbar, double par_Cfbar, double par_Dfbar,
@@ -95,7 +95,8 @@ bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym,
       val_pdf = BCPV_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sf, par_Cf, par_Df);
       val_bar_pdf = BCPV_bar_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sfbar, par_Cfbar, par_Dfbar);
 
-      val_final = (rndm.Uniform() < val_pdf/(val_pdf + val_bar_pdf)) ? +1 : -1;
+      double prob_finalstate = val_pdf/(val_pdf + val_bar_pdf) - par_det_asym/2;
+      val_final = (rndm.Uniform() < prob_finalstate) ? +1 : -1;
 
       if(val_final  == 1) {
         val_envelope = BCPV_PDF_Envelope(val_t, gamma_min, par_Sf, par_Cf, par_Df);

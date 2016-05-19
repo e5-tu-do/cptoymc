@@ -55,6 +55,7 @@ private:
     double Cfbar;
     double Dfbar;
     double prod_asym;
+    double det_asym;
   } params_timeandcp_;
 
   struct ParamsTimeResol {
