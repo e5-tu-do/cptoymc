@@ -31,3 +31,6 @@ build*/
 *.swp
 .DS_Store
 ._*
+
+# build scripts
+scripts/
