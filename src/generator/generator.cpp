@@ -95,8 +95,19 @@ bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym, double par_det_asym,
       val_pdf = BCPV_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sf, par_Cf, par_Df);
       val_bar_pdf = BCPV_bar_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sfbar, par_Cfbar, par_Dfbar);
 
-      double prob_finalstate = val_pdf/(val_pdf + val_bar_pdf) - par_det_asym/2;
-      val_final = (rndm.Uniform() < prob_finalstate) ? +1 : -1;
+      double prob_finalstate = val_pdf/(val_pdf + val_bar_pdf);
+      double prob_detect = (1 - par_det_asym)/2;
+
+      // std::cout << "val_pdf = " << val_pdf << std::endl;
+      // std::cout << "val_bar_pdf = " << val_bar_pdf << std::endl;
+      // std::cout << "prob_detect = " << prob_detect << std::endl;
+      // std::cout << "C = " << par_Cf << std::endl;
+      // std::cout << "Cbar = " << par_Cfbar << std::endl;
+      // std::cout << "combined = " << val_pdf/(val_pdf + val_bar_pdf) << std::endl;
+      // std::cout << "combined bar = " << val_bar_pdf/(val_pdf + val_bar_pdf) << std::endl;
+      // std::cout << "prob_finalstate = " << prob_finalstate << "\n" << std::endl;
+
+      val_final = (rndm.Uniform() < prob_detect) ? +1 : -1;
 
       if(val_final  == 1) {
         val_envelope = BCPV_PDF_Envelope(val_t, gamma_min, par_Sf, par_Cf, par_Df);

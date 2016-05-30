@@ -32,26 +32,30 @@ Components
         Cfbar     0.999  ; 1-|lambda_f|/1+|lambda_f|^2
         Dfbar     0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
         AP        0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
-        AD        0.     ; detection asymmetry
+        AD        1.     ; detection asymmetry
       }
       TimeResol {
         bias  0.
         sigma 0.050
       }
       Tagging {
-        eff_OS     0.3292
-        eff_SS     0.0635
-        eff_SSOS   0.0436
+        eff_OS     1.0
+        eff_SS     0.0
+        eff_SSOS   0.0
         p1_OS      1.
         p0_OS      0.25
         etabar_OS  0.25
         dp1_OS     0.
         dp0_OS     0.
+        eta_dist_mean_OS  0.37
+        eta_dist_sigma_OS 0.02
         p1_SS      1.
         p0_SS      0.22
         etabar_SS  0.22
         dp1_SS     0.
         dp0_SS     0.
+        eta_dist_mean_SS  0.37
+        eta_dist_sigma_SS 0.02
       }
     }
   }
@@ -60,30 +64,30 @@ Components
 ; observable dimensions to be generated. Specifies their name in the TTree.
 Observables {
   ; EventInfo
-  comp_cat {
-    name          "catBkg"
-    desc          "catBkg"
-    type          Integer
-    range         {
-      "Sig_Bd" 1
-    }
-  }
+  ;comp_cat {
+  ;  name          "catBkg"
+  ;  desc          "catBkg"
+  ;  type          Integer
+  ;  range         {
+  ;    "Sig_Bd" 1
+  ;  }
+  ;}
 
   ; Mass
-  mass_true {
-    name          "obsMassTrue"
-    desc          "m'"
-    type          Real
-    min           5000.
-    max           5500.
-  }
-  mass_meas {
-    name          "obsMass"
-    desc          "m"
-    type          Real
-    min           5200.
-    max           5400.
-  }
+  ;mass_true {
+  ;  name          "obsMassTrue"
+  ;  desc          "m'"
+  ;  type          Real
+  ;  min           5000.
+  ;  max           5500.
+  ;}
+  ;mass_meas {
+  ;  name          "obsMass"
+  ;  desc          "m"
+  ;  type          Real
+  ;  min           5200.
+  ;  max           5400.
+  ;}
 
   ; Time
   time_true {
@@ -153,16 +157,16 @@ Observables {
     min           0.
     max           0.44
   }
-  tag_class {
-    name          "catTaggedOSSSPion"
-    desc          "catTag"
-    type          Integer
-    range         {
-      "untagged" 0
-      "OSonly"   1
-      "SSonly"   10
-      "OSandSS"  100
-    }
-  }
+  ;tag_class {
+  ;  name          "catTaggedOSSSPion"
+  ;  desc          "catTag"
+  ;  type          Integer
+  ;  range         {
+  ;    "untagged" 0
+  ;    "OSonly"   1
+  ;    "SSonly"   10
+  ;    "OSandSS"  100
+  ;  }
+  ;}
 }
 
