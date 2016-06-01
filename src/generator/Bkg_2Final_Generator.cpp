@@ -18,7 +18,7 @@ namespace generator {
 LLBkg_Generator::LLBkg_Generator() :
   CompGenerator(),
   params_mass_{0.},
-  params_timeandcp_{1.,0.},
+  params_timeandcp_{1.,0.,0.},
   params_timeresol_{0.033,0.72,0.,1.0},
   params_taggingeffs_{0.30,0.06,0.04},
   params_taggingOS_{0.5,0.,0.0,-1.0},
@@ -44,6 +44,7 @@ void LLBkg_Generator::Configure(const configuration::CompConfig& comp_config) {
   sub_config_ptree = config_ptree.get_child("TimeAndCP");
   params_timeandcp_.tau       = sub_config_ptree.get("tau", params_timeandcp_.tau);
   params_timeandcp_.prod_asym = sub_config_ptree.get("AP" , params_timeandcp_.prod_asym);
+  params_timeandcp_.det_asym  = sub_config_ptree.get("AD" , params_timeandcp_.det_asym);
 
   sub_config_ptree = config_ptree.get_child("TimeResol");
   params_timeresol_.lognormal_m  = sub_config_ptree.get("lognormal_m", params_timeresol_.lognormal_m);
@@ -74,7 +75,8 @@ bool LLBkg_Generator::TryGenerateEvent(TRandom& rndm, Observables& observables) 
   observables.comp_cat.set_value(comp_cat_);
 
   gen_success &= GenerateMass(rndm, observables.mass_true, observables.mass_meas);
-  gen_success &= GenerateTimeAndTrueTag(rndm, observables.time_true, observables.timeerror, observables.tag_true, observables.time_meas);
+  gen_success &= GenerateTimeAndTrueTag(rndm, observables.time_true, observables.timeerror, observables.tag_true,
+                                              observables.finalstate, observables.time_meas);
   gen_success &= GenerateTagAndEta(rndm, observables.tag_true,
                                    observables.tag_OS, observables.eta_OS,
                                    observables.tag_SS, observables.eta_SS,
@@ -93,7 +95,7 @@ bool LLBkg_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true,
 }
 
 bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt&
-                                             obs_tag_true, ObservableReal& obs_time_meas) {
+                                             obs_tag_true, ObservableInt& obs_finalstate, ObservableReal& obs_time_meas) {
 
   unsigned int trials = 0;
   bool gen_success = true;
@@ -104,13 +106,16 @@ bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_
     // true "tag" according to prodasym
     obs_tag_true.value_ = (rndm.Uniform() < (1. - params_timeandcp_.prod_asym)/2.) ? +1 : -1;
 
+    // finalstate according to detasym
+    obs_finalstate.value_ = (rndm.Uniform() < (1. - params_timeandcp_.det_asym)/2.) ? +1 : -1;
+
     // decay time
     gen_success &= GenerateExpo(rndm,1./params_timeandcp_.tau,obs_time_true.value_,obs_time_true.min_value(),obs_time_true.max_value());
 
     gen_success &= GenerateLognormal(rndm, params_timeresol_.lognormal_m, params_timeresol_.lognormal_k, obs_timeerror.min_value(), obs_timeerror.max_value(), obs_timeerror.value_);
     gen_success &= GenerateResolSingleGaussPerEvent(rndm, params_timeresol_.bias, params_timeresol_.scale, obs_timeerror.value_, obs_time_true.value(), obs_time_meas.value_);
 
-    if (gen_success && obs_time_true.HasValidValue() && obs_time_meas.HasValidValue() && obs_tag_true.HasValidValue()) {
+    if (gen_success && obs_time_true.HasValidValue() && obs_time_meas.HasValidValue() && obs_tag_true.HasValidValue() && obs_finalstate.HasValidValue()) {
       break;
     } else {
       ++trials;
