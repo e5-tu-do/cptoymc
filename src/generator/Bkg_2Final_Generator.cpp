@@ -1,4 +1,4 @@
-#include "generator/LLBkg_Generator.h"
+#include "generator/Bkg_2Final_Generator.h"
 
 // from ROOT
 #include "TRandom.h"
@@ -15,7 +15,7 @@ namespace cptoymc {
 namespace generator {
 
 
-LLBkg_Generator::LLBkg_Generator() :
+Bkg_2Final_Generator::Bkg_2Final_Generator() :
   CompGenerator(),
   params_mass_{0.},
   params_timeandcp_{1.,0.,0.},
@@ -27,11 +27,11 @@ LLBkg_Generator::LLBkg_Generator() :
 {
 }
 
-LLBkg_Generator::~LLBkg_Generator() {
+Bkg_2Final_Generator::~Bkg_2Final_Generator() {
 
 }
 
-void LLBkg_Generator::Configure(const configuration::CompConfig& comp_config) {
+void Bkg_2Final_Generator::Configure(const configuration::CompConfig& comp_config) {
   auto config_ptree = comp_config.model_ptree();
 
   comp_cat_ = comp_config.comp_cat();
@@ -69,7 +69,7 @@ void LLBkg_Generator::Configure(const configuration::CompConfig& comp_config) {
   params_taggingSS_.eta_dist_sigma = sub_config_ptree.get("eta_dist_sigma_SS", params_taggingSS_.eta_dist_sigma);
 }
 
-bool LLBkg_Generator::TryGenerateEvent(TRandom& rndm, Observables& observables) {
+bool Bkg_2Final_Generator::TryGenerateEvent(TRandom& rndm, Observables& observables) {
   bool gen_success = true;
 
   observables.comp_cat.set_value(comp_cat_);
@@ -84,7 +84,7 @@ bool LLBkg_Generator::TryGenerateEvent(TRandom& rndm, Observables& observables) 
   return gen_success;
 }
 
-bool LLBkg_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas) {
+bool Bkg_2Final_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true, ObservableReal& obs_mass_meas) {
   bool gen_success = true;
 
   obs_mass_true.value_ = -1000.;
@@ -94,7 +94,7 @@ bool LLBkg_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_true,
   return gen_success;
 }
 
-bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt&
+bool Bkg_2Final_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt&
                                              obs_tag_true, ObservableInt& obs_finalstate, ObservableReal& obs_time_meas) {
 
   unsigned int trials = 0;
@@ -134,7 +134,7 @@ bool LLBkg_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_
 }
 
 
-bool LLBkg_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_tag_true,
+bool Bkg_2Final_Generator::GenerateTagAndEta(TRandom& rndm, const ObservableInt& obs_tag_true,
                                                 ObservableInt& obs_tag_OS, ObservableReal& obs_eta_OS,
                                                 ObservableInt& obs_tag_SS, ObservableReal& obs_eta_SS,
                                                 ObservableInt& obs_tag_class)

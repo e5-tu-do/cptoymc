@@ -1,5 +1,5 @@
-#ifndef CPTOYMC_GENERATOR_LLBKG_GENERATOR_H
-#define CPTOYMC_GENERATOR_LLBKG_GENERATOR_H
+#ifndef CPTOYMC_GENERATOR_BKG_2FINAL_GENERATOR_H
+#define CPTOYMC_GENERATOR_BKG_2FINAL_GENERATOR_H
 
 // STL
 #include <algorithm>
@@ -17,10 +17,10 @@ namespace generator {
 class ObservableReal;
 class ObservableInt;
 
-class LLBkg_Generator : public CompGenerator {
+class Bkg_2Final_Generator : public CompGenerator {
 public:
-  LLBkg_Generator();
-  virtual ~LLBkg_Generator();
+  Bkg_2Final_Generator();
+  virtual ~Bkg_2Final_Generator();
 
   virtual void Configure(const configuration::CompConfig& comp_config);
   virtual bool TryGenerateEvent(TRandom& rndm, Observables& observables);
@@ -70,4 +70,4 @@ private:
 } // namespace generator
 } // namespace cptoymc
 
-#endif // CPTOYMC_GENERATOR_LLBKG_GENERATOR_H
+#endif // CPTOYMC_GENERATOR_BKG_2FINAL_GENERATOR_H

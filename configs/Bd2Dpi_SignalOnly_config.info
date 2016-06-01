@@ -32,7 +32,7 @@ Components
         Cfbar     0.999  ; 1-|lambda_f|/1+|lambda_f|^2
         Dfbar     0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
         AP        0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
-        AD        1.     ; detection asymmetry
+        AD        0.     ; detection asymmetry
       }
       TimeResol {
         bias  0.
@@ -59,35 +59,66 @@ Components
       }
     }
   }
+  Bkg
+  {
+    name     "Bkg"
+    comp_cat 100
+    yield    10000
+    model    "Bkg_2Final"
+    {
+      Mass {
+        expo      0.
+      }
+      TimeAndCP {
+        tau     1.       ; lifetime in ps
+        AP      0.       ; production asymmetry R_Bb - R_B / R_Bb + R_B
+        AD      0.       ; detection asymmetry R_Bb - R_B / R_Bb + R_B
+      }
+      TimeResol {
+        bias  0.
+        sigma 0.050
+      }
+      Tagging {
+        eff_OS    0.3292
+        eff_SS    0.0635
+        eff_SSOS  0.0436
+        omega_OS  0.4
+        domega_OS 0.
+        omega_SS  0.35
+        domega_SS 0.
+      }
+    }
+  }
 }
 
 ; observable dimensions to be generated. Specifies their name in the TTree.
 Observables {
   ; EventInfo
-  ;comp_cat {
-  ;  name          "catBkg"
-  ;  desc          "catBkg"
-  ;  type          Integer
-  ;  range         {
-  ;    "Sig_Bd" 1
-  ;  }
-  ;}
+  comp_cat {
+    name          "catBkg"
+    desc          "catBkg"
+    type          Integer
+    range         {
+      "Sig_Bd" 1
+      "Bkg"    100
+    }
+  }
 
   ; Mass
-  ;mass_true {
-  ;  name          "obsMassTrue"
-  ;  desc          "m'"
-  ;  type          Real
-  ;  min           5000.
-  ;  max           5500.
-  ;}
-  ;mass_meas {
-  ;  name          "obsMass"
-  ;  desc          "m"
-  ;  type          Real
-  ;  min           5200.
-  ;  max           5400.
-  ;}
+  mass_true {
+    name          "obsMassTrue"
+    desc          "m'"
+    type          Real
+    min           5000.
+    max           5500.
+  }
+  mass_meas {
+    name          "obsMass"
+    desc          "m"
+    type          Real
+    min           5200.
+    max           5400.
+  }
 
   ; Time
   time_true {
@@ -157,16 +188,16 @@ Observables {
     min           0.
     max           0.44
   }
-  ;tag_class {
-  ;  name          "catTaggedOSSSPion"
-  ;  desc          "catTag"
-  ;  type          Integer
-  ;  range         {
-  ;    "untagged" 0
-  ;    "OSonly"   1
-  ;    "SSonly"   10
-  ;    "OSandSS"  100
-  ;  }
-  ;}
+  tag_class {
+    name          "catTaggedOSSSPion"
+    desc          "catTag"
+    type          Integer
+    range         {
+      "untagged" 0
+      "OSonly"   1
+      "SSonly"   10
+      "OSandSS"  100
+    }
+  }
 }
 
