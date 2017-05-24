@@ -9,6 +9,7 @@
 #include "generator/CompGenerator.h"
 #include "generator/BSig_CPV_P2VP_Generator.h"
 #include "generator/LLBkg_Generator.h"
+#include "generator/Bkg_2Final_Generator.h"
 
 namespace cptoymc {
 namespace generator {
@@ -17,6 +18,7 @@ namespace generator {
 CompGeneratorFactory::CompGeneratorFactory() {
   RegisterGenerator<BSig_CPV_P2VP_Generator>("BSig_CPV_P2VP");
   RegisterGenerator<LLBkg_Generator>("LLBkg");
+  RegisterGenerator<Bkg_2Final_Generator>("Bkg_2Final");
 }
 
 CompGeneratorFactory::~CompGeneratorFactory() { }
@@ -30,7 +32,7 @@ void CompGeneratorFactory::RegisterGenerator(const std::string& model_name,
                                          std::function<CompGenerator*(void)> generator_factory_function) {
   generator_registry.emplace(model_name,generator_factory_function);
 }
-  
+
 std::shared_ptr<CompGenerator> CompGeneratorFactory::CreateGenerator(const configuration::CompConfig& comp_config) const {
   CompGenerator* generator_instance = nullptr;
 

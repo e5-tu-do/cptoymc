@@ -1,0 +1,203 @@
+; Example configuration for a ToyMC in Bd2JpsiKS
+
+; General configuration options
+
+; Define which components should be used and which yields should be generated.
+; This defines, which other property trees are read out.
+Components
+{
+  Sig_Bd
+  {
+    name     "Sig_Bd"
+    comp_cat 1
+    yield    10000
+    model    "BSig_CPV_P2VP"
+    {
+      Mass {
+        mean      5279.15
+        width        0.
+      }
+      MassResol {
+        bias   0.
+        sigma  8.
+      }
+      TimeAndCP {
+        tau       1.519     ; lifetime in ps
+        dGamma    0.     ;
+        dm        0.517  ; Deltam in hbar ps^{-1}
+        Sf        0.0303 ; 2*Im(lambda_f)/1+|lambda_f|^2
+        Cf        0.999  ; 1-|lambda_f|/1+|lambda_f|^2
+        Df        0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
+        Sfbar     -0.0285; 2*Im(lambda_f)/1+|lambda_f|^2
+        Cfbar     0.999  ; 1-|lambda_f|/1+|lambda_f|^2
+        Dfbar     0.     ; 2*Re(lambda_f)/1+|lambda_f|^2
+        AP        0.     ; production asymmetry R_Bb - R_B / R_Bb + R_B
+        AD        0.     ; detection asymmetry
+      }
+      TimeResol {
+        bias  0.
+        sigma 0.050
+      }
+      Tagging {
+        eff_OS     1.0
+        eff_SS     0.0
+        eff_SSOS   0.0
+        p1_OS      1.
+        p0_OS      0.25
+        etabar_OS  0.25
+        dp1_OS     0.
+        dp0_OS     0.
+        eta_dist_mean_OS  0.37
+        eta_dist_sigma_OS 0.02
+        p1_SS      1.
+        p0_SS      0.22
+        etabar_SS  0.22
+        dp1_SS     0.
+        dp0_SS     0.
+        eta_dist_mean_SS  0.37
+        eta_dist_sigma_SS 0.02
+      }
+    }
+  }
+  Bkg
+  {
+    name     "Bkg"
+    comp_cat 100
+    yield    10000
+    model    "Bkg_2Final"
+    {
+      Mass {
+        expo      0.
+      }
+      TimeAndCP {
+        tau     1.       ; lifetime in ps
+        AP      0.       ; production asymmetry R_Bb - R_B / R_Bb + R_B
+        AD      0.       ; detection asymmetry R_Bb - R_B / R_Bb + R_B
+      }
+      TimeResol {
+        bias  0.
+        sigma 0.050
+      }
+      Tagging {
+        eff_OS    0.3292
+        eff_SS    0.0635
+        eff_SSOS  0.0436
+        omega_OS  0.4
+        domega_OS 0.
+        omega_SS  0.35
+        domega_SS 0.
+      }
+    }
+  }
+}
+
+; observable dimensions to be generated. Specifies their name in the TTree.
+Observables {
+  ; EventInfo
+  comp_cat {
+    name          "catBkg"
+    desc          "catBkg"
+    type          Integer
+    range         {
+      "Sig_Bd" 1
+      "Bkg"    100
+    }
+  }
+
+  ; Mass
+  mass_true {
+    name          "obsMassTrue"
+    desc          "m'"
+    type          Real
+    min           5000.
+    max           5500.
+  }
+  mass_meas {
+    name          "obsMass"
+    desc          "m"
+    type          Real
+    min           5200.
+    max           5400.
+  }
+
+  ; Time
+  time_true {
+    name          "obsTimeTrue"
+    desc          "t'"
+    type          Real
+    min           0.
+    max           18.
+  }
+  time_meas {
+    name          "obsTime"
+    desc          "t"
+    type          Real
+    min           -2.
+    max           20.
+  }
+  finalstate {
+    name             "catFinalstate"
+    desc             "f"
+    type             Integer
+    range {
+      "f"     +1
+      "fbar"  -1
+    }
+  }
+  ; Tagging
+  tag_true {
+    name          "obsTagTrue"
+    desc          "d'"
+    type          Integer
+    range {
+      "Bb" -1
+      "B"  +1
+    }
+  }
+  tag_OS {
+    name          "obsTagOS"
+    desc          "d_{OS}"
+    type          Integer
+    range {
+      "Bb"   -1
+      "B"    +1
+      "None"  0
+    }
+  }
+  eta_OS {
+    name          "obsEtaOS"
+    desc          "#eta_{OS}"
+    type          Real
+    min           0.
+    max           0.5
+  }
+  tag_SS {
+    name          "obsTagSS"
+    desc          "d_{SS}"
+    type          Integer
+    range {
+     "Bb"   -1
+     "B"    +1
+     "None" 0
+    }
+  }
+  eta_SS {
+    name          "obsEtaSS"
+    desc          "#eta_{SS}"
+    type          Real
+    min           0.
+    max           0.44
+  }
+  tag_class {
+    name          "catTaggedOSSSPion"
+    desc          "catTag"
+    type          Integer
+    range         {
+      "untagged" 0
+      "OSonly"   1
+      "SSonly"   10
+      "OSandSS"  100
+    }
+  }
+}
+
