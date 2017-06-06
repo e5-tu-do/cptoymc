@@ -53,6 +53,7 @@ Observables::Observables() :
   eta_SS("eta_SS","obsEtaSS","\\eta_{\\text{SS}}",0.5,0.0,0.5),
   comp_cat("comp_cat","catBkg","catBkg",-10000,{{"Sig_Bd",1},{"Sig_Bs",10},{"Bkg",100}}),
   finalstate("finalstate","catFinalstate","catFinalstate",1,{{"f",1},{"fbar",-1}}),
+  mix_true("mix_true","catMixingTrue","catMixingTrue",-99,{{"mixed",1},{"unmixed",-1}}),
   observables_real_(),
   observables_int_()
 {
@@ -70,6 +71,7 @@ Observables::Observables() :
   observables_int_.emplace(tag_SS.dim_name()    , &tag_SS    );
   observables_int_.emplace(comp_cat.dim_name()  , &comp_cat  );
   observables_int_.emplace(finalstate.dim_name(), &finalstate);
+  observables_int_.emplace(mix_true.dim_name(), &mix_true);
 }
 
 void Observables::Configure(const std::shared_ptr<configuration::ObsConfig> obs_config) {

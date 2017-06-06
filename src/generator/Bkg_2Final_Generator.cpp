@@ -76,7 +76,7 @@ bool Bkg_2Final_Generator::TryGenerateEvent(TRandom& rndm, Observables& observab
 
   gen_success &= GenerateMass(rndm, observables.mass_true, observables.mass_meas);
   gen_success &= GenerateTimeAndTrueTag(rndm, observables.time_true, observables.timeerror, observables.tag_true,
-                                              observables.finalstate, observables.time_meas);
+                                              observables.finalstate, observables.time_meas, observables.mix_true);
   gen_success &= GenerateTagAndEta(rndm, observables.tag_true,
                                    observables.tag_OS, observables.eta_OS,
                                    observables.tag_SS, observables.eta_SS,
@@ -95,7 +95,8 @@ bool Bkg_2Final_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_mass_
 }
 
 bool Bkg_2Final_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt&
-                                             obs_tag_true, ObservableInt& obs_finalstate, ObservableReal& obs_time_meas) {
+                                             obs_tag_true, ObservableInt& obs_finalstate, ObservableReal& obs_time_meas,
+                                             ObservableInt& obs_mix_true) {
 
   unsigned int trials = 0;
   bool gen_success = true;
@@ -108,6 +109,8 @@ bool Bkg_2Final_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal&
 
     // finalstate according to detasym
     obs_finalstate.value_ = (rndm.Uniform() < (1. - params_timeandcp_.det_asym)/2.) ? +1 : -1;
+
+    obs_mix_true.value_ = obs_tag_true.value_ * obs_finalstate.value_;
 
     // decay time
     gen_success &= GenerateExpo(rndm,1./params_timeandcp_.tau,obs_time_true.value_,obs_time_true.min_value(),obs_time_true.max_value());

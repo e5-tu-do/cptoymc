@@ -57,7 +57,8 @@ bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym, double par_det_asym,
                       double par_tau, double par_dGamma, double par_dm,
                       double par_Sf, double par_Cf, double par_Df,
                       double par_Sfbar, double par_Cfbar, double par_Dfbar,
-                      double& obs_time_true, int& obs_tag_true, int& finalstate) {
+                      double& obs_time_true, int& obs_tag_true, int& finalstate,
+                      int& mix_true) {
   // helper quantities
   double prob_B = (1. - par_prod_asym)/2.;
   double gamma_min = 1./par_tau - std::abs(par_dGamma)/2.;
@@ -116,6 +117,7 @@ bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym, double par_det_asym,
   obs_tag_true  = val_d;
   obs_time_true = val_t;
   finalstate    = val_final;
+  mix_true      = val_final * val_d;
 
   return true;
 }
