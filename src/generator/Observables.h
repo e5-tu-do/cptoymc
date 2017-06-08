@@ -151,6 +151,7 @@ public:
   ObservableReal eta_SS;
   ObservableInt  comp_cat;
   ObservableInt finalstate;
+  ObservableInt mix_true;
 
 private:
   std::map<std::string,ObservableReal*> observables_real_;

@@ -154,6 +154,15 @@ Observables {
       "B"  +1
     }
   }
+  mix_true {
+    name          "catMixingTrue"
+    desc          "Xi'"
+    type          Integer
+    range {
+      "mixed" -1
+      "unmixed"  +1
+    }
+  }
   tag_OS {
     name          "obsTagOS"
     desc          "d_{OS}"

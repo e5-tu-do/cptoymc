@@ -36,7 +36,8 @@ bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym, double par_det_asym,
                       double par_tau, double par_dGamma, double par_dm,
                       double par_Sf, double par_Cf, double par_Df,
                       double par_Sfbar, double par_Cfbar, double par_Dfbar,
-                      double& obs_time_true, int& obs_tag_true, int& finalstate);
+                      double& obs_time_true, int& obs_tag_true, int& finalstate,
+                      int& mix_true);
 
 double BCPV_PDF(double t, double d, double tau, double dGamma, double dm,
                 double Sf, double Cf, double Df);

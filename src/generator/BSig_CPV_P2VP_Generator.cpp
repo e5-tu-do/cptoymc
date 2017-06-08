@@ -107,7 +107,7 @@ bool BSig_CPV_P2VP_Generator::TryGenerateEvent(TRandom& rndm, Observables& obser
   gen_success &= GenerateMass(rndm, observables.mass_true, observables.mass_meas);
   //gen_success &= GenerateLognormal(rndm, m, k, observables.timeerror);
   gen_success &= GenerateTimeAndTrueTag(rndm, observables.time_true, observables.timeerror, observables.tag_true,
-                                              observables.time_meas, observables.finalstate);
+                                              observables.time_meas, observables.finalstate, observables.mix_true);
   gen_success &= GenerateTagAndEta(rndm, observables.tag_true,
                     observables.tag_OS, observables.eta_OS,
                     observables.tag_SS, observables.eta_SS,
@@ -143,7 +143,7 @@ bool BSig_CPV_P2VP_Generator::GenerateMass(TRandom& rndm, ObservableReal& obs_ma
   return gen_success;
 }
 
-bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas, ObservableInt& obs_finalstate) {
+bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableReal& obs_time_true, ObservableReal& obs_timeerror, ObservableInt& obs_tag_true, ObservableReal& obs_time_meas, ObservableInt& obs_finalstate, ObservableInt& obs_mix_true) {
   unsigned int trials = 0;
   bool gen_success = true;
   while (trials < max_trials_) {
@@ -152,7 +152,7 @@ bool BSig_CPV_P2VP_Generator::GenerateTimeAndTrueTag(TRandom& rndm, ObservableRe
                      params_timeandcp_.dGamma, params_timeandcp_.dm,
                      params_timeandcp_.Sf, params_timeandcp_.Cf, params_timeandcp_.Df,
                      params_timeandcp_.Sfbar, params_timeandcp_.Cfbar, params_timeandcp_.Dfbar,
-                     obs_time_true.value_, obs_tag_true.value_, obs_finalstate.value_);
+                     obs_time_true.value_, obs_tag_true.value_, obs_finalstate.value_, obs_mix_true.value_);
 
     gen_success &= GenerateLognormal(rndm, params_timeresol_.lognormal_m, params_timeresol_.lognormal_k, obs_timeerror.min_value(), obs_timeerror.max_value(), obs_timeerror.value_);
     gen_success &= GenerateResolSingleGaussPerEvent(rndm, params_timeresol_.bias, params_timeresol_.scale, obs_timeerror.value_,
