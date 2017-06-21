@@ -93,19 +93,23 @@ bool GenerateCPV_P2PV(TRandom& rndm, double par_prod_asym, double par_det_asym,
       else break;
     }
     else{
-      double prob_detect = (1 - par_det_asym)/2;
+      val_pdf = BCPV_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sf, par_Cf, par_Df);
+      val_bar_pdf = BCPV_bar_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sfbar, par_Cfbar, par_Dfbar);
 
-      val_final = (rndm.Uniform() < prob_detect) ? +1 : -1;
+      // double prob_detect = (1 - par_det_asym)/2;
+
+      // val_final = (rndm.Uniform() < prob_detect) ? +1 : -1;
+
+      double prob_finalstate = val_pdf/(val_pdf + val_bar_pdf) - par_det_asym/2;
+      val_final = (rndm.Uniform() < prob_finalstate) ? +1 : -1;
 
       if(val_final  == 1) {
-        val_pdf = BCPV_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sf, par_Cf, par_Df);
         val_envelope = BCPV_PDF_Envelope(val_t, gamma_min, par_Sf, par_Cf, par_Df);
         if (val_envelope < val_pdf) std::cout << "WARNING: Envelope smaller than PDF!" << std::endl;
         if(val_envelope*rndm.Uniform() > val_pdf) continue;
         else break;
       }
       else {
-        val_bar_pdf = BCPV_bar_PDF(val_t, val_d, par_tau, par_dGamma, par_dm, par_Sfbar, par_Cfbar, par_Dfbar);
         val_envelope = BCPV_PDF_Envelope(val_t, gamma_min, par_Sfbar, par_Cfbar, par_Dfbar);
         if (val_envelope < val_bar_pdf) std::cout << "WARNING: Envelope smaller than PDF!" << std::endl;
         if(val_envelope*rndm.Uniform() > val_bar_pdf) continue;
